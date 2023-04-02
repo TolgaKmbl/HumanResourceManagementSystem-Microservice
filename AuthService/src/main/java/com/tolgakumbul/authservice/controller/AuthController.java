@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface AuthController {
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(@RequestBody AuthRequestDto request);
+    public ResponseEntity<String> register(@RequestBody AuthRequestDto request);
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto request);

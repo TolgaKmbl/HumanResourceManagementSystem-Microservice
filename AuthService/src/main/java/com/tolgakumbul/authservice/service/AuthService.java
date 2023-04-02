@@ -5,7 +5,7 @@ import com.tolgakumbul.authservice.model.auth.AuthResponseDto;
 
 public interface AuthService {
 
-    AuthResponseDto register(AuthRequestDto request);
+    String register(AuthRequestDto request);
 
     AuthResponseDto authenticate(AuthRequestDto request);
 

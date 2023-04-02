@@ -15,7 +15,7 @@ public class AuthControllerImpl implements AuthController {
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<AuthResponseDto> register(AuthRequestDto request) {
+    public ResponseEntity<String> register(AuthRequestDto request) {
         return ResponseEntity.ok(authService.register(request));
     }
 

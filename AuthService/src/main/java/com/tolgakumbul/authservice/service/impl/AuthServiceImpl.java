@@ -2,12 +2,14 @@ package com.tolgakumbul.authservice.service.impl;
 
 import com.tolgakumbul.authservice.entity.Role;
 import com.tolgakumbul.authservice.entity.User;
+import com.tolgakumbul.authservice.exception.UserCreateException;
 import com.tolgakumbul.authservice.model.auth.AuthRequestDto;
 import com.tolgakumbul.authservice.model.auth.AuthResponseDto;
 import com.tolgakumbul.authservice.repository.UserRepository;
 import com.tolgakumbul.authservice.service.AuthService;
 import com.tolgakumbul.authservice.service.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,19 +26,19 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthResponseDto register(AuthRequestDto request) {
+    public String register(AuthRequestDto request) {
+        try {
+            User user = User.builder()
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .role(Role.USER)
+                    .build();
 
-        User user = User.builder()
-                /*.firstName(request.getFirstName())
-                .lastName(request.getLastName())*/
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .build();
-
-        repository.save(user);
-
-        return getAuthResponse(user);
+            repository.save(user);
+            return "User registered succesfully";
+        } catch (DataAccessException exception) {
+            throw new UserCreateException("Cannot registered this user at the moment.");
+        }
     }
 
     @Override
