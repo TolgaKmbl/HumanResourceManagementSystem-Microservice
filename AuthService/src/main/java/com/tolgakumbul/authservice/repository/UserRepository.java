@@ -1,6 +1,6 @@
 package com.tolgakumbul.authservice.repository;
 
-import com.tolgakumbul.authservice.model.User;
+import com.tolgakumbul.authservice.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

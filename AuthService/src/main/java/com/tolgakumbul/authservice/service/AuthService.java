@@ -1,13 +1,12 @@
 package com.tolgakumbul.authservice.service;
 
-import com.tolgakumbul.authservice.model.auth.AuthRequest;
-import com.tolgakumbul.authservice.model.auth.AuthResponse;
-import com.tolgakumbul.authservice.model.auth.RegisterRequest;
+import com.tolgakumbul.authservice.model.auth.AuthRequestDto;
+import com.tolgakumbul.authservice.model.auth.AuthResponseDto;
 
 public interface AuthService {
 
-    AuthResponse register(RegisterRequest request);
+    AuthResponseDto register(AuthRequestDto request);
 
-    AuthResponse authenticate(AuthRequest request);
+    AuthResponseDto authenticate(AuthRequestDto request);
 
 }

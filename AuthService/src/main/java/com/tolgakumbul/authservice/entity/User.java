@@ -1,4 +1,4 @@
-package com.tolgakumbul.authservice.model;
+package com.tolgakumbul.authservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,9 +22,9 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    private Integer id;
-    private String firstName;
-    private String lastName;
+    private Long id;
+    /*private String firstName;
+    private String lastName;*/
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)

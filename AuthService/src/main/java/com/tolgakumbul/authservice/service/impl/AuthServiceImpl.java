@@ -1,10 +1,9 @@
 package com.tolgakumbul.authservice.service.impl;
 
-import com.tolgakumbul.authservice.model.Role;
-import com.tolgakumbul.authservice.model.User;
-import com.tolgakumbul.authservice.model.auth.AuthRequest;
-import com.tolgakumbul.authservice.model.auth.AuthResponse;
-import com.tolgakumbul.authservice.model.auth.RegisterRequest;
+import com.tolgakumbul.authservice.entity.Role;
+import com.tolgakumbul.authservice.entity.User;
+import com.tolgakumbul.authservice.model.auth.AuthRequestDto;
+import com.tolgakumbul.authservice.model.auth.AuthResponseDto;
 import com.tolgakumbul.authservice.repository.UserRepository;
 import com.tolgakumbul.authservice.service.AuthService;
 import com.tolgakumbul.authservice.service.JwtService;
@@ -14,8 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +24,11 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponseDto register(AuthRequestDto request) {
 
         User user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
+                /*.firstName(request.getFirstName())
+                .lastName(request.getLastName())*/
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
@@ -43,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse authenticate(AuthRequest request) {
+    public AuthResponseDto authenticate(AuthRequestDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = repository
                 .findByEmail(request.getEmail())
@@ -52,9 +49,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
-    private AuthResponse getAuthResponse(User user) {
+    private AuthResponseDto getAuthResponse(User user) {
         String jwtToken = jwtService.generateToken(user);
 
-        return AuthResponse.builder().token(jwtToken).build();
+        return AuthResponseDto.builder().token(jwtToken).build();
     }
 }

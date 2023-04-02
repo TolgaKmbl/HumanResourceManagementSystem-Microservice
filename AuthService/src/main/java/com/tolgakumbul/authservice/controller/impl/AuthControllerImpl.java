@@ -1,9 +1,8 @@
 package com.tolgakumbul.authservice.controller.impl;
 
 import com.tolgakumbul.authservice.controller.AuthController;
-import com.tolgakumbul.authservice.model.auth.AuthRequest;
-import com.tolgakumbul.authservice.model.auth.AuthResponse;
-import com.tolgakumbul.authservice.model.auth.RegisterRequest;
+import com.tolgakumbul.authservice.model.auth.AuthRequestDto;
+import com.tolgakumbul.authservice.model.auth.AuthResponseDto;
 import com.tolgakumbul.authservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +15,12 @@ public class AuthControllerImpl implements AuthController {
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<AuthResponse> register(RegisterRequest request) {
+    public ResponseEntity<AuthResponseDto> register(AuthRequestDto request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
     @Override
-    public ResponseEntity<AuthResponse> authenticate(AuthRequest request) {
+    public ResponseEntity<AuthResponseDto> authenticate(AuthRequestDto request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 }
