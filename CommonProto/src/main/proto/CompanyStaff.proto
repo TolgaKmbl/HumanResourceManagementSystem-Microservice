@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "CompanyStaffProto";
+
+package com.tolgakumbul.proto;
+
+message GetCompanyStaffByIdRequest {
+  int64 userId = 1;
+}
+
+message GetCompanyStaffByNameRequest {
+  string firstName = 1;
+  string lastName = 2;
+}
+
+message GetCompanyStaffResponse {
+  int64 userId = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string status = 4;
+}
+
+service CompanyStaffGrpcService {
+  rpc GetCompanyStaffById (GetCompanyStaffByIdRequest) returns (GetCompanyStaffResponse){}
+  rpc GetCompanyStaffByName (GetCompanyStaffByNameRequest) returns (GetCompanyStaffResponse){}
+}
