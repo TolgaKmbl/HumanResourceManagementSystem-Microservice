@@ -3,6 +3,8 @@ syntax = "proto3";
 option java_package = "com.tolgakumbul.proto";
 option java_outer_classname = "CompanyStaffProto";
 
+import "google/protobuf/empty.proto";
+
 package com.tolgakumbul.proto;
 
 message GetCompanyStaffByIdRequest {
@@ -14,14 +16,20 @@ message GetCompanyStaffByNameRequest {
   string lastName = 2;
 }
 
-message GetCompanyStaffResponse {
+message CompanyStaffData {
   int64 userId = 1;
   string firstName = 2;
   string lastName = 3;
   string status = 4;
 }
 
+message GetAllCompanyStaffResponse {
+  repeated CompanyStaffData companyStaffList = 1;
+}
+
 service CompanyStaffGrpcService {
-  rpc GetCompanyStaffById (GetCompanyStaffByIdRequest) returns (GetCompanyStaffResponse){}
-  rpc GetCompanyStaffByName (GetCompanyStaffByNameRequest) returns (GetCompanyStaffResponse){}
+  rpc GetAllCompanyStaff (google.protobuf.Empty) returns (GetAllCompanyStaffResponse){}
+  rpc GetCompanyStaffById (GetCompanyStaffByIdRequest) returns (CompanyStaffData){}
+  rpc GetCompanyStaffByName (GetCompanyStaffByNameRequest) returns (CompanyStaffData){}
+  rpc InsertCompanyStaff (CompanyStaffData) returns (CompanyStaffData){}
 }

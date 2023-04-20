@@ -27,7 +27,7 @@ public class JobSeekers {
     @Column("CV_ID")
     private Long cvId;
     @Column("IS_APPROVED")
-    private Character isApproved;
+    private String isApproved;
     @Column("APPROVAL_DATE")
     private LocalDateTime approvalDate;
 
