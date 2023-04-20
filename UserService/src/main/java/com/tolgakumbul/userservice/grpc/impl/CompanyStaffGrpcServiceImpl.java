@@ -1,6 +1,7 @@
 package com.tolgakumbul.userservice.grpc.impl;
 
 import com.google.protobuf.Empty;
+import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffGrpcServiceGrpc;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
 import com.tolgakumbul.proto.CompanyStaffProto.GetAllCompanyStaffResponse;
@@ -8,6 +9,7 @@ import com.tolgakumbul.proto.CompanyStaffProto.GetCompanyStaffByIdRequest;
 import com.tolgakumbul.proto.CompanyStaffProto.GetCompanyStaffByNameRequest;
 import com.tolgakumbul.userservice.grpc.CompanyStaffGrpcService;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
+import com.tolgakumbul.userservice.model.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.CompanyStaffDTO;
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import io.grpc.stub.StreamObserver;
@@ -61,10 +63,10 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
     }
 
     @Override
-    public void insertCompanyStaff(CompanyStaffData request, StreamObserver<CompanyStaffData> responseObserver) {
-        CompanyStaffDTO companyStaffByName = companyStaffService.insertCompanyStaff(MAPPER.toCompanyStaffDTO(request));
-        CompanyStaffData companyStaffData = MAPPER.toGetCompanyStaffResponse(companyStaffByName);
-        responseObserver.onNext(companyStaffData);
+    public void insertCompanyStaff(CompanyStaffData request, StreamObserver<CommonResponse> responseObserver) {
+        CommonResponseDTO commonResponseDTO = companyStaffService.insertCompanyStaff(MAPPER.toCompanyStaffDTO(request));
+        CommonResponse commonResponse = MAPPER.toCommonResponse(commonResponseDTO);
+        responseObserver.onNext(commonResponse);
         responseObserver.onCompleted();
     }
 }

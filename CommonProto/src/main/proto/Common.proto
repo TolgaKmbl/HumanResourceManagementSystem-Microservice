@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "CommonProto";
+
+package com.tolgakumbul.proto;
+
+message CommonResponse {
+  int32 returnCode = 1;
+  string reasonCode = 2;
+}

@@ -1,6 +1,7 @@
 package com.tolgakumbul.userservice.grpc;
 
 import com.google.protobuf.Empty;
+import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
 import com.tolgakumbul.proto.CompanyStaffProto.GetAllCompanyStaffResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.GetCompanyStaffByIdRequest;
@@ -15,6 +16,6 @@ public interface CompanyStaffGrpcService {
 
     void getCompanyStaffByName(GetCompanyStaffByNameRequest request, StreamObserver<CompanyStaffData> responseObserver);
 
-    void insertCompanyStaff(CompanyStaffData request, StreamObserver<CompanyStaffData> responseObserver);
+    void insertCompanyStaff(CompanyStaffData request, StreamObserver<CommonResponse> responseObserver);
 
 }

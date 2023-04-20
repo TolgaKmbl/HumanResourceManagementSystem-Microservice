@@ -4,6 +4,8 @@ option java_package = "com.tolgakumbul.proto";
 option java_outer_classname = "CompanyStaffProto";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "Common.proto";
 
 package com.tolgakumbul.proto;
 
@@ -20,16 +22,24 @@ message CompanyStaffData {
   int64 userId = 1;
   string firstName = 2;
   string lastName = 3;
-  string status = 4;
+  IsApproved isApproved = 4;
+  google.protobuf.Timestamp approvalDate = 5;
 }
 
 message GetAllCompanyStaffResponse {
   repeated CompanyStaffData companyStaffList = 1;
 }
 
+enum IsApproved {
+  ACTIVE = 0;
+  PASSIVE = 1;
+}
+
 service CompanyStaffGrpcService {
   rpc GetAllCompanyStaff (google.protobuf.Empty) returns (GetAllCompanyStaffResponse){}
   rpc GetCompanyStaffById (GetCompanyStaffByIdRequest) returns (CompanyStaffData){}
   rpc GetCompanyStaffByName (GetCompanyStaffByNameRequest) returns (CompanyStaffData){}
-  rpc InsertCompanyStaff (CompanyStaffData) returns (CompanyStaffData){}
+  rpc InsertCompanyStaff (CompanyStaffData) returns (CommonResponse){}
+  rpc DeleteCompanyStaff (GetCompanyStaffByIdRequest) returns (CommonResponse){}
+  rpc ApproveCompanyStaff (google.protobuf.Empty) returns (CommonResponse){}
 }

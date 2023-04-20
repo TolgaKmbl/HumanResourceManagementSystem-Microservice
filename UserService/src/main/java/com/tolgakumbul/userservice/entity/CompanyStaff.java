@@ -20,8 +20,8 @@ public class CompanyStaff {
     private String firstName;
     @Column("LAST_NAME")
     private String lastName;
-    @Column("STATUS")
-    private String status;
+    @Column("IS_APPROVED")
+    private String isApproved;
     @Column("APPROVAL_DATE")
     private LocalDateTime approvalDate;
 }

@@ -15,7 +15,7 @@ public class CompanyStaffDTO {
     private Long userId;
     private String firstName;
     private String lastName;
-    private String status;
+    private String isApproved;
     private LocalDateTime approvalDate;
 
 }
