@@ -9,6 +9,7 @@ import net.devh.boot.grpc.server.advice.GrpcAdvice;
 import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 @GrpcAdvice
@@ -37,7 +38,11 @@ public class GeneralExceptionHandler {
         GeneralErrorResponse generalErrorResponse = new GeneralErrorResponse();
         generalErrorResponse.setErrorCode(usersException.getMessage());
         ResourceBundle resourceBundle = ResourceBundle.getBundle("message");
-        generalErrorResponse.setErrorMessage(resourceBundle.getString(usersException.getMessage()));
+        if (usersException.getArgs() == null || usersException.getArgs().length == 0) {
+            generalErrorResponse.setErrorMessage(resourceBundle.getString(usersException.getMessage()));
+        } else {
+            generalErrorResponse.setErrorMessage(MessageFormat.format(resourceBundle.getString(usersException.getMessage()), usersException.getArgs()));
+        }
         return generalErrorResponse;
     }
 

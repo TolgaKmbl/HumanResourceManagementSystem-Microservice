@@ -4,7 +4,8 @@ import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.dao.mapper.CompanyStaffRowMapper;
 import com.tolgakumbul.userservice.entity.CompanyStaff;
-import com.tolgakumbul.userservice.model.CommonResponseDTO;
+import com.tolgakumbul.userservice.exception.UsersException;
+import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.relational.core.sql.LockMode;
@@ -66,21 +67,43 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
-    public CommonResponseDTO insertCompanyStaff(CompanyStaff companyStaff) {
+    public Integer insertCompanyStaff(CompanyStaff companyStaff) {
         try {
-            int updatedRow = jdbcTemplate.update(QueryConstants.INSERT_COMPANY_STAFF_QUERY,
+            return jdbcTemplate.update(QueryConstants.INSERT_COMPANY_STAFF_QUERY,
                     companyStaff.getUserId(),
                     companyStaff.getFirstName(),
                     companyStaff.getLastName(),
                     companyStaff.getIsApproved(),
                     null);
-            if(updatedRow > 0) {
-                return new CommonResponseDTO(200, "OK");
-            }
-            return new CommonResponseDTO(500, "Could not insert data!");
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            return new CommonResponseDTO(500, e.getMessage());
+            throw new UsersException("ERRDAO001", e.getMessage());
+        }
+    }
+
+    /*TODO: Create an IS_DELETED COLUMN AND UPDATE IT INSTEAD OF DELETING DATA*/
+    @Override
+    @Lock(LockMode.PESSIMISTIC_WRITE)
+    public Integer deleteCompanyStaff(Long companyStaffId) {
+        try {
+            return jdbcTemplate.update(QueryConstants.DELETE_COMPANY_STAFF_QUERY,
+                    companyStaffId);
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
+            throw new UsersException("ERRDAO001", e.getMessage());
+        }
+    }
+
+    @Override
+    @Lock(LockMode.PESSIMISTIC_WRITE)
+    public Integer approveCompanyStaff(Long companyStaffId) {
+        try {
+            return jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
+                    IsApprovedEnum.ACTIVE.getTextType(),
+                    companyStaffId);
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
+            throw new UsersException("ERRDAO001", e.getMessage());
         }
     }
 

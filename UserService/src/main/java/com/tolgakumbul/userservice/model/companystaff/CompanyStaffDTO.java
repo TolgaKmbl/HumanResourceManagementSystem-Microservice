@@ -1,4 +1,4 @@
-package com.tolgakumbul.userservice.model;
+package com.tolgakumbul.userservice.model.companystaff;
 
 import lombok.*;
 
@@ -15,7 +15,7 @@ public class CompanyStaffDTO {
     private Long userId;
     private String firstName;
     private String lastName;
-    private String isApproved;
+    private IsApprovedEnum isApproved;
     private LocalDateTime approvalDate;
 
 }

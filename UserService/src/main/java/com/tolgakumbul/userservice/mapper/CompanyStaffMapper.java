@@ -3,17 +3,14 @@ package com.tolgakumbul.userservice.mapper;
 import com.google.protobuf.Timestamp;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
+import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffGeneralResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.IsApproved;
 import com.tolgakumbul.userservice.entity.CompanyStaff;
-import com.tolgakumbul.userservice.model.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.CompanyStaffDTO;
-import com.tolgakumbul.userservice.model.IsApprovedEnum;
-import io.grpc.internal.GrpcUtil;
-import net.devh.boot.grpc.common.util.GrpcUtils;
-import org.mapstruct.CollectionMappingStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
-import org.mapstruct.ValueMapping;
+import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
@@ -29,13 +26,17 @@ public interface CompanyStaffMapper {
 
     CompanyStaffData toGetCompanyStaffResponse(CompanyStaffDTO companyStaffDTO);
 
+    @Mapping(target = "isApproved", expression = "java(IsApprovedEnum.fromTextType(companyStaff.getIsApproved()))")
     CompanyStaffDTO toCompanyStaffDTO(CompanyStaff companyStaff);
 
     CompanyStaffDTO toCompanyStaffDTO(CompanyStaffData companyStaff);
 
+    @Mapping(target = "isApproved", expression = "java(companyStaffDTO.getIsApproved().getTextType())")
     CompanyStaff toCompanyStaff(CompanyStaffDTO companyStaffDTO);
 
     CommonResponse toCommonResponse(CommonResponseDTO commonResponseDTO);
+
+    CompanyStaffGeneralResponse toCompanyStaffGeneralResponse(CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO);
 
     @ValueMapping(source = "ACTIVE", target = "ACTIVE")
     @ValueMapping(source = "PASSIVE", target = "PASSIVE")
@@ -46,7 +47,7 @@ public interface CompanyStaffMapper {
     @ValueMapping(source = "PASSIVE", target = "PASSIVE")
     IsApproved toIsApproved(IsApprovedEnum isApprovedEnum);
 
-    default Timestamp localDateTimeToTimestamp(LocalDateTime localDateTime){
+    default Timestamp localDateTimeToTimestamp(LocalDateTime localDateTime) {
         Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
 
         return Timestamp.newBuilder()
@@ -55,8 +56,8 @@ public interface CompanyStaffMapper {
                 .build();
     }
 
-    default LocalDateTime timestampToLocalDateTimeTo(Timestamp timestamp){
-        return LocalDateTime.ofEpochSecond(timestamp.getSeconds() , timestamp.getNanos(),ZoneOffset.UTC);
+    default LocalDateTime timestampToLocalDateTimeTo(Timestamp timestamp) {
+        return LocalDateTime.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos(), ZoneOffset.UTC);
     }
 
 }

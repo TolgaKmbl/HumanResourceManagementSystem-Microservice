@@ -1,18 +1,21 @@
 package com.tolgakumbul.userservice.service;
 
-import com.tolgakumbul.proto.CommonProto.CommonResponse;
-import com.tolgakumbul.userservice.model.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.CompanyStaffDTO;
-
-import java.util.List;
+import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
 
 public interface CompanyStaffService {
 
-    List<CompanyStaffDTO> getAllCompanyStaff();
+    CompanyStaffListResponseDTO getAllCompanyStaff();
 
-    CompanyStaffDTO getCompanyStaffById(Long companyStaffId);
+    CompanyStaffGeneralResponseDTO getCompanyStaffById(Long companyStaffId);
 
-    CompanyStaffDTO getCompanyStaffByName(String firstName, String lastName);
+    CompanyStaffGeneralResponseDTO getCompanyStaffByName(String firstName, String lastName);
 
-    CommonResponseDTO insertCompanyStaff(CompanyStaffDTO companyStaffDTO);
+    CompanyStaffGeneralResponseDTO insertCompanyStaff(CompanyStaffDTO companyStaffDTO);
+
+    CommonResponseDTO deleteCompanyStaff(Long companyStaffId);
+
+    CompanyStaffGeneralResponseDTO approveCompanyStaff(Long companyStaffId);
 }

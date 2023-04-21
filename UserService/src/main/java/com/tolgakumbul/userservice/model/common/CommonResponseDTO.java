@@ -1,4 +1,4 @@
-package com.tolgakumbul.userservice.model;
+package com.tolgakumbul.userservice.model.common;
 
 import lombok.*;
 

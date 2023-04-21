@@ -1,16 +1,22 @@
 package com.tolgakumbul.userservice.service.impl;
 
-import com.tolgakumbul.proto.CommonProto.CommonResponse;
+import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.entity.CompanyStaff;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
-import com.tolgakumbul.userservice.model.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.CompanyStaffDTO;
+import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,11 +35,12 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     @Override
-    public List<CompanyStaffDTO> getAllCompanyStaff() {
+    public CompanyStaffListResponseDTO getAllCompanyStaff() {
         try {
             List<CompanyStaff> allCompanyStaff = companyStaffDao.getAllCompanyStaff();
             List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaff.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
-            return companyStaffDTOList;
+            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffDTOList);
+            return new CompanyStaffListResponseDTO(companyStaffDTOList, commonResponseDTO);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getAllCompanyStaff : {}", e.getMessage());
             throw new UsersException("ERRMSGCMPNY001");
@@ -42,10 +49,15 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     @Override
-    public CompanyStaffDTO getCompanyStaffById(Long companyStaffId) {
+    public CompanyStaffGeneralResponseDTO getCompanyStaffById(Long companyStaffId) {
         try {
             CompanyStaff companyStaffById = companyStaffDao.getCompanyStaffById(companyStaffId);
-            return MAPPER.toCompanyStaffDTO(companyStaffById);
+            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffById);
+            CompanyStaffDTO companyStaffData = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
+            if(companyStaffById != null){
+                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffById);
+            }
+            return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffById : {}", e.getMessage());
             throw new UsersException("ERRMSGCMPNY002");
@@ -53,10 +65,15 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     @Override
-    public CompanyStaffDTO getCompanyStaffByName(String firstName, String lastName) {
+    public CompanyStaffGeneralResponseDTO getCompanyStaffByName(String firstName, String lastName) {
         try {
             CompanyStaff companyStaffByName = companyStaffDao.getCompanyStaffByName(firstName, lastName);
-            return MAPPER.toCompanyStaffDTO(companyStaffByName);
+            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffByName);
+            CompanyStaffDTO companyStaffData = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
+            if(companyStaffByName != null){
+                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffByName);
+            }
+            return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffByName : {}", e.getMessage());
             throw new UsersException("ERRMSGCMPNY003");
@@ -64,13 +81,82 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     @Override
-    public CommonResponseDTO insertCompanyStaff(CompanyStaffDTO companyStaffDTO) {
+    @Transactional
+    public CompanyStaffGeneralResponseDTO insertCompanyStaff(CompanyStaffDTO companyStaffDTO) {
         try {
-            CommonResponseDTO commonResponseDTO = companyStaffDao.insertCompanyStaff(MAPPER.toCompanyStaff(companyStaffDTO));
-            return commonResponseDTO;
+            Integer affectedRowCount = companyStaffDao.insertCompanyStaff(MAPPER.toCompanyStaff(companyStaffDTO));
+            final CommonResponseDTO commonResponseDTO;
+            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
+
+            if (affectedRowCount > 0) {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
+                CompanyStaff companyStaffById = companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId());
+                if (companyStaffById != null) {
+                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffById);
+                }
+            } else {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not insert data!");
+            }
+
+            return new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.insertCompanyStaff : {}", e.getMessage());
             throw new UsersException("ERRMSGCMPNY004");
         }
     }
+
+    @Override
+    @Transactional
+    public CommonResponseDTO deleteCompanyStaff(Long companyStaffId) {
+        try {
+            Integer affectedRowCount = companyStaffDao.deleteCompanyStaff(companyStaffId);
+            final CommonResponseDTO commonResponseDTO;
+            if (affectedRowCount == 1) {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
+            } else {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not delete data!");
+            }
+            return commonResponseDTO;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.deleteCompanyStaff : {}", e.getMessage());
+            throw new UsersException("ERRMSGCMPNY005");
+        }
+    }
+
+    @Override
+    @Transactional
+    public CompanyStaffGeneralResponseDTO approveCompanyStaff(Long companyStaffId) {
+        try {
+            Integer affectedRowCount = companyStaffDao.approveCompanyStaff(companyStaffId);
+            final CommonResponseDTO commonResponseDTO;
+            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
+
+            if (affectedRowCount > 0) {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
+                CompanyStaff companyStaffById = companyStaffDao.getCompanyStaffById(companyStaffId);
+                if (companyStaffById != null) {
+                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffById);
+                }
+            } else {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not update company staff!");
+            }
+
+            return new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.approveCompanyStaff : {}", e.getMessage());
+            throw new UsersException("ERRMSGCMPNY006");
+        }
+    }
+
+
+    private CommonResponseDTO getCommonResponseDTO(Object companyStaff) {
+        boolean isList = companyStaff instanceof List;
+        boolean isEmpty = isList ? CollectionUtils.isEmpty((List<?>) companyStaff) : ObjectUtils.isEmpty(companyStaff);
+
+        int statusCode = isEmpty ? Constants.STATUS_INTERNAL_ERROR : Constants.STATUS_OK;
+        String message = isEmpty ? (isList ? "List is empty" : "Could not fetch data by name!") : Constants.OK;
+
+        return new CommonResponseDTO(statusCode, message);
+    }
+
 }
