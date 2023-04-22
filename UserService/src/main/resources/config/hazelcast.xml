@@ -27,4 +27,8 @@
         <max-idle-seconds>60</max-idle-seconds>
         <time-to-live-seconds>60</time-to-live-seconds>
     </map>
+    <map name="companyStaffListMap">
+        <max-idle-seconds>60</max-idle-seconds>
+        <time-to-live-seconds>60</time-to-live-seconds>
+    </map>
 </hazelcast>

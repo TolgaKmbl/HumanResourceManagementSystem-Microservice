@@ -14,11 +14,11 @@ import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class CompanyStaffDaoImpl implements CompanyStaffDao {
@@ -37,7 +37,20 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_READ)
     public List<CompanyStaffEntity> getAllCompanyStaff() {
         try {
-            return jdbcTemplate.query(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY, new CompanyStaffRowMapper());
+            HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
+            hazelcastCacheModel.setKeyName("AllCompanyStaff");
+            hazelcastCacheModel.setMapName("companyStaffListMap");
+            List<CompanyStaffEntity> companyStaffEntityList = (List<CompanyStaffEntity>) hazelcastCacheHelper.get(hazelcastCacheModel);
+            if (CollectionUtils.isEmpty(companyStaffEntityList)) {
+                LOGGER.info("GetAllCompanyStaff.CompanyStaffEntityList has not found on cache");
+                companyStaffEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY, new CompanyStaffRowMapper());
+                hazelcastCacheModel.setCachedObject(companyStaffEntityList);
+                hazelcastCacheHelper.put(hazelcastCacheModel);
+                LOGGER.info("GetAllCompanyStaff.CompanyStaffEntityList put on cache {}", hazelcastCacheModel);
+                return companyStaffEntityList;
+            }
+            LOGGER.info("GetAllCompanyStaff.CompanyStaffEntityList found on cache {}", companyStaffEntityList);
+            return companyStaffEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getAllCompanyStaff : {}", e.getMessage());
             return new ArrayList<>();
@@ -50,10 +63,10 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     public CompanyStaffEntity getCompanyStaffById(Long companyStaffId) {
         try {
             HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
-            hazelcastCacheModel.setKeyName("CompanyStaffById"+companyStaffId);
+            hazelcastCacheModel.setKeyName("CompanyStaffById" + companyStaffId);
             hazelcastCacheModel.setMapName("companyStaffByIdMap");
             CompanyStaffEntity companyStaffEntity = (CompanyStaffEntity) hazelcastCacheHelper.get(hazelcastCacheModel);
-            if(ObjectUtils.isEmpty(companyStaffEntity)){
+            if (ObjectUtils.isEmpty(companyStaffEntity)) {
                 LOGGER.info("CompanyStaffById.CompanyStaffEntity has not found on cache");
                 companyStaffEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_ID_QUERY,
                         new CompanyStaffRowMapper(),
@@ -75,9 +88,22 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_READ)
     public CompanyStaffEntity getCompanyStaffByName(String firstName, String lastName) {
         try {
-            return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_NAME_QUERY,
-                    new CompanyStaffRowMapper(),
-                    firstName, lastName);
+            HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
+            hazelcastCacheModel.setKeyName("CompanyStaffByName" + firstName + lastName);
+            hazelcastCacheModel.setMapName("companyStaffByNameMap");
+            CompanyStaffEntity companyStaffEntity = (CompanyStaffEntity) hazelcastCacheHelper.get(hazelcastCacheModel);
+            if (ObjectUtils.isEmpty(companyStaffEntity)) {
+                LOGGER.info("CompanyStaffByName.CompanyStaffEntity has not found on cache");
+                companyStaffEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_NAME_QUERY,
+                        new CompanyStaffRowMapper(),
+                        firstName, lastName);
+                hazelcastCacheModel.setCachedObject(companyStaffEntity);
+                hazelcastCacheHelper.put(hazelcastCacheModel);
+                LOGGER.info("CompanyStaffByName.CompanyStaffEntity put on cache {}", hazelcastCacheModel);
+                return companyStaffEntity;
+            }
+            LOGGER.info("CompanyStaffByName.CompanyStaffEntity found on cache {}", companyStaffEntity);
+            return companyStaffEntity;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             return new CompanyStaffEntity();
@@ -88,12 +114,14 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer insertCompanyStaff(CompanyStaffEntity companyStaffEntity) {
         try {
-            return jdbcTemplate.update(QueryConstants.INSERT_COMPANY_STAFF_QUERY,
+            int affectedRowCount = jdbcTemplate.update(QueryConstants.INSERT_COMPANY_STAFF_QUERY,
                     companyStaffEntity.getUserId(),
                     companyStaffEntity.getFirstName(),
                     companyStaffEntity.getLastName(),
                     companyStaffEntity.getIsApproved(),
                     null);
+            hazelcastCacheHelper.removeAll();
+            return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             throw new UsersException("ERRDAO001", e.getMessage());
@@ -101,13 +129,14 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     }
 
     /*TODO: Create an IS_DELETED COLUMN AND UPDATE IT INSTEAD OF DELETING DATA*/
-    /*TODO: Remove from cache*/
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer deleteCompanyStaff(Long companyStaffId) {
         try {
-            return jdbcTemplate.update(QueryConstants.DELETE_COMPANY_STAFF_QUERY,
+            int affectedRowCount = jdbcTemplate.update(QueryConstants.DELETE_COMPANY_STAFF_QUERY,
                     companyStaffId);
+            hazelcastCacheHelper.removeAll();
+            return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             throw new UsersException("ERRDAO001", e.getMessage());
@@ -118,9 +147,11 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer approveCompanyStaff(Long companyStaffId) {
         try {
-            return jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
+            int affectedRowCount = jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
                     IsApprovedEnum.ACTIVE.getTextType(),
                     companyStaffId);
+            hazelcastCacheHelper.removeAll();
+            return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             throw new UsersException("ERRDAO001", e.getMessage());

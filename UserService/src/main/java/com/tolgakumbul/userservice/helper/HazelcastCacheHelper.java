@@ -1,6 +1,8 @@
 package com.tolgakumbul.userservice.helper;
 
+import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 import com.tolgakumbul.userservice.helper.model.HazelcastCacheModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,5 +38,13 @@ public class HazelcastCacheHelper {
             LOGGER.error("ERROR while putting {} into cache: {}", cacheModel, e.getMessage());
         }
         return false;
+    }
+
+    public void removeAll(){
+        HazelcastInstance hazelcast = Hazelcast.getHazelcastInstanceByName("hazelcast-instance");
+        hazelcast.getDistributedObjects().stream()
+                .filter(object -> object instanceof IMap)
+                .map(object -> (IMap<Object, Object>) object)
+                .forEach(IMap::clear);
     }
 }
