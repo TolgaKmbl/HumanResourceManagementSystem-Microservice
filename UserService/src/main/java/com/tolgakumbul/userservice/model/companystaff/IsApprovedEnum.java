@@ -13,6 +13,9 @@ public enum IsApprovedEnum {
     }
 
     public static IsApprovedEnum fromTextType(String textType) {
+        if(textType == null){
+            return IsApprovedEnum.PASSIVE;
+        }
         for (IsApprovedEnum e : IsApprovedEnum.values()) {
             if (e.textType.equals(textType)) {
                 return e;

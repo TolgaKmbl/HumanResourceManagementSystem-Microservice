@@ -19,7 +19,8 @@ import java.time.ZoneOffset;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
-        componentModel = "spring")
+        componentModel = "spring",
+        imports = {LocalDateTime.class})
 public interface CompanyStaffMapper {
 
     CompanyStaffMapper INSTANCE = Mappers.getMapper(CompanyStaffMapper.class);
@@ -27,6 +28,10 @@ public interface CompanyStaffMapper {
     CompanyStaffData toGetCompanyStaffResponse(CompanyStaffDTO companyStaffDTO);
 
     @Mapping(target = "isApproved", expression = "java(IsApprovedEnum.fromTextType(companyStaffEntity.getIsApproved()))")
+    @Mapping(target = "userId", expression = "java(companyStaffEntity.getUserId() == null ? 0 : companyStaffEntity.getUserId())")
+    @Mapping(target = "firstName", source = "firstName", defaultValue = " ")
+    @Mapping(target = "lastName", source = "lastName", defaultValue = " ")
+    @Mapping(target = "approvalDate", source = "approvalDate", defaultExpression = "java(LocalDateTime.of(1900,1,1,0,0,0,0))")
     CompanyStaffDTO toCompanyStaffDTO(CompanyStaffEntity companyStaffEntity);
 
     CompanyStaffDTO toCompanyStaffDTO(CompanyStaffData companyStaff);

@@ -48,7 +48,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
-            return null;
+            return new CompanyStaffEntity();
         }
     }
 
@@ -61,7 +61,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     firstName, lastName);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            return null;
+            return new CompanyStaffEntity();
         }
     }
 

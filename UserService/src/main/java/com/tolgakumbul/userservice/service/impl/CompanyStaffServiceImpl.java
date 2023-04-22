@@ -53,10 +53,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
         try {
             CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffId);
             final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffEntityById);
-            CompanyStaffDTO companyStaffData = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
-            if(companyStaffEntityById != null){
-                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
-            }
+            CompanyStaffDTO companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
             return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffById : {}", e.getMessage());
@@ -69,10 +66,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
         try {
             CompanyStaffEntity companyStaffEntityByName = companyStaffDao.getCompanyStaffByName(firstName, lastName);
             final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffEntityByName);
-            CompanyStaffDTO companyStaffData = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
-            if(companyStaffEntityByName != null){
-                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityByName);
-            }
+            CompanyStaffDTO companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityByName);
             return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffByName : {}", e.getMessage());
@@ -86,14 +80,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
         try {
             Integer affectedRowCount = companyStaffDao.insertCompanyStaff(MAPPER.toCompanyStaff(companyStaffDTO));
             final CommonResponseDTO commonResponseDTO;
-            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
-
+            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO();
             if (affectedRowCount == 1) {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
                 CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId());
-                if (companyStaffEntityById != null) {
-                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
-                }
+                companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
             } else {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not insert data!");
             }
@@ -129,14 +120,12 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
         try {
             Integer affectedRowCount = companyStaffDao.approveCompanyStaff(companyStaffId);
             final CommonResponseDTO commonResponseDTO;
-            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
+            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO();
 
             if (affectedRowCount == 1) {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
                 CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffId);
-                if (companyStaffEntityById != null) {
-                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
-                }
+                companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
             } else {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not update company staff!");
             }
