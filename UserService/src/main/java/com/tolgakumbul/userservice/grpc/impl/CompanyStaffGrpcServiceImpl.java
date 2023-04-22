@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @GrpcService
 public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.CompanyStaffGrpcServiceImplBase implements CompanyStaffGrpcService {
 
-    private CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
+    private final CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
     private final CompanyStaffService companyStaffService;
 
     public CompanyStaffGrpcServiceImpl(CompanyStaffService companyStaffService) {

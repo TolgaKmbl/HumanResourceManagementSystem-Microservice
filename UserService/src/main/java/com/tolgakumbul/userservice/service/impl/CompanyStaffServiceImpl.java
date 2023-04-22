@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 @Service
 public class CompanyStaffServiceImpl implements CompanyStaffService {
 
-    private static Logger LOGGER = LogManager.getLogger(CompanyStaffServiceImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(CompanyStaffServiceImpl.class);
 
-    private CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
+    private final CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
 
     private final CompanyStaffDao companyStaffDao;
 

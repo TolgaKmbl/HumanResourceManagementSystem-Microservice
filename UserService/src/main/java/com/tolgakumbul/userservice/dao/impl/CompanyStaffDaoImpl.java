@@ -19,7 +19,7 @@ import java.util.List;
 @Repository
 public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
-    private static Logger LOGGER = LogManager.getLogger(CompanyStaffDaoImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(CompanyStaffDaoImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -44,8 +44,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     public CompanyStaffEntity getCompanyStaffById(Long companyStaffId) {
         try {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_ID_QUERY,
-                    new Object[]{companyStaffId},
-                    new CompanyStaffRowMapper());
+                    new CompanyStaffRowMapper(),
+                    companyStaffId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
             return null;
@@ -57,8 +57,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     public CompanyStaffEntity getCompanyStaffByName(String firstName, String lastName) {
         try {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_NAME_QUERY,
-                    new Object[]{firstName, lastName},
-                    new CompanyStaffRowMapper());
+                    new CompanyStaffRowMapper(),
+                    firstName, lastName);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             return null;
