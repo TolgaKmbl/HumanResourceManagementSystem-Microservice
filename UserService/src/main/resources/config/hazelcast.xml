@@ -1,0 +1,30 @@
+<hazelcast xmlns="http://www.hazelcast.com/schema/config"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.hazelcast.com/schema/config
+           http://www.hazelcast.com/schema/config/hazelcast-config-3.12.xsd">
+    <instance-name>hazelcast-instance</instance-name>
+    <network>
+        <port port-count="3">5701</port>
+        <join>
+            <multicast enabled="false"/>
+            <tcp-ip enabled="true">
+                <member-list>
+                    <member>127.0.0.1</member>
+                    <member>127.0.0.1</member>
+                    <member>127.0.0.1</member>
+                </member-list>
+            </tcp-ip>
+        </join>
+        <interfaces enabled="true">
+            <interface>127.0.0.1</interface>
+        </interfaces>
+    </network>
+    <map name="companyStaffByIdMap">
+        <max-idle-seconds>60</max-idle-seconds>
+        <time-to-live-seconds>60</time-to-live-seconds>
+    </map>
+    <map name="companyStaffByNameMap">
+        <max-idle-seconds>60</max-idle-seconds>
+        <time-to-live-seconds>60</time-to-live-seconds>
+    </map>
+</hazelcast>

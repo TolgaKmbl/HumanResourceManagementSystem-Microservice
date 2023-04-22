@@ -5,6 +5,8 @@ import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.dao.mapper.CompanyStaffRowMapper;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
+import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
+import com.tolgakumbul.userservice.helper.model.HazelcastCacheModel;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,9 +14,11 @@ import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class CompanyStaffDaoImpl implements CompanyStaffDao {
@@ -22,9 +26,11 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     private static final Logger LOGGER = LogManager.getLogger(CompanyStaffDaoImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
+    private final HazelcastCacheHelper hazelcastCacheHelper;
 
-    public CompanyStaffDaoImpl(JdbcTemplate jdbcTemplate) {
+    public CompanyStaffDaoImpl(JdbcTemplate jdbcTemplate, HazelcastCacheHelper hazelcastCacheHelper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.hazelcastCacheHelper = hazelcastCacheHelper;
     }
 
     @Override
@@ -43,9 +49,22 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_READ)
     public CompanyStaffEntity getCompanyStaffById(Long companyStaffId) {
         try {
-            return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_ID_QUERY,
-                    new CompanyStaffRowMapper(),
-                    companyStaffId);
+            HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
+            hazelcastCacheModel.setKeyName("CompanyStaffById"+companyStaffId);
+            hazelcastCacheModel.setMapName("companyStaffByIdMap");
+            CompanyStaffEntity companyStaffEntity = (CompanyStaffEntity) hazelcastCacheHelper.get(hazelcastCacheModel);
+            if(ObjectUtils.isEmpty(companyStaffEntity)){
+                LOGGER.info("CompanyStaffById.CompanyStaffEntity has not found on cache");
+                companyStaffEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_ID_QUERY,
+                        new CompanyStaffRowMapper(),
+                        companyStaffId);
+                hazelcastCacheModel.setCachedObject(companyStaffEntity);
+                hazelcastCacheHelper.put(hazelcastCacheModel);
+                LOGGER.info("CompanyStaffById.CompanyStaffEntity put on cache {}", hazelcastCacheModel);
+                return companyStaffEntity;
+            }
+            LOGGER.info("CompanyStaffById.CompanyStaffEntity found on cache {}", companyStaffEntity);
+            return companyStaffEntity;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
             return new CompanyStaffEntity();
@@ -82,6 +101,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     }
 
     /*TODO: Create an IS_DELETED COLUMN AND UPDATE IT INSTEAD OF DELETING DATA*/
+    /*TODO: Remove from cache*/
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer deleteCompanyStaff(Long companyStaffId) {
