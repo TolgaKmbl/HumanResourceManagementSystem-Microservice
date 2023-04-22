@@ -2,7 +2,7 @@ package com.tolgakumbul.userservice.service.impl;
 
 import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
-import com.tolgakumbul.userservice.entity.CompanyStaff;
+import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
@@ -37,8 +37,8 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     @Override
     public CompanyStaffListResponseDTO getAllCompanyStaff() {
         try {
-            List<CompanyStaff> allCompanyStaff = companyStaffDao.getAllCompanyStaff();
-            List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaff.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
+            List<CompanyStaffEntity> allCompanyStaffEntity = companyStaffDao.getAllCompanyStaff();
+            List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaffEntity.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
             final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffDTOList);
             return new CompanyStaffListResponseDTO(companyStaffDTOList, commonResponseDTO);
         } catch (Exception e) {
@@ -51,11 +51,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     @Override
     public CompanyStaffGeneralResponseDTO getCompanyStaffById(Long companyStaffId) {
         try {
-            CompanyStaff companyStaffById = companyStaffDao.getCompanyStaffById(companyStaffId);
-            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffById);
+            CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffId);
+            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffEntityById);
             CompanyStaffDTO companyStaffData = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
-            if(companyStaffById != null){
-                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffById);
+            if(companyStaffEntityById != null){
+                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
             }
             return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
         } catch (Exception e) {
@@ -67,11 +67,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     @Override
     public CompanyStaffGeneralResponseDTO getCompanyStaffByName(String firstName, String lastName) {
         try {
-            CompanyStaff companyStaffByName = companyStaffDao.getCompanyStaffByName(firstName, lastName);
-            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffByName);
+            CompanyStaffEntity companyStaffEntityByName = companyStaffDao.getCompanyStaffByName(firstName, lastName);
+            final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffEntityByName);
             CompanyStaffDTO companyStaffData = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
-            if(companyStaffByName != null){
-                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffByName);
+            if(companyStaffEntityByName != null){
+                companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityByName);
             }
             return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
         } catch (Exception e) {
@@ -88,11 +88,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             final CommonResponseDTO commonResponseDTO;
             CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
 
-            if (affectedRowCount > 0) {
+            if (affectedRowCount == 1) {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
-                CompanyStaff companyStaffById = companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId());
-                if (companyStaffById != null) {
-                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffById);
+                CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId());
+                if (companyStaffEntityById != null) {
+                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
                 }
             } else {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not insert data!");
@@ -131,11 +131,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             final CommonResponseDTO commonResponseDTO;
             CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO(0L, "", "", IsApprovedEnum.PASSIVE, null);
 
-            if (affectedRowCount > 0) {
+            if (affectedRowCount == 1) {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
-                CompanyStaff companyStaffById = companyStaffDao.getCompanyStaffById(companyStaffId);
-                if (companyStaffById != null) {
-                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffById);
+                CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffId);
+                if (companyStaffEntityById != null) {
+                    companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
                 }
             } else {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not update company staff!");

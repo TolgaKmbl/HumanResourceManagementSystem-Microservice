@@ -3,7 +3,7 @@ package com.tolgakumbul.userservice.dao.impl;
 import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.dao.mapper.CompanyStaffRowMapper;
-import com.tolgakumbul.userservice.entity.CompanyStaff;
+import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +29,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
-    public List<CompanyStaff> getAllCompanyStaff() {
+    public List<CompanyStaffEntity> getAllCompanyStaff() {
         try {
             return jdbcTemplate.query(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY, new CompanyStaffRowMapper());
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
-    public CompanyStaff getCompanyStaffById(Long companyStaffId) {
+    public CompanyStaffEntity getCompanyStaffById(Long companyStaffId) {
         try {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_ID_QUERY,
                     new Object[]{companyStaffId},
@@ -54,7 +54,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
-    public CompanyStaff getCompanyStaffByName(String firstName, String lastName) {
+    public CompanyStaffEntity getCompanyStaffByName(String firstName, String lastName) {
         try {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_NAME_QUERY,
                     new Object[]{firstName, lastName},
@@ -67,13 +67,13 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
-    public Integer insertCompanyStaff(CompanyStaff companyStaff) {
+    public Integer insertCompanyStaff(CompanyStaffEntity companyStaffEntity) {
         try {
             return jdbcTemplate.update(QueryConstants.INSERT_COMPANY_STAFF_QUERY,
-                    companyStaff.getUserId(),
-                    companyStaff.getFirstName(),
-                    companyStaff.getLastName(),
-                    companyStaff.getIsApproved(),
+                    companyStaffEntity.getUserId(),
+                    companyStaffEntity.getFirstName(),
+                    companyStaffEntity.getLastName(),
+                    companyStaffEntity.getIsApproved(),
                     null);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());

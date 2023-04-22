@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "JOB_SEEKERS")
-public class JobSeekers {
+public class JobSeekersEntity {
 
     @Column("USER_ID")
     private Long userId;

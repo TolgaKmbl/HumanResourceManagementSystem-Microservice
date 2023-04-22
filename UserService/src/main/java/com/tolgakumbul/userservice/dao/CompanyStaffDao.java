@@ -1,19 +1,19 @@
 package com.tolgakumbul.userservice.dao;
 
 
-import com.tolgakumbul.userservice.entity.CompanyStaff;
+import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 
 import java.util.List;
 
 public interface CompanyStaffDao {
 
-    List<CompanyStaff> getAllCompanyStaff();
+    List<CompanyStaffEntity> getAllCompanyStaff();
 
-    CompanyStaff getCompanyStaffById(Long companyStaffId);
+    CompanyStaffEntity getCompanyStaffById(Long companyStaffId);
 
-    CompanyStaff getCompanyStaffByName(String firstName, String lastName);
+    CompanyStaffEntity getCompanyStaffByName(String firstName, String lastName);
 
-    Integer insertCompanyStaff(CompanyStaff companyStaff);
+    Integer insertCompanyStaff(CompanyStaffEntity companyStaffEntity);
 
     Integer deleteCompanyStaff(Long companyStaffId);
 

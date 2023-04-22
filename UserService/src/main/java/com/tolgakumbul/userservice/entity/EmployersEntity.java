@@ -10,7 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "EMPLOYERS")
-public class Employers {
+public class EmployersEntity {
 
     @Column("USER_ID")
     private Long userId;

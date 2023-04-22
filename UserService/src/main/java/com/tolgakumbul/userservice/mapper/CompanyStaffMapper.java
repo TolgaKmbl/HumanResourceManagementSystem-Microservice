@@ -5,7 +5,7 @@ import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffGeneralResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.IsApproved;
-import com.tolgakumbul.userservice.entity.CompanyStaff;
+import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
@@ -26,13 +26,13 @@ public interface CompanyStaffMapper {
 
     CompanyStaffData toGetCompanyStaffResponse(CompanyStaffDTO companyStaffDTO);
 
-    @Mapping(target = "isApproved", expression = "java(IsApprovedEnum.fromTextType(companyStaff.getIsApproved()))")
-    CompanyStaffDTO toCompanyStaffDTO(CompanyStaff companyStaff);
+    @Mapping(target = "isApproved", expression = "java(IsApprovedEnum.fromTextType(companyStaffEntity.getIsApproved()))")
+    CompanyStaffDTO toCompanyStaffDTO(CompanyStaffEntity companyStaffEntity);
 
     CompanyStaffDTO toCompanyStaffDTO(CompanyStaffData companyStaff);
 
     @Mapping(target = "isApproved", expression = "java(companyStaffDTO.getIsApproved().getTextType())")
-    CompanyStaff toCompanyStaff(CompanyStaffDTO companyStaffDTO);
+    CompanyStaffEntity toCompanyStaff(CompanyStaffDTO companyStaffDTO);
 
     CommonResponse toCommonResponse(CommonResponseDTO commonResponseDTO);
 
