@@ -7,17 +7,17 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaProducerHelper<T> {
+public class KafkaProducerHelper {
 
     private static final Logger LOGGER = LogManager.getLogger(KafkaProducerHelper.class);
 
-    private final KafkaTemplate<String, T> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public KafkaProducerHelper(KafkaTemplate<String, T> kafkaTemplate) {
+    public KafkaProducerHelper(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public boolean send(KafkaProducerModel<T> kafkaProducerModel) {
+    public boolean send(KafkaProducerModel kafkaProducerModel) {
         try {
             kafkaTemplate.send(kafkaProducerModel.getTopicName(), kafkaProducerModel.getKeyName(), kafkaProducerModel.getKafkaObject());
             return true;

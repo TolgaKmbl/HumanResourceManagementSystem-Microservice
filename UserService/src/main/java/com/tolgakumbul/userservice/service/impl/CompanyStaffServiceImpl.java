@@ -4,6 +4,8 @@ import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
+import com.tolgakumbul.userservice.helper.KafkaProducerHelper;
+import com.tolgakumbul.userservice.helper.model.KafkaProducerModel;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
@@ -12,7 +14,7 @@ import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDT
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -29,11 +31,14 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     private final CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
 
     private final CompanyStaffDao companyStaffDao;
-    private final KafkaTemplate<String, CompanyStaffGeneralResponseDTO> kafkaTemplate;
+    private final KafkaProducerHelper kafkaProducerHelper;
 
-    public CompanyStaffServiceImpl(CompanyStaffDao companyStaffDao, KafkaTemplate<String, CompanyStaffGeneralResponseDTO> kafkaTemplate) {
+    @Value("${kafka.topic.companystaffgeneralresponse.name}")
+    private String companyStaffGeneralResponseTopic;
+
+    public CompanyStaffServiceImpl(CompanyStaffDao companyStaffDao, KafkaProducerHelper kafkaProducerHelper) {
         this.companyStaffDao = companyStaffDao;
-        this.kafkaTemplate = kafkaTemplate;
+        this.kafkaProducerHelper = kafkaProducerHelper;
     }
 
     @Override
@@ -92,7 +97,13 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             }
 
             CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
-            kafkaTemplate.send("custom-notification", "company-staff", companyStaffGeneralResponseDTO);
+
+            KafkaProducerModel kafkaProducerModel = new KafkaProducerModel();
+            kafkaProducerModel.setTopicName(companyStaffGeneralResponseTopic);
+            kafkaProducerModel.setKeyName("company-general");
+            kafkaProducerModel.setKafkaObject(companyStaffGeneralResponseDTO);
+            kafkaProducerHelper.send(kafkaProducerModel);
+
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.insertCompanyStaff : {}", e.getMessage());

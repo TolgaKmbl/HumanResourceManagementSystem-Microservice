@@ -10,8 +10,8 @@ public class LoggingServiceImpl {
 
     private final Logger logger = LoggerFactory.getLogger(LoggingServiceImpl.class);
 
-    @KafkaListener(topics="custom-notification", groupId="group-id")
-    public void consumeCustom(Object message) {
+    @KafkaListener(topics = "${kafka.topic.companystaffgeneralresponse.name}", groupId = "group-id")
+    public void consumeCompanyStaffGeneralResponse(Object message) {
         logger.info("Received data {}", message);
     }
 
