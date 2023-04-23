@@ -19,6 +19,7 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
 
     private static final String SECRET = "576D5A7134743777217A24432646294A404E635266556A586E3272357538782F";
+    private static final String ISSUER = "HumanResourceManagementSystemApp";
 
     @Override
     public String extractUsername(String token) {
@@ -41,6 +42,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
+                .setIssuer(ISSUER)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5))  // 5 mins valid token
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

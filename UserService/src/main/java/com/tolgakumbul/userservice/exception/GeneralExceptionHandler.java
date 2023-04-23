@@ -28,9 +28,10 @@ public class GeneralExceptionHandler {
             return Status.INTERNAL.withDescription(generalErrorResponse.getErrorCode()).withCause(exception).augmentDescription(generalErrorResponse.getErrorMessage()).asRuntimeException(metadata);
 
         } else {
-            GeneralErrorResponse generalErrorResponse = defaultErrorResponse();
+            /*GeneralErrorResponse generalErrorResponse = defaultErrorResponse();
             Metadata metadata = getMetadata(generalErrorResponse);
-            return Status.UNKNOWN.withDescription(generalErrorResponse.getErrorCode()).withCause(exception).augmentDescription(generalErrorResponse.getErrorMessage()).asRuntimeException(metadata);
+            return Status.UNKNOWN.withDescription(generalErrorResponse.getErrorCode()).withCause(exception).augmentDescription(generalErrorResponse.getErrorMessage()).asRuntimeException(metadata);*/
+            return Status.UNKNOWN.withDescription(exception.getMessage()).withCause(exception).asRuntimeException();
         }
     }
 
