@@ -9,15 +9,7 @@ public class GrpcInterceptor implements ServerInterceptor {
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
-        /*logRequest(call.getMethodDescriptor().getFullMethodName(), headers);
-        ServerCall<ReqT, RespT> wrappedCall = new ForwardingServerCall.SimpleForwardingServerCall<ReqT, RespT>(call) {
-            @Override
-            public void sendMessage(RespT message) {
-                logResponse(message);
-                super.sendMessage(message);
-            }
-        };
-        return next.startCall(wrappedCall, headers);*/
+        /*TODO: Take the username from the metadata headers and match it with the one in the token*/
         String authToken = headers.get(Metadata.Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER));
         if (authToken == null || !authToken.startsWith("Bearer ")) {
             throw new StatusRuntimeException(Status.UNAUTHENTICATED.withDescription("Invalid authorization header"));
