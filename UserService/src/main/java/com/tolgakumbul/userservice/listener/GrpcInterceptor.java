@@ -1,7 +1,6 @@
 package com.tolgakumbul.userservice.listener;
 
 import com.tolgakumbul.userservice.helper.JwtValidator;
-import com.tolgakumbul.userservice.service.impl.CompanyStaffServiceImpl;
 import io.grpc.*;
 import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
 import org.apache.logging.log4j.LogManager;
