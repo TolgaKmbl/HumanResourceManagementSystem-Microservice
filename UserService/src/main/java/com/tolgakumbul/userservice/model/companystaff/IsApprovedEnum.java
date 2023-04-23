@@ -2,7 +2,10 @@ package com.tolgakumbul.userservice.model.companystaff;
 
 import lombok.Getter;
 
-public enum IsApprovedEnum {
+import java.io.Serializable;
+
+public enum IsApprovedEnum implements Serializable {
+
     ACTIVE("A"), PASSIVE("P");
 
     @Getter

@@ -12,6 +12,7 @@ import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDT
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -28,9 +29,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     private final CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
 
     private final CompanyStaffDao companyStaffDao;
+    private final KafkaTemplate<String, CompanyStaffGeneralResponseDTO> kafkaTemplate;
 
-    public CompanyStaffServiceImpl(CompanyStaffDao companyStaffDao) {
+    public CompanyStaffServiceImpl(CompanyStaffDao companyStaffDao, KafkaTemplate<String, CompanyStaffGeneralResponseDTO> kafkaTemplate) {
         this.companyStaffDao = companyStaffDao;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -88,7 +91,9 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not insert data!");
             }
 
-            return new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
+            kafkaTemplate.send("custom-notification", "company-staff", companyStaffGeneralResponseDTO);
+            return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.insertCompanyStaff : {}", e.getMessage());
             throw new UsersException("ERRMSGCMPNY004");

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Document(collection = "CompanyStaff")
 @Data
-public class CompanyStaffLoggingObject {
+public class CompanyStaffDto {
 
     @Id
     private String id;

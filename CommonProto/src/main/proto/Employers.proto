@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "EmployersProto";
+
+import "google/protobuf/empty.proto";
+import "Common.proto";
+
+package com.tolgakumbul.proto;
+
+message EmployerByIdRequest {
+  int64 userId = 1;
+}
+
+message EmployersByCompanyNameRequest {
+  string companyName = 2;
+}
+
+message EmployerGeneralResponse {
+  Employer employer = 1;
+  CommonResponse commonResponse = 2;
+}
+
+message GetAllEmployersResponse {
+  repeated Employer employerList = 1;
+  CommonResponse commonResponse = 2;
+}
+
+message Employer {
+  int64 userId = 1;
+  string companyName = 2;
+  string website = 3;
+  string phoneNum = 4;
+  string companyImgUrl = 5;
+}
+
+service EmployersGrpcService {
+  rpc GetAllEmployers (google.protobuf.Empty) returns (GetAllEmployersResponse){}
+  rpc GetEmployerById (EmployerByIdRequest) returns (EmployerGeneralResponse){}
+  rpc GetEmployersByCompanyName (EmployersByCompanyNameRequest) returns (EmployerGeneralResponse){}
+  rpc InsertEmployer (Employer) returns (EmployerGeneralResponse){}
+  rpc DeleteEmployer (EmployerByIdRequest) returns (CommonResponse){}
+}
