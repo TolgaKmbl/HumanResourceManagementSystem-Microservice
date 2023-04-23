@@ -1,11 +1,16 @@
 package com.tolgakumbul.userservice.listener;
 
 import com.tolgakumbul.userservice.helper.JwtValidator;
+import com.tolgakumbul.userservice.service.impl.CompanyStaffServiceImpl;
 import io.grpc.*;
 import net.devh.boot.grpc.server.interceptor.GrpcGlobalServerInterceptor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @GrpcGlobalServerInterceptor
 public class GrpcInterceptor implements ServerInterceptor {
+
+    private static final Logger LOGGER = LogManager.getLogger(GrpcInterceptor.class);
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {
@@ -30,10 +35,10 @@ public class GrpcInterceptor implements ServerInterceptor {
     }
 
     private void logRequest(String method, Metadata headers) {
-        System.out.println("Received request for method " + method + " with headers " + headers);
+        LOGGER.info("Received request for method {} with headers {}", method, headers);
     }
 
     private <RespT> void logResponse(RespT response) {
-        System.out.println("Sent response " + response);
+        LOGGER.info("Sent response {}", response);
     }
 }
