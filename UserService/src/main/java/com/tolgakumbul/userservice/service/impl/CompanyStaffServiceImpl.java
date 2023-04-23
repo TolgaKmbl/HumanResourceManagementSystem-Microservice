@@ -9,7 +9,6 @@ import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

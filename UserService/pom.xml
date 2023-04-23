@@ -75,6 +75,16 @@
             <version>0.11.2</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- APACHE KAFKA -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- CACHE -->
         <dependency>
             <artifactId>spring-boot-starter-cache</artifactId>
