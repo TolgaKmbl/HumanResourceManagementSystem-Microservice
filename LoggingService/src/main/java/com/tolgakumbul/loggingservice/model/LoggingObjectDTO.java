@@ -15,4 +15,5 @@ public class LoggingObjectDTO implements Serializable {
     private Object request;
     private Object response;
     private LocalDateTime instanceId;
+    private String errorMessage;
 }

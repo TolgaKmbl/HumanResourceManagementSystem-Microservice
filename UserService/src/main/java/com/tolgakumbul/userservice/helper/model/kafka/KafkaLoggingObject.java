@@ -1,4 +1,4 @@
-package com.tolgakumbul.userservice.helper.model;
+package com.tolgakumbul.userservice.helper.model.kafka;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +16,7 @@ public class KafkaLoggingObject implements Serializable {
     private String entityName;
     private Object request;
     private Object response;
+    private String errorMessage;
     private LocalDateTime instanceId;
 
 }

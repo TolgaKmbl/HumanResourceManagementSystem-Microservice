@@ -2,7 +2,7 @@ package com.tolgakumbul.userservice.helper.serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tolgakumbul.userservice.helper.model.KafkaLoggingObject;
+import com.tolgakumbul.userservice.helper.model.kafka.KafkaLoggingObject;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 

@@ -18,4 +18,5 @@ public class LoggingObjectEntity {
     private Object request;
     private Object response;
     private LocalDateTime instanceId;
+    private String errorMessage;
 }

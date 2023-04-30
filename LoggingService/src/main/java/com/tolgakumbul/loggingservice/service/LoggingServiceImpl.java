@@ -32,17 +32,20 @@ public class LoggingServiceImpl {
     }
 
     @KafkaListener(topics = "${kafka.topic.userservicegeneral.name}", groupId = "group-id")
-    public void consumeUsersServiceData(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY)String key, @Payload LoggingObjectDTO value) {
-        try{
+    public void consumeUsersServiceData(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key, @Payload LoggingObjectDTO value) {
+        try {
             LOGGER.info("Received data {}", value);
             LoggingObjectEntity loggingObject = MAPPER.toEntity(value, key);
-            repository.insert(loggingObject);
+            if (loggingObject.getErrorMessage().equalsIgnoreCase("")) {
+                repository.insert(loggingObject);
+            } else {
+                LoggingErrorObject errorObject = new LoggingErrorObject();
+                errorObject.setErrorMessage(loggingObject.getErrorMessage());
+                errorObject.setErrorDateTime(LocalDateTime.now());
+                errorRepository.insert(errorObject);
+            }
         } catch (Exception e) {
             LOGGER.error("Error receiving data {}: {}", value, e.getMessage());
-            LoggingErrorObject errorObject = new LoggingErrorObject();
-            errorObject.setErrorMessage(e.getMessage());
-            errorObject.setErrorDateTime(LocalDateTime.now());
-            errorRepository.insert(errorObject);
         }
     }
 

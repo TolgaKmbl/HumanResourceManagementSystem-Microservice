@@ -5,7 +5,7 @@ import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.KafkaProducerHelper;
-import com.tolgakumbul.userservice.helper.model.KafkaProducerModel;
+import com.tolgakumbul.userservice.helper.model.kafka.KafkaProducerModel;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
@@ -104,6 +104,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.insertCompanyStaff : {}", e.getMessage());
+            sendKafkaTopicForError(companyStaffDTO, "INSERT", e.getMessage());
             throw new UsersException("ERRMSGCMPNY004");
         }
     }
@@ -161,13 +162,25 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
 
-    private void sendKafkaTopic(CompanyStaffDTO companyStaffDTO, CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO, String operationName) {
+    private void sendKafkaTopic(Object request, Object response, String operationName) {
         KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(companyStaffGeneralResponseTopic,
                 entityNameForKafka+"-"+operationName,
-                companyStaffDTO,
-                companyStaffGeneralResponseDTO,
+                request,
+                response,
                 operationName,
-                entityNameForKafka);
+                entityNameForKafka,
+                "");
+        kafkaProducerHelper.send(kafkaProducerModel);
+    }
+
+    private void sendKafkaTopicForError(Object request, String operationName, String errorMessage) {
+        KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(companyStaffGeneralResponseTopic,
+                entityNameForKafka+"-"+operationName,
+                request,
+                null,
+                operationName,
+                entityNameForKafka,
+                errorMessage);
         kafkaProducerHelper.send(kafkaProducerModel);
     }
 

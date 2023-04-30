@@ -3,7 +3,7 @@ package com.tolgakumbul.userservice.helper;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
-import com.tolgakumbul.userservice.helper.model.HazelcastCacheModel;
+import com.tolgakumbul.userservice.helper.model.hazelcast.HazelcastCacheModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;

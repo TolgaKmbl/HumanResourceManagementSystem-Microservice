@@ -1,7 +1,7 @@
 package com.tolgakumbul.userservice.helper;
 
-import com.tolgakumbul.userservice.helper.model.KafkaLoggingObject;
-import com.tolgakumbul.userservice.helper.model.KafkaProducerModel;
+import com.tolgakumbul.userservice.helper.model.kafka.KafkaLoggingObject;
+import com.tolgakumbul.userservice.helper.model.kafka.KafkaProducerModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -25,13 +25,15 @@ public class KafkaProducerHelper {
                                                          Object request,
                                                          Object response,
                                                          String operationName,
-                                                         String entityName) {
+                                                         String entityName,
+                                                         String errorMessage) {
         KafkaLoggingObject kafkaLoggingObject = KafkaLoggingObject.builder()
                 .request(request)
                 .response(response)
                 .entityName(entityName)
                 .operationName(operationName)
                 .instanceId(LocalDateTime.now())
+                .errorMessage(errorMessage)
                 .build();
         return KafkaProducerModel.builder()
                 .topicName(topicName)

@@ -1,4 +1,4 @@
-package com.tolgakumbul.userservice.helper.model;
+package com.tolgakumbul.userservice.helper.model.hazelcast;
 
 import lombok.Data;
 
