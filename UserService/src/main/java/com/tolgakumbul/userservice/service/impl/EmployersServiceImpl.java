@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -96,6 +97,7 @@ public class EmployersServiceImpl implements EmployersService {
     }
 
     @Override
+    @Transactional
     public EmployersGeneralResponseDTO updateEmployer(EmployersDTO employersDTO) {
         try {
             Integer affectedRowCount = employersDao.updateEmployer(MAPPER.toEmployersEntity(employersDTO));
@@ -122,6 +124,7 @@ public class EmployersServiceImpl implements EmployersService {
     }
 
     @Override
+    @Transactional
     public EmployersGeneralResponseDTO insertEmployer(EmployersDTO employersDTO) {
         try {
             Integer affectedRowCount = employersDao.insertEmployer(MAPPER.toEmployersEntity(employersDTO));
@@ -148,6 +151,7 @@ public class EmployersServiceImpl implements EmployersService {
     }
 
     @Override
+    @Transactional
     public CommonResponseDTO deleteEmployer(Long employerId) {
         try {
             Integer affectedRowCount = employersDao.deleteEmployer(employerId);

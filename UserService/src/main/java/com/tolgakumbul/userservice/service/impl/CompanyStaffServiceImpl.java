@@ -125,6 +125,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     @Override
+    @Transactional
     public CompanyStaffGeneralResponseDTO updateCompanyStaff(CompanyStaffDTO companyStaffDTO) {
         try {
             Integer affectedRowCount = companyStaffDao.updateCompanyStaff(MAPPER.toCompanyStaff(companyStaffDTO));

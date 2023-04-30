@@ -127,7 +127,9 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
         }
     }
 
+    /*TODO: Restrict the updatable columns */
     @Override
+    @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer updateCompanyStaff(CompanyStaffEntity companyStaffEntity) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
