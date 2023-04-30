@@ -1,4 +1,4 @@
-package com.tolgakumbul.LoggingService;
+package com.tolgakumbul.loggingservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

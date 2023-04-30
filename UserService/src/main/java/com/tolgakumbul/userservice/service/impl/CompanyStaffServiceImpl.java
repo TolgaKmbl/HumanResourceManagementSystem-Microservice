@@ -5,6 +5,7 @@ import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.KafkaProducerHelper;
+import com.tolgakumbul.userservice.helper.model.KafkaLoggingObject;
 import com.tolgakumbul.userservice.helper.model.KafkaProducerModel;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     private final CompanyStaffDao companyStaffDao;
     private final KafkaProducerHelper kafkaProducerHelper;
 
-    @Value("${kafka.topic.companystaffgeneralresponse.name}")
+    @Value("${kafka.topic.userservicegeneral.name}")
     private String companyStaffGeneralResponseTopic;
 
     public CompanyStaffServiceImpl(CompanyStaffDao companyStaffDao, KafkaProducerHelper kafkaProducerHelper) {
@@ -101,7 +103,13 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             KafkaProducerModel kafkaProducerModel = new KafkaProducerModel();
             kafkaProducerModel.setTopicName(companyStaffGeneralResponseTopic);
             kafkaProducerModel.setKeyName("company-general");
-            kafkaProducerModel.setKafkaObject(companyStaffGeneralResponseDTO);
+            KafkaLoggingObject kafkaLoggingObject = new KafkaLoggingObject();
+            kafkaLoggingObject.setRequest(companyStaffDTO);
+            kafkaLoggingObject.setResponse(companyStaffGeneralResponseDTO);
+            kafkaLoggingObject.setOperationName("INSERT");
+            kafkaLoggingObject.setEntityName("COMPANYSTAFF");
+            kafkaLoggingObject.setInstanceId(LocalDateTime.now());
+            kafkaProducerModel.setKafkaObject(kafkaLoggingObject);
             kafkaProducerHelper.send(kafkaProducerModel);
 
             return companyStaffGeneralResponseDTO;

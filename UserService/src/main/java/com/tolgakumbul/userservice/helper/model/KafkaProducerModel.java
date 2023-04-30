@@ -7,6 +7,6 @@ public class KafkaProducerModel {
 
     private String topicName;
     private String keyName;
-    private Object kafkaObject;
+    private KafkaLoggingObject kafkaObject;
 
 }

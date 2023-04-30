@@ -2,13 +2,13 @@ package com.tolgakumbul.userservice.helper.serializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
+import com.tolgakumbul.userservice.helper.model.KafkaLoggingObject;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;
 
-public class CompanyStaffGeneralResponseSerializer implements Serializer<CompanyStaffGeneralResponseDTO> {
+public class KafkaLoggingObjectSerializer implements Serializer<KafkaLoggingObject> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -16,9 +16,9 @@ public class CompanyStaffGeneralResponseSerializer implements Serializer<Company
     }
 
     @Override
-    public byte[] serialize(String topic, CompanyStaffGeneralResponseDTO data) {
+    public byte[] serialize(String topic, KafkaLoggingObject data) {
         try {
-            if (data == null){
+            if (data == null) {
                 System.out.println("Null received at serializing");
                 return null;
             }
