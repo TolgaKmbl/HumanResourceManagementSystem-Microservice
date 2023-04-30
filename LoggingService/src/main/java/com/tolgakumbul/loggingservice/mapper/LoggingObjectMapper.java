@@ -14,6 +14,6 @@ public interface LoggingObjectMapper {
 
     LoggingObjectMapper INSTANCE = Mappers.getMapper(LoggingObjectMapper.class);
 
-    LoggingObjectEntity toEntity(LoggingObjectDTO loggingObjectDTO);
+    LoggingObjectEntity toEntity(LoggingObjectDTO loggingObjectDTO, String keyName);
 
 }

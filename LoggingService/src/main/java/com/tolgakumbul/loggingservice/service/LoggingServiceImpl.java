@@ -9,6 +9,9 @@ import com.tolgakumbul.loggingservice.model.LoggingObjectDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,13 +32,13 @@ public class LoggingServiceImpl {
     }
 
     @KafkaListener(topics = "${kafka.topic.userservicegeneral.name}", groupId = "group-id")
-    public void consumeUsersServiceData(LoggingObjectDTO message) {
+    public void consumeUsersServiceData(@Header(KafkaHeaders.RECEIVED_MESSAGE_KEY)String key, @Payload LoggingObjectDTO value) {
         try{
-            LOGGER.info("Received data {}", message);
-            LoggingObjectEntity loggingObject = MAPPER.toEntity(message);
+            LOGGER.info("Received data {}", value);
+            LoggingObjectEntity loggingObject = MAPPER.toEntity(value, key);
             repository.insert(loggingObject);
         } catch (Exception e) {
-            LOGGER.error("Error receiving data {}: {}", message, e.getMessage());
+            LOGGER.error("Error receiving data {}: {}", value, e.getMessage());
             LoggingErrorObject errorObject = new LoggingErrorObject();
             errorObject.setErrorMessage(e.getMessage());
             errorObject.setErrorDateTime(LocalDateTime.now());

@@ -5,7 +5,6 @@ import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.KafkaProducerHelper;
-import com.tolgakumbul.userservice.helper.model.KafkaLoggingObject;
 import com.tolgakumbul.userservice.helper.model.KafkaProducerModel;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +27,7 @@ import java.util.stream.Collectors;
 public class CompanyStaffServiceImpl implements CompanyStaffService {
 
     private static final Logger LOGGER = LogManager.getLogger(CompanyStaffServiceImpl.class);
+    private static final String entityNameForKafka = "COMPANYSTAFF";
 
     private final CompanyStaffMapper MAPPER = CompanyStaffMapper.INSTANCE;
 
@@ -100,17 +99,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
 
             CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
 
-            KafkaProducerModel kafkaProducerModel = new KafkaProducerModel();
-            kafkaProducerModel.setTopicName(companyStaffGeneralResponseTopic);
-            kafkaProducerModel.setKeyName("company-general");
-            KafkaLoggingObject kafkaLoggingObject = new KafkaLoggingObject();
-            kafkaLoggingObject.setRequest(companyStaffDTO);
-            kafkaLoggingObject.setResponse(companyStaffGeneralResponseDTO);
-            kafkaLoggingObject.setOperationName("INSERT");
-            kafkaLoggingObject.setEntityName("COMPANYSTAFF");
-            kafkaLoggingObject.setInstanceId(LocalDateTime.now());
-            kafkaProducerModel.setKafkaObject(kafkaLoggingObject);
-            kafkaProducerHelper.send(kafkaProducerModel);
+            sendKafkaTopic(companyStaffDTO, companyStaffGeneralResponseDTO, "INSERT");
 
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
@@ -169,6 +158,17 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
         String message = isEmpty ? (isList ? "List is empty" : "Could not fetch data by name!") : Constants.OK;
 
         return new CommonResponseDTO(statusCode, message);
+    }
+
+
+    private void sendKafkaTopic(CompanyStaffDTO companyStaffDTO, CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO, String operationName) {
+        KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(companyStaffGeneralResponseTopic,
+                entityNameForKafka+"-"+operationName,
+                companyStaffDTO,
+                companyStaffGeneralResponseDTO,
+                operationName,
+                entityNameForKafka);
+        kafkaProducerHelper.send(kafkaProducerModel);
     }
 
 }

@@ -12,6 +12,7 @@ public class LoggingObjectEntity {
 
     @Id
     private String id;
+    private String keyName;
     private String operationName;
     private String entityName;
     private Object request;
