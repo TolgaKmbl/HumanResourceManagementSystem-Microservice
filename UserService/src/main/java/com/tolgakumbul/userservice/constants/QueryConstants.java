@@ -16,6 +16,7 @@ public class QueryConstants {
 
     public static final String UPDATE_QUERY = "UPDATE ";
 
+    /*COMPANY STAFF*/
     public static final String SELECT_ALL_COMPANY_STAFF_QUERY = SELECT_ALL_QUERY +
             FROM_QUERY +
             "COMPANY_STAFF";
@@ -40,10 +41,44 @@ public class QueryConstants {
             "COMPANY_STAFF " +
             WHERE_QUERY + "USER_ID = ?";
 
-    public static final String UPDATE_COMPANY_STAFF_QUERY = UPDATE_QUERY +
+    public static final String APPROVE_COMPANY_STAFF_QUERY = UPDATE_QUERY +
             "COMPANY_STAFF " +
             "SET IS_APPROVED = ? " +
             WHERE_QUERY + "USER_ID = ?";
 
+    public static final String UPDATE_COMPANY_STAFF_QUERY = UPDATE_QUERY +
+            "COMPANY_STAFF " +
+            "SET FIRST_NAME = ?, LAST_NAME = ?, IS_APPROVED = ?, APPROVAL_DATE = ?" +
+            WHERE_QUERY + "USER_ID = ?";
 
+    /*EMPLOYERS*/
+    public static final String SELECT_ALL_EMPLOYERS_QUERY = SELECT_ALL_QUERY +
+            FROM_QUERY +
+            "EMPLOYERS";
+
+    public static final String SELECT_EMPLOYER_BY_ID_QUERY = SELECT_QUERY +
+            "USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL " +
+            FROM_QUERY +
+            "EMPLOYERS " +
+            WHERE_QUERY + "USER_ID = ?";
+
+    public static final String SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY = SELECT_QUERY +
+            "USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL " +
+            FROM_QUERY +
+            "EMPLOYERS " +
+            WHERE_QUERY + "COMPANY_NAME = ?";
+
+    public static final String UPDATE_EMPLOYER_QUERY = UPDATE_QUERY +
+            "EMPLOYERS " +
+            "SET COMPANY_NAME = ?, WEBSITE = ?, PHONE_NUM = ?, COMPANY_IMG_URL = ? " +
+            WHERE_QUERY + "USER_ID = ?";
+
+
+    public static final String INSERT_EMPLOYER_QUERY = INSERT_QUERY +
+            "EMPLOYERS(USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL) " +
+            "VALUES (?, ?, ?, ?, ?)";
+
+    public static final String DELETE_EMPLOYER_QUERY = DELETE_QUERY + FROM_QUERY +
+            "EMPLOYERS " +
+            WHERE_QUERY + "USER_ID = ?";
 }

@@ -31,4 +31,16 @@
         <max-idle-seconds>60</max-idle-seconds>
         <time-to-live-seconds>60</time-to-live-seconds>
     </map>
+    <map name="employerListMap">
+        <max-idle-seconds>60</max-idle-seconds>
+        <time-to-live-seconds>60</time-to-live-seconds>
+    </map>
+    <map name="employerByIdMap">
+        <max-idle-seconds>60</max-idle-seconds>
+        <time-to-live-seconds>60</time-to-live-seconds>
+    </map>
+    <map name="employerByNameMap">
+        <max-idle-seconds>60</max-idle-seconds>
+        <time-to-live-seconds>60</time-to-live-seconds>
+    </map>
 </hazelcast>

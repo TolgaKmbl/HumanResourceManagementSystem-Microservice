@@ -6,11 +6,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "EMPLOYERS")
-public class EmployersEntity {
+public class EmployersEntity implements Serializable {
+
+    private static final long serialVersionUID = 4516888019581455554L;
 
     @Column("USER_ID")
     private Long userId;

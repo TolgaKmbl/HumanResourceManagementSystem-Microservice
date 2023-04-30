@@ -15,6 +15,8 @@ public interface CompanyStaffService {
 
     CompanyStaffGeneralResponseDTO insertCompanyStaff(CompanyStaffDTO companyStaffDTO);
 
+    CompanyStaffGeneralResponseDTO updateCompanyStaff(CompanyStaffDTO companyStaffDTO);
+
     CommonResponseDTO deleteCompanyStaff(Long companyStaffId);
 
     CompanyStaffGeneralResponseDTO approveCompanyStaff(Long companyStaffId);

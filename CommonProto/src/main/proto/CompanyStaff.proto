@@ -46,6 +46,7 @@ service CompanyStaffGrpcService {
   rpc GetCompanyStaffById (CompanyStaffByIdRequest) returns (CompanyStaffGeneralResponse){}
   rpc GetCompanyStaffByName (GetCompanyStaffByNameRequest) returns (CompanyStaffGeneralResponse){}
   rpc InsertCompanyStaff (CompanyStaffData) returns (CompanyStaffGeneralResponse){}
+  rpc UpdateCompanyStaff (CompanyStaffData) returns (CompanyStaffGeneralResponse){}
   rpc DeleteCompanyStaff (CompanyStaffByIdRequest) returns (CommonResponse){}
   rpc ApproveCompanyStaff (CompanyStaffByIdRequest) returns (CompanyStaffGeneralResponse){}
 }

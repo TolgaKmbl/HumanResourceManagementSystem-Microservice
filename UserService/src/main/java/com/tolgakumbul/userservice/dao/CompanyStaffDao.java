@@ -15,6 +15,8 @@ public interface CompanyStaffDao {
 
     Integer insertCompanyStaff(CompanyStaffEntity companyStaffEntity);
 
+    Integer updateCompanyStaff(CompanyStaffEntity companyStaffEntity);
+
     Integer deleteCompanyStaff(Long companyStaffId);
 
     Integer approveCompanyStaff(Long companyStaffId);

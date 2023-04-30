@@ -15,6 +15,8 @@ public interface CompanyStaffGrpcService {
 
     void insertCompanyStaff(CompanyStaffData request, StreamObserver<CompanyStaffGeneralResponse> responseObserver);
 
+    void updateCompanyStaff(CompanyStaffData request, StreamObserver<CompanyStaffGeneralResponse> responseObserver);
+
     void deleteCompanyStaff(CompanyStaffByIdRequest request, StreamObserver<CommonResponse> responseObserver);
 
     void approveCompanyStaff(CompanyStaffByIdRequest request, StreamObserver<CompanyStaffGeneralResponse> responseObserver);

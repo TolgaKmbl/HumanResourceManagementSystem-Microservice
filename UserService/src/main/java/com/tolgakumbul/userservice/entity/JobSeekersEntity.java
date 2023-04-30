@@ -6,13 +6,16 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "JOB_SEEKERS")
-public class JobSeekersEntity {
+public class JobSeekersEntity implements Serializable {
+
+    private static final long serialVersionUID = -8601469500698783982L;
 
     @Column("USER_ID")
     private Long userId;

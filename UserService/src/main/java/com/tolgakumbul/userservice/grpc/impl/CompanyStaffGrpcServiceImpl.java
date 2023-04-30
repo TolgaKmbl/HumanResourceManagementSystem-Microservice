@@ -80,6 +80,14 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
     }
 
     @Override
+    public void updateCompanyStaff(CompanyStaffData request, StreamObserver<CompanyStaffGeneralResponse> responseObserver) {
+        CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = companyStaffService.updateCompanyStaff(MAPPER.toCompanyStaffDTO(request));
+
+        responseObserver.onNext(MAPPER.toCompanyStaffGeneralResponse(companyStaffGeneralResponseDTO));
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void deleteCompanyStaff(CompanyStaffByIdRequest request, StreamObserver<CommonResponse> responseObserver) {
         CommonResponseDTO commonResponseDTO = companyStaffService.deleteCompanyStaff(request.getUserId());
 

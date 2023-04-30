@@ -21,7 +21,7 @@ message EmployerGeneralResponse {
   CommonResponse commonResponse = 2;
 }
 
-message GetAllEmployersResponse {
+message EmployerListGeneralResponse {
   repeated Employer employerList = 1;
   CommonResponse commonResponse = 2;
 }
@@ -35,9 +35,10 @@ message Employer {
 }
 
 service EmployersGrpcService {
-  rpc GetAllEmployers (google.protobuf.Empty) returns (GetAllEmployersResponse){}
+  rpc GetAllEmployers (google.protobuf.Empty) returns (EmployerListGeneralResponse){}
   rpc GetEmployerById (EmployerByIdRequest) returns (EmployerGeneralResponse){}
-  rpc GetEmployersByCompanyName (EmployersByCompanyNameRequest) returns (EmployerGeneralResponse){}
+  rpc GetEmployersByCompanyName (EmployersByCompanyNameRequest) returns (EmployerListGeneralResponse){}
+  rpc UpdateEmployer (Employer) returns (EmployerGeneralResponse){}
   rpc InsertEmployer (Employer) returns (EmployerGeneralResponse){}
   rpc DeleteEmployer (EmployerByIdRequest) returns (CommonResponse){}
 }

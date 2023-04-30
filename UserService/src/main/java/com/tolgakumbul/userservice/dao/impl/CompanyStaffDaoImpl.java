@@ -122,7 +122,24 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
-            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.insertCompanyStaff : {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Integer updateCompanyStaff(CompanyStaffEntity companyStaffEntity) {
+        try {
+            int affectedRowCount = jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
+                    companyStaffEntity.getFirstName(),
+                    companyStaffEntity.getLastName(),
+                    companyStaffEntity.getIsApproved(),
+                    companyStaffEntity.getApprovalDate(),
+                    companyStaffEntity.getUserId());
+            hazelcastCacheHelper.removeAll();
+            return affectedRowCount;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.updateCompanyStaff : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -137,7 +154,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
-            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.deleteCompanyStaff : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -146,7 +163,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer approveCompanyStaff(Long companyStaffId) {
         try {
-            int affectedRowCount = jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
+            int affectedRowCount = jdbcTemplate.update(QueryConstants.APPROVE_COMPANY_STAFF_QUERY,
                     IsApprovedEnum.ACTIVE.getTextType(),
                     companyStaffId);
             hazelcastCacheHelper.removeAll();

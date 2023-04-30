@@ -35,7 +35,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     private final KafkaProducerHelper kafkaProducerHelper;
 
     @Value("${kafka.topic.userservicegeneral.name}")
-    private String companyStaffGeneralResponseTopic;
+    private String userServiceTopic;
 
     public CompanyStaffServiceImpl(CompanyStaffDao companyStaffDao, KafkaProducerHelper kafkaProducerHelper) {
         this.companyStaffDao = companyStaffDao;
@@ -125,6 +125,32 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     @Override
+    public CompanyStaffGeneralResponseDTO updateCompanyStaff(CompanyStaffDTO companyStaffDTO) {
+        try {
+            Integer affectedRowCount = companyStaffDao.updateCompanyStaff(MAPPER.toCompanyStaff(companyStaffDTO));
+            final CommonResponseDTO commonResponseDTO;
+            CompanyStaffDTO companyStaffByIdDTO = new CompanyStaffDTO();
+            if (affectedRowCount == 1) {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
+                CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId());
+                companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
+            } else {
+                commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not update data!");
+            }
+
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
+
+            sendKafkaTopic(companyStaffDTO, companyStaffGeneralResponseDTO, "UPDATE");
+
+            return companyStaffGeneralResponseDTO;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.updateCompanyStaff : {}", e.getMessage());
+            sendKafkaTopicForError(companyStaffDTO, "UPDATE", e.getMessage());
+            throw new UsersException("ERRMSGCMPNY007", companyStaffDTO.getUserId());
+        }
+    }
+
+    @Override
     @Transactional
     public CommonResponseDTO deleteCompanyStaff(Long companyStaffId) {
         try {
@@ -187,7 +213,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
 
 
     private void sendKafkaTopic(Object request, Object response, String operationName) {
-        KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(companyStaffGeneralResponseTopic,
+        KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(userServiceTopic,
                 entityNameForKafka+"-"+operationName,
                 request,
                 response,
@@ -198,7 +224,7 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     }
 
     private void sendKafkaTopicForError(Object request, String operationName, String errorMessage) {
-        KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(companyStaffGeneralResponseTopic,
+        KafkaProducerModel kafkaProducerModel = kafkaProducerHelper.generateKafkaProducerModel(userServiceTopic,
                 entityNameForKafka+"-"+operationName,
                 request,
                 null,
