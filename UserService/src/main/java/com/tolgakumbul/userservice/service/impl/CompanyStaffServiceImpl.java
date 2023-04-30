@@ -48,9 +48,14 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             List<CompanyStaffEntity> allCompanyStaffEntity = companyStaffDao.getAllCompanyStaff();
             List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaffEntity.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
             final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffDTOList);
-            return new CompanyStaffListResponseDTO(companyStaffDTOList, commonResponseDTO);
+            CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO(companyStaffDTOList, commonResponseDTO);
+
+            sendKafkaTopic(null, companyStaffListResponseDTO, "GETALL");
+
+            return companyStaffListResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getAllCompanyStaff : {}", e.getMessage());
+            sendKafkaTopicForError(null, "GETALL", e.getMessage());
             throw new UsersException("ERRMSGCMPNY001");
         }
 
@@ -62,9 +67,14 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffId);
             final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffEntityById);
             CompanyStaffDTO companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
-            return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
+
+            sendKafkaTopic(companyStaffId, companyStaffGeneralResponseDTO, "GETBYID");
+
+            return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffById : {}", e.getMessage());
+            sendKafkaTopicForError(companyStaffId, "GETBYID", e.getMessage());
             throw new UsersException("ERRMSGCMPNY002");
         }
     }
@@ -75,9 +85,14 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             CompanyStaffEntity companyStaffEntityByName = companyStaffDao.getCompanyStaffByName(firstName, lastName);
             final CommonResponseDTO commonResponseDTO = getCommonResponseDTO(companyStaffEntityByName);
             CompanyStaffDTO companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityByName);
-            return new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
+
+            sendKafkaTopic(firstName+" "+lastName, companyStaffGeneralResponseDTO, "GETBYNAME");
+
+            return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffByName : {}", e.getMessage());
+            sendKafkaTopicForError(firstName+" "+lastName, "GETBYNAME", e.getMessage());
             throw new UsersException("ERRMSGCMPNY003");
         }
     }
@@ -120,9 +135,13 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             } else {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not delete data!");
             }
+
+            sendKafkaTopic(companyStaffId, commonResponseDTO, "DELETE");
+
             return commonResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.deleteCompanyStaff : {}", e.getMessage());
+            sendKafkaTopicForError(companyStaffId, "DELETE", e.getMessage());
             throw new UsersException("ERRMSGCMPNY005");
         }
     }
@@ -143,9 +162,14 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
                 commonResponseDTO = new CommonResponseDTO(Constants.STATUS_INTERNAL_ERROR, "Could not update company staff!");
             }
 
-            return new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO, commonResponseDTO);
+
+            sendKafkaTopic(companyStaffId, companyStaffGeneralResponseDTO, "APPROVE");
+
+            return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.approveCompanyStaff : {}", e.getMessage());
+            sendKafkaTopicForError(companyStaffId, "APPROVE", e.getMessage());
             throw new UsersException("ERRMSGCMPNY006");
         }
     }

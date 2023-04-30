@@ -4,7 +4,6 @@ import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.dao.mapper.CompanyStaffRowMapper;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
-import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.model.hazelcast.HazelcastCacheModel;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
@@ -139,7 +138,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            throw new UsersException("ERRDAO001", e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -154,7 +153,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            throw new UsersException("ERRDAO001", e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
