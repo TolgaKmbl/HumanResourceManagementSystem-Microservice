@@ -1,0 +1,41 @@
+name: Java with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        java-version: [ 11, 15, 17 ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK ${{ matrix.java-version }}
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ matrix.java-version }}
+        distribution: 'adopt'
+
+    - name: Build with Maven
+      run: |
+        mvn -B clean package --file ./CommonProto/pom.xml
+        mvn -B clean package --file ./AuthService/pom.xml
+        mvn -B clean package --file ./LoggingService/pom.xml
+        mvn -B clean package --file ./UserService/pom.xml
+      working-directory: ./
+      
+#   - name: Run Unit Tests
+#     run: |
+#       mvn test --file ./path/to/your/project/pom.xml
+#       mvn test --file ./path/to/your/project/subproject1/pom.xml
+#       mvn test --file ./path/to/your/project/subproject2/pom.xml
+#       mvn test --file ./path/to/your/project/subproject3/pom.xml
+#       mvn test --file ./path/to/your/project/subproject4/pom.xml
+#     working-directory: ./
