@@ -6,6 +6,7 @@ option java_outer_classname = "CompanyStaffProto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "Common.proto";
+import "IsApproved.proto";
 
 package com.tolgakumbul.proto;
 
@@ -34,11 +35,6 @@ message CompanyStaffData {
   string lastName = 3;
   IsApproved isApproved = 4;
   google.protobuf.Timestamp approvalDate = 5;
-}
-
-enum IsApproved {
-  PASSIVE = 0;
-  ACTIVE = 1;
 }
 
 service CompanyStaffGrpcService {

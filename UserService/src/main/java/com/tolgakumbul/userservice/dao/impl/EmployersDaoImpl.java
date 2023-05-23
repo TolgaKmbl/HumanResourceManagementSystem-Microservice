@@ -143,6 +143,7 @@ public class EmployersDaoImpl implements EmployersDao {
         }
     }
 
+    /*TODO: Create an IS_DELETED COLUMN AND UPDATE IT INSTEAD OF DELETING DATA*/
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer deleteEmployer(Long employerId) {

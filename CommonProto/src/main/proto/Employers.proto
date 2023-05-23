@@ -13,7 +13,7 @@ message EmployerByIdRequest {
 }
 
 message EmployersByCompanyNameRequest {
-  string companyName = 2;
+  string companyName = 1;
 }
 
 message EmployerGeneralResponse {

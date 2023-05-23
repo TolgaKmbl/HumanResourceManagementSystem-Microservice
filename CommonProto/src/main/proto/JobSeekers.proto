@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "JobSeekersProto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "Common.proto";
+import "IsApproved.proto";
+
+package com.tolgakumbul.proto;
+
+message JobSeekerByIdRequest {
+  int64 userId = 1;
+}
+
+message JobSeekerByNationalIdRequest {
+  string nationalId = 1;
+}
+
+message JobSeekerByNameRequest {
+  string firstName = 1;
+  string lastName = 2;
+}
+
+message JobSeekerGeneralResponse {
+  JobSeeker jobSeeker = 1;
+  CommonResponse commonResponse = 2;
+}
+
+message JobSeekerListGeneralResponse {
+  repeated JobSeeker jobSeekerList = 1;
+  CommonResponse commonResponse = 2;
+}
+
+message JobSeeker {
+  int64 userId = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string nationalId = 4;
+  google.protobuf.Timestamp birthDate = 5;
+  int64 cvId = 6;
+  IsApproved isApproved = 7;
+  google.protobuf.Timestamp approvalDate = 8;
+}
+
+service JobSeekersGrpcService {
+  rpc GetAllJobSeekers (google.protobuf.Empty) returns (JobSeekerListGeneralResponse){}
+  rpc GetJobSeekerById (JobSeekerByIdRequest) returns (JobSeekerGeneralResponse){}
+  rpc GetJobSeekerByNationalId (JobSeekerByNationalIdRequest) returns (JobSeekerGeneralResponse){}
+  rpc GetJobSeekerByName (JobSeekerByNameRequest) returns (JobSeekerGeneralResponse){}
+  rpc UpdateJobSeeker (JobSeeker) returns (JobSeekerGeneralResponse){}
+  rpc InsertJobSeeker (JobSeeker) returns (JobSeekerGeneralResponse){}
+  rpc ApproveJobSeeker (JobSeekerByIdRequest) returns (JobSeekerGeneralResponse){}
+  rpc DeleteJobSeeker (JobSeekerByIdRequest) returns (CommonResponse){}
+}

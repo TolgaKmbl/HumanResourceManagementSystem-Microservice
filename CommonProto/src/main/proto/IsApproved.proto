@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "IsApprovedProto";
+
+package com.tolgakumbul.proto;
+
+enum IsApproved {
+  PASSIVE = 0;
+  ACTIVE = 1;
+}

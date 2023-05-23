@@ -81,4 +81,45 @@ public class QueryConstants {
     public static final String DELETE_EMPLOYER_QUERY = DELETE_QUERY + FROM_QUERY +
             "EMPLOYERS " +
             WHERE_QUERY + "USER_ID = ?";
+
+    /*JOB SEEKERS*/
+    public static final String SELECT_ALL_JOB_SEEKERS_QUERY = SELECT_ALL_QUERY +
+            FROM_QUERY +
+            "JOB_SEEKERS";
+
+    public static final String SELECT_JOB_SEEKER_BY_ID_QUERY = SELECT_QUERY +
+            "USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE " +
+            FROM_QUERY +
+            "JOB_SEEKERS " +
+            WHERE_QUERY + "USER_ID = ?";
+
+    public static final String SELECT_JOB_SEEKER_BY_NATIONAL_QUERY = SELECT_QUERY +
+            "USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE " +
+            FROM_QUERY +
+            "JOB_SEEKERS " +
+            WHERE_QUERY + "NATIONAL_ID = ?";
+
+    public static final String SELECT_JOB_SEEKER_BY_NAME_QUERY = SELECT_QUERY +
+            "USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE " +
+            FROM_QUERY +
+            "JOB_SEEKERS " +
+            WHERE_QUERY + "FIRST_NAME = ? AND LAST_NAME = ?";
+
+    public static final String UPDATE_JOB_SEEKER_QUERY = UPDATE_QUERY +
+            "JOB_SEEKERS " +
+            "SET FIRST_NAME = ?, LAST_NAME = ?, NATIONAL_ID = ?, BIRTH_DATE = ?, CV_ID = ?, IS_APPROVED = ?, APPROVAL_DATE = ? " +
+            WHERE_QUERY + "USER_ID = ?";
+
+    public static final String INSERT_JOB_SEEKER_QUERY = INSERT_QUERY +
+            "JOB_SEEKERS(USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+    public static final String APPROVE_JOB_SEEKER_QUERY = UPDATE_QUERY +
+            "JOB_SEEKERS " +
+            "SET IS_APPROVED = ? " +
+            WHERE_QUERY + "USER_ID = ?";
+
+    public static final String DELETE_JOB_SEEKER_QUERY = DELETE_QUERY + FROM_QUERY +
+            "JOB_SEEKERS " +
+            WHERE_QUERY + "USER_ID = ?";
 }

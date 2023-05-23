@@ -4,7 +4,7 @@ import com.google.protobuf.Timestamp;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffGeneralResponse;
-import com.tolgakumbul.proto.CompanyStaffProto.IsApproved;
+import com.tolgakumbul.proto.IsApprovedProto.IsApproved;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
