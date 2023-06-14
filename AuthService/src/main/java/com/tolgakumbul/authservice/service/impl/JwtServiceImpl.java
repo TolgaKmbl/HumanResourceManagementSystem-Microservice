@@ -6,20 +6,34 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private static final String SECRET = "576D5A7134743777217A24432646294A404E635266556A586E3272357538782F";
-    private static final String ISSUER = "HumanResourceManagementSystemApp";
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtServiceImpl.class);
+
+    @Value("${jwt.custom.secret}")
+    private String SECRET;
+    @Value("${jwt.custom.issuer}")
+    private String ISSUER;
 
     @Override
     public String extractUsername(String token) {
@@ -34,13 +48,8 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
-
-    @Override
-    public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts.builder()
-                .setClaims(claims)
+                .claim("role", userDetails.getAuthorities())
                 .setSubject(userDetails.getUsername())
                 .setIssuer(ISSUER)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -50,9 +59,27 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    public Boolean isTokenValid(String token) {
+        try {
+            return !isTokenExpired(token);
+        } catch (SignatureException e) {
+            LOGGER.info("Invalid JWT signature: " + e.getMessage());
+            LOGGER.debug("Exception " + e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public Authentication getAuthentication(String token) {
+
+        Claims claims = extractAllClaims(token);
+
+        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("role").toString().split(","))
+                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+
+        User principal = new User(claims.getSubject(), "", authorities);
+
+        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
     private Boolean isTokenExpired(String token) {

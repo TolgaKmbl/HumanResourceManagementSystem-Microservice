@@ -15,6 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    public final static String AUTHORIZATION_HEADER = "Authorization";
+    public final static String BEARER = "Bearer ";
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -25,7 +28,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/v0/**")
+                .requestMatchers("/auth/v0/**", "/error")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
