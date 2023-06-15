@@ -1,7 +1,7 @@
 package com.tolgakumbul.authservice.controller;
 
+import com.tolgakumbul.authservice.core.Result;
 import com.tolgakumbul.authservice.model.auth.AuthRequestDto;
-import com.tolgakumbul.authservice.model.auth.AuthResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 public interface AuthController {
 
     @PostMapping("/register")
-    ResponseEntity<String> register(@RequestBody AuthRequestDto request);
+    ResponseEntity<Result> register(@RequestBody AuthRequestDto request);
 
     @PostMapping("/authenticate")
-    ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto request);
+    ResponseEntity<Result> authenticate(@RequestBody AuthRequestDto request);
 
     @GetMapping("/validate")
-    ResponseEntity<Boolean> validateToken(@RequestHeader("token") String token);
+    ResponseEntity<Result> validateToken(@RequestHeader("token") String token);
 
 }
