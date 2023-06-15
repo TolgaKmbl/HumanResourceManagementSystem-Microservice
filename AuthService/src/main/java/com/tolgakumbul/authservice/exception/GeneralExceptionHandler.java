@@ -1,6 +1,7 @@
 package com.tolgakumbul.authservice.exception;
 
 import com.tolgakumbul.authservice.service.impl.JwtServiceImpl;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,12 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> badCredentialsExceptionHandler(BadCredentialsException exception) {
+        errorLogger(exception);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> expiredJwtExceptionHandler(ExpiredJwtException exception) {
         errorLogger(exception);
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
     }

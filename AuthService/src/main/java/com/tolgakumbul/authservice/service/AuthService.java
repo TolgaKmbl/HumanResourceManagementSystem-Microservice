@@ -9,4 +9,6 @@ public interface AuthService {
 
     AuthResponseDto authenticate(AuthRequestDto request);
 
+    void validateToken(String token);
+
 }

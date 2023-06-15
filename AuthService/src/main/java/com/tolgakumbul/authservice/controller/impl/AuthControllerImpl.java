@@ -23,4 +23,10 @@ public class AuthControllerImpl implements AuthController {
     public ResponseEntity<AuthResponseDto> authenticate(AuthRequestDto request) {
         return ResponseEntity.ok(authService.authenticate(request));
     }
+
+    @Override
+    public ResponseEntity<Boolean> validateToken(String token) {
+        authService.validateToken(token);
+        return ResponseEntity.ok(true);
+    }
 }

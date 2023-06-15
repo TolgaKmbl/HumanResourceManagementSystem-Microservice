@@ -50,6 +50,11 @@ public class AuthServiceImpl implements AuthService {
         return getAuthResponse(user);
     }
 
+    @Override
+    public void validateToken(String token) {
+        jwtService.isTokenValid(token);
+    }
+
 
     private AuthResponseDto getAuthResponse(User user) {
         String jwtToken = jwtService.generateToken(user);
