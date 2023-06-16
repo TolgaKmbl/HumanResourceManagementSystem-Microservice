@@ -7,9 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @GrpcGlobalServerInterceptor
-public class GrpcInterceptor implements ServerInterceptor {
+public class GrpcServerInterceptor implements ServerInterceptor {
 
-    private static final Logger LOGGER = LogManager.getLogger(GrpcInterceptor.class);
+    private static final Logger LOGGER = LogManager.getLogger(GrpcServerInterceptor.class);
 
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(ServerCall<ReqT, RespT> call, Metadata headers, ServerCallHandler<ReqT, RespT> next) {

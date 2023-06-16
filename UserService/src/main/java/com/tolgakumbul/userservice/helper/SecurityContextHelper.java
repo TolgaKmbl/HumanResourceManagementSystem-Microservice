@@ -40,7 +40,7 @@ public class SecurityContextHelper {
             return false;
         }
     }
-
+    //TODO: Implement custom context instead of spring security
     public static void resetSecurityContext() {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
