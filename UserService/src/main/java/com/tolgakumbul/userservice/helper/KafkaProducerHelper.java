@@ -4,6 +4,7 @@ import com.tolgakumbul.userservice.helper.model.kafka.KafkaLoggingObject;
 import com.tolgakumbul.userservice.helper.model.kafka.KafkaProducerModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,9 @@ import java.time.LocalDateTime;
 public class KafkaProducerHelper {
 
     private static final Logger LOGGER = LogManager.getLogger(KafkaProducerHelper.class);
+
+    @Value("${kafka.enabled}")
+    private Boolean isKafkaEnabledForLogging;
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -44,7 +48,9 @@ public class KafkaProducerHelper {
 
     public boolean send(KafkaProducerModel kafkaProducerModel) {
         try {
-            kafkaTemplate.send(kafkaProducerModel.getTopicName(), kafkaProducerModel.getKeyName(), kafkaProducerModel.getKafkaObject());
+            if(isKafkaEnabledForLogging){
+                kafkaTemplate.send(kafkaProducerModel.getTopicName(), kafkaProducerModel.getKeyName(), kafkaProducerModel.getKafkaObject());
+            }
             return true;
         } catch (Exception e) {
             LOGGER.error("ERROR while sending {} to topic {} : {}", kafkaProducerModel.getKafkaObject(), kafkaProducerModel.getTopicName(), e.getMessage());
