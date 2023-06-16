@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,8 +21,8 @@ import java.util.stream.Collectors;
 
 public class SecurityContextHelper {
 
-    private static final String ISSUER = "HumanResourceManagementSystemApp";
-    private static final String SECRET = "576D5A7134743777217A24432646294A404E635266556A586E3272357538782F";
+    private static String ISSUER;
+    private static String SECRET;
 
 
     public static boolean isJwtTokenValid(String token) {
@@ -67,6 +68,16 @@ public class SecurityContextHelper {
     private static Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @Value("${jwt.custom.issuer}")
+    public void setIssuer(String issuer) {
+        ISSUER = issuer;
+    }
+
+    @Value("${jwt.custom.secret}")
+    public void setSecret(String secret) {
+        SECRET = secret;
     }
 
 }
