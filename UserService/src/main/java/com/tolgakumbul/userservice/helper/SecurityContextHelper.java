@@ -23,8 +23,6 @@ public class SecurityContextHelper {
     private static final String ISSUER = "HumanResourceManagementSystemApp";
     private static final String SECRET = "576D5A7134743777217A24432646294A404E635266556A586E3272357538782F";
 
-    public final static String AUTHORIZATION_HEADER = "Authorization";
-    public final static String BEARER = "Bearer ";
 
     public static boolean isJwtTokenValid(String token) {
         try {
@@ -32,7 +30,7 @@ public class SecurityContextHelper {
             Instant now = Instant.now();
             Date expiration = jws.getBody().getExpiration();
             boolean isNotExpired = expiration != null && expiration.toInstant().isAfter(now);
-            if(isNotExpired){
+            if (isNotExpired) {
                 setSecurityContext(jws);
             }
             return isNotExpired;
@@ -40,7 +38,7 @@ public class SecurityContextHelper {
             return false;
         }
     }
-    //TODO: Implement custom context instead of spring security
+
     public static void resetSecurityContext() {
         SecurityContextHolder.getContext().setAuthentication(null);
     }

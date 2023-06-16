@@ -119,6 +119,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--CUSTOM CONTEXT LIBRARY-->
+        <dependency>
+            <groupId>com.tolgakumbul</groupId>
+            <artifactId>customcontext</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
