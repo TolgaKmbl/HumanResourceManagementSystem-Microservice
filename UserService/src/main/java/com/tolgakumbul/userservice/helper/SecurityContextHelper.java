@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.time.Instant;
@@ -19,22 +20,27 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+@Component
 public class SecurityContextHelper {
 
     private static String ISSUER;
     private static String SECRET;
+    private static Boolean isSecurityEnabled;
 
 
     public static boolean isJwtTokenValid(String token) {
         try {
-            Jws<Claims> jws = getClaimsJws(token);
-            Instant now = Instant.now();
-            Date expiration = jws.getBody().getExpiration();
-            boolean isNotExpired = expiration != null && expiration.toInstant().isAfter(now);
-            if (isNotExpired) {
-                setSecurityContext(jws);
+            if(isSecurityEnabled){
+                Jws<Claims> jws = getClaimsJws(token);
+                Instant now = Instant.now();
+                Date expiration = jws.getBody().getExpiration();
+                boolean isNotExpired = expiration != null && expiration.toInstant().isAfter(now);
+                if (isNotExpired) {
+                    setSecurityContext(jws);
+                }
+                return isNotExpired;
             }
-            return isNotExpired;
+            return true;
         } catch (Exception e) {
             return false;
         }
@@ -72,12 +78,17 @@ public class SecurityContextHelper {
 
     @Value("${jwt.custom.issuer}")
     public void setIssuer(String issuer) {
-        ISSUER = issuer;
+        SecurityContextHelper.ISSUER = issuer;
     }
 
     @Value("${jwt.custom.secret}")
     public void setSecret(String secret) {
-        SECRET = secret;
+        SecurityContextHelper.SECRET = secret;
+    }
+
+    @Value("${enable.authorization}")
+    public void setIsSecurityEnabled(Boolean isSecured) {
+        SecurityContextHelper.isSecurityEnabled = isSecured;
     }
 
 }

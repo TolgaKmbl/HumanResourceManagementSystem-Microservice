@@ -5,6 +5,7 @@ import com.tolgakumbul.userservice.dao.JobSeekersDao;
 import com.tolgakumbul.userservice.dao.mapper.JobSeekersRowMapper;
 import com.tolgakumbul.userservice.entity.JobSeekersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
+import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +22,6 @@ public class JobSeekersImpl implements JobSeekersDao {
     private static final Logger LOGGER = LogManager.getLogger(JobSeekersImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
-    //TODO: Check unnecessary cache operations
     private final HazelcastCacheHelper hazelcastCacheHelper;
 
     public JobSeekersImpl(JdbcTemplate jdbcTemplate, HazelcastCacheHelper hazelcastCacheHelper) {
@@ -30,6 +30,7 @@ public class JobSeekersImpl implements JobSeekersDao {
     }
 
     @Override
+    @CacheHelper(mapName = "jobseekerListMap", keyName = "AllJobSeekers")
     public List<JobSeekersEntity> getAllJobSeekers() {
         try {
             List<JobSeekersEntity> jobSeekersEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_JOB_SEEKERS_QUERY, new JobSeekersRowMapper());
@@ -104,6 +105,7 @@ public class JobSeekersImpl implements JobSeekersDao {
                     jobSeekersEntity.getCvId(),
                     jobSeekersEntity.getIsApproved(),
                     jobSeekersEntity.getApprovalDate());
+            hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.insertJobSeeker : {}", e.getMessage());
@@ -130,6 +132,7 @@ public class JobSeekersImpl implements JobSeekersDao {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.DELETE_JOB_SEEKER_QUERY,
                     jobSeekerId);
+            hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.deleteJobSeeker : {}", e.getMessage());

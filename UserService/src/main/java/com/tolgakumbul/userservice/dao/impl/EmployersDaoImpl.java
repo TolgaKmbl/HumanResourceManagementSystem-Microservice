@@ -5,15 +5,13 @@ import com.tolgakumbul.userservice.dao.EmployersDao;
 import com.tolgakumbul.userservice.dao.mapper.EmployersRowMapper;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
-import com.tolgakumbul.userservice.helper.model.hazelcast.HazelcastCacheModel;
+import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +31,10 @@ public class EmployersDaoImpl implements EmployersDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
+    @CacheHelper(mapName = "employerListMap", keyName = "AllEmployers")
     public List<EmployersEntity> getAllEmployers() {
         try {
-            HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
-            hazelcastCacheModel.setKeyName("AllEmployers");
-            hazelcastCacheModel.setMapName("employerListMap");
-            List<EmployersEntity> employersEntityList = (List<EmployersEntity>) hazelcastCacheHelper.get(hazelcastCacheModel);
-            if (CollectionUtils.isEmpty(employersEntityList)) {
-                LOGGER.info("GetAllEmployers.EmployersEntityList has not found on cache");
-                employersEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY, new EmployersRowMapper());
-                hazelcastCacheModel.setCachedObject(employersEntityList);
-                hazelcastCacheHelper.put(hazelcastCacheModel);
-                LOGGER.info("GetAllEmployers.EmployersEntityList put on cache {}", hazelcastCacheModel);
-                return employersEntityList;
-            }
-            LOGGER.info("GetAllEmployers.EmployersEntityList found on cache {}", employersEntityList);
+            List<EmployersEntity> employersEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY, new EmployersRowMapper());
             return employersEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getAllEmployers : {}", e.getMessage());
@@ -59,22 +46,9 @@ public class EmployersDaoImpl implements EmployersDao {
     @Lock(LockMode.PESSIMISTIC_READ)
     public EmployersEntity getEmployerById(Long employerId) {
         try {
-            HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
-            hazelcastCacheModel.setKeyName("EmployerById" + employerId);
-            hazelcastCacheModel.setMapName("employerByIdMap");
-            EmployersEntity employerEntity = (EmployersEntity) hazelcastCacheHelper.get(hazelcastCacheModel);
-            if (ObjectUtils.isEmpty(employerEntity)) {
-                LOGGER.info("EmployerById.EmployersEntity has not found on cache");
-                employerEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_EMPLOYER_BY_ID_QUERY,
-                        new EmployersRowMapper(),
-                        employerId);
-                hazelcastCacheModel.setCachedObject(employerEntity);
-                hazelcastCacheHelper.put(hazelcastCacheModel);
-                LOGGER.info("EmployerById.EmployersEntity put on cache {}", hazelcastCacheModel);
-                return employerEntity;
-            }
-            LOGGER.info("EmployerById.EmployersEntity found on cache {}", employerEntity);
-            return employerEntity;
+            return jdbcTemplate.queryForObject(QueryConstants.SELECT_EMPLOYER_BY_ID_QUERY,
+                    new EmployersRowMapper(),
+                    employerId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployerById : {}", e.getMessage());
             return new EmployersEntity();
@@ -85,22 +59,9 @@ public class EmployersDaoImpl implements EmployersDao {
     @Lock(LockMode.PESSIMISTIC_READ)
     public List<EmployersEntity> getEmployersByCompanyName(String companyName) {
         try {
-            HazelcastCacheModel hazelcastCacheModel = new HazelcastCacheModel();
-            hazelcastCacheModel.setKeyName("EmployersByCompanyName" + companyName);
-            hazelcastCacheModel.setMapName("employerByNameMap");
-            List<EmployersEntity> employersEntityList = (List<EmployersEntity>) hazelcastCacheHelper.get(hazelcastCacheModel);
-            if (ObjectUtils.isEmpty(employersEntityList)) {
-                LOGGER.info("EmployersByCompanyName.EmployersEntityList has not found on cache");
-                employersEntityList = jdbcTemplate.query(QueryConstants.SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY,
-                        new EmployersRowMapper(),
-                        companyName);
-                hazelcastCacheModel.setCachedObject(employersEntityList);
-                hazelcastCacheHelper.put(hazelcastCacheModel);
-                LOGGER.info("EmployersByCompanyName.EmployersEntityList put on cache {}", hazelcastCacheModel);
-                return employersEntityList;
-            }
-            LOGGER.info("EmployersByCompanyName.EmployersEntityList found on cache {}", employersEntityList);
-            return employersEntityList;
+            return jdbcTemplate.query(QueryConstants.SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY,
+                    new EmployersRowMapper(),
+                    companyName);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployersByCompanyName : {}", e.getMessage());
             return new ArrayList<>();
@@ -117,7 +78,6 @@ public class EmployersDaoImpl implements EmployersDao {
                     employersEntity.getPhoneNum(),
                     employersEntity.getCompanyImgUrl(),
                     employersEntity.getUserId());
-            hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.updateEmployer : {}", e.getMessage());
