@@ -26,8 +26,6 @@ public class AuditHelperAspect {
         if (auditHelper.sqlQuery().equalsIgnoreCase(Constants.SQL_INSERT)) {
             baseDaoEntity.setCreatedAt(LocalDateTime.now());
             baseDaoEntity.setCreatedBy(SecurityContextHelper.getUserName());
-            baseDaoEntity.setUpdatedAt(LocalDateTime.now());
-            baseDaoEntity.setUpdatedBy("");
         } else if (auditHelper.sqlQuery().equalsIgnoreCase(Constants.SQL_UPDATE)) {
             baseDaoEntity.setUpdatedAt(LocalDateTime.now());
             baseDaoEntity.setUpdatedBy(SecurityContextHelper.getUserName());
