@@ -135,6 +135,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer approveCompanyStaff(Long companyStaffId) {
         try {
+            //TODO: send the body instead of companyStaffId
             int affectedRowCount = jdbcTemplate.update(QueryConstants.APPROVE_COMPANY_STAFF_QUERY,
                     IsApprovedEnum.ACTIVE.getTextType(),
                     companyStaffId);
