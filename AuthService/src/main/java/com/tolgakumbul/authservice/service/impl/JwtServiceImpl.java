@@ -53,7 +53,7 @@ public class JwtServiceImpl implements JwtService {
                 .setSubject(userDetails.getUsername())
                 .setIssuer(ISSUER)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5))  // 5 mins valid token
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 45))  // 45 mins valid token
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -34,8 +34,8 @@ public class QueryConstants {
             WHERE_QUERY + "FIRST_NAME = ? AND LAST_NAME = ?";
 
     public static final String INSERT_COMPANY_STAFF_QUERY = INSERT_QUERY +
-            "COMPANY_STAFF(USER_ID, FIRST_NAME, LAST_NAME, IS_APPROVED, APPROVAL_DATE) " +
-            "VALUES (?, ?, ?, ?, ?)";
+            "COMPANY_STAFF(USER_ID, FIRST_NAME, LAST_NAME, IS_APPROVED, APPROVAL_DATE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String DELETE_COMPANY_STAFF_QUERY = DELETE_QUERY + FROM_QUERY +
             "COMPANY_STAFF " +
@@ -48,7 +48,7 @@ public class QueryConstants {
 
     public static final String UPDATE_COMPANY_STAFF_QUERY = UPDATE_QUERY +
             "COMPANY_STAFF " +
-            "SET FIRST_NAME = ?, LAST_NAME = ?, IS_APPROVED = ?, APPROVAL_DATE = ?" +
+            "SET FIRST_NAME = ?, LAST_NAME = ?, IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?" +
             WHERE_QUERY + "USER_ID = ?";
 
     /*EMPLOYERS*/

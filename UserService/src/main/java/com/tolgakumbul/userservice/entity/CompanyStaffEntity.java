@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "COMPANY_STAFF")
-public class CompanyStaffEntity implements Serializable {
+public class CompanyStaffEntity extends BaseDaoEntity implements Serializable {
 
     private static final long serialVersionUID = -1171792021749860240L;
 

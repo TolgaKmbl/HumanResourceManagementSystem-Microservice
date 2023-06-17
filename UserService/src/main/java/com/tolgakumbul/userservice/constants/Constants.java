@@ -10,4 +10,7 @@ public class Constants {
     public final static String GUID_HEADER = "Guid";
     public final static String BEARER = "Bearer ";
 
+    public final static String SQL_UPDATE = "UPDATE";
+    public final static String SQL_INSERT = "INSERT";
+
 }

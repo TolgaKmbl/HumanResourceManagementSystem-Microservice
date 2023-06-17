@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "EMPLOYERS")
-public class EmployersEntity implements Serializable {
+public class EmployersEntity extends BaseDaoEntity implements Serializable {
 
     private static final long serialVersionUID = 4516888019581455554L;
 

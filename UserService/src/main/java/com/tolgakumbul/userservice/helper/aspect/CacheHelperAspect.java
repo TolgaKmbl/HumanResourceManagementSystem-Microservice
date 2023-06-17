@@ -26,7 +26,7 @@ public class CacheHelperAspect {
 
     @Around(value = "@annotation(cacheHelper)",
     argNames = "joinPoint, cacheHelper")
-    public Object cacheableDbResultAdvice(ProceedingJoinPoint joinPoint, CacheHelper cacheHelper) throws Throwable {
+    public Object cacheAspect(ProceedingJoinPoint joinPoint, CacheHelper cacheHelper) throws Throwable {
         String keyName = cacheHelper.keyName();
         HazelcastCacheModel cacheModel = new HazelcastCacheModel();
         cacheModel.setMapName(cacheHelper.mapName());

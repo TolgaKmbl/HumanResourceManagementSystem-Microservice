@@ -1,10 +1,12 @@
 package com.tolgakumbul.userservice.dao.impl;
 
+import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.dao.mapper.CompanyStaffRowMapper;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
+import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.apache.logging.log4j.LogManager;
@@ -72,6 +74,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
+    @AuditHelper(sqlQuery = Constants.SQL_INSERT)
     public Integer insertCompanyStaff(CompanyStaffEntity companyStaffEntity) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.INSERT_COMPANY_STAFF_QUERY,
@@ -79,7 +82,11 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffEntity.getFirstName(),
                     companyStaffEntity.getLastName(),
                     companyStaffEntity.getIsApproved(),
-                    null);
+                    null,
+                    companyStaffEntity.getCreatedBy(),
+                    companyStaffEntity.getCreatedAt(),
+                    companyStaffEntity.getUpdatedBy(),
+                    companyStaffEntity.getUpdatedAt());
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
@@ -91,6 +98,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     /*TODO: Restrict the updatable columns */
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
+    @AuditHelper(sqlQuery = Constants.SQL_UPDATE)
     public Integer updateCompanyStaff(CompanyStaffEntity companyStaffEntity) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.UPDATE_COMPANY_STAFF_QUERY,
@@ -98,6 +106,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffEntity.getLastName(),
                     companyStaffEntity.getIsApproved(),
                     companyStaffEntity.getApprovalDate(),
+                    companyStaffEntity.getUpdatedBy(),
+                    companyStaffEntity.getUpdatedAt(),
                     companyStaffEntity.getUserId());
             return affectedRowCount;
         } catch (Exception e) {
