@@ -9,9 +9,6 @@ import net.devh.boot.grpc.server.advice.GrpcAdvice;
 import net.devh.boot.grpc.server.advice.GrpcExceptionHandler;
 import org.apache.commons.lang3.SerializationUtils;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
 @GrpcAdvice
 public class GeneralExceptionHandler {
 
@@ -21,7 +18,7 @@ public class GeneralExceptionHandler {
     public StatusRuntimeException handleException(Exception exception) {
         if (exception instanceof UsersException) {
             GeneralErrorResponse generalErrorResponse;
-            generalErrorResponse = handleErrorResponse((UsersException) exception);
+            generalErrorResponse = ExceptionMessageUtil.handleErrorResponse((UsersException) exception);
 
             Metadata metadata = getMetadata(generalErrorResponse);
 
@@ -33,18 +30,6 @@ public class GeneralExceptionHandler {
             return Status.UNKNOWN.withDescription(generalErrorResponse.getErrorCode()).withCause(exception).augmentDescription(generalErrorResponse.getErrorMessage()).asRuntimeException(metadata);*/
             return Status.UNKNOWN.withDescription(exception.getMessage()).withCause(exception).asRuntimeException();
         }
-    }
-
-    private GeneralErrorResponse handleErrorResponse(UsersException usersException) {
-        GeneralErrorResponse generalErrorResponse = new GeneralErrorResponse();
-        generalErrorResponse.setErrorCode(usersException.getMessage());
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("message");
-        if (usersException.getArgs() == null || usersException.getArgs().length == 0) {
-            generalErrorResponse.setErrorMessage(resourceBundle.getString(usersException.getMessage()));
-        } else {
-            generalErrorResponse.setErrorMessage(MessageFormat.format(resourceBundle.getString(usersException.getMessage()), usersException.getArgs()));
-        }
-        return generalErrorResponse;
     }
 
     private GeneralErrorResponse defaultErrorResponse() {

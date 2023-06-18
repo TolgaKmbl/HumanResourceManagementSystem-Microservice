@@ -43,7 +43,7 @@ public class QueryConstants {
 
     public static final String APPROVE_COMPANY_STAFF_QUERY = UPDATE_QUERY +
             "COMPANY_STAFF " +
-            "SET IS_APPROVED = ? " +
+            "SET IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ? " +
             WHERE_QUERY + "USER_ID = ?";
 
     public static final String UPDATE_COMPANY_STAFF_QUERY = UPDATE_QUERY +
@@ -70,13 +70,13 @@ public class QueryConstants {
 
     public static final String UPDATE_EMPLOYER_QUERY = UPDATE_QUERY +
             "EMPLOYERS " +
-            "SET COMPANY_NAME = ?, WEBSITE = ?, PHONE_NUM = ?, COMPANY_IMG_URL = ? " +
+            "SET COMPANY_NAME = ?, WEBSITE = ?, PHONE_NUM = ?, COMPANY_IMG_URL = ?, UPDATED_BY = ?, UPDATED_AT = ? " +
             WHERE_QUERY + "USER_ID = ?";
 
 
     public static final String INSERT_EMPLOYER_QUERY = INSERT_QUERY +
-            "EMPLOYERS(USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL) " +
-            "VALUES (?, ?, ?, ?, ?)";
+            "EMPLOYERS(USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String DELETE_EMPLOYER_QUERY = DELETE_QUERY + FROM_QUERY +
             "EMPLOYERS " +
@@ -107,16 +107,16 @@ public class QueryConstants {
 
     public static final String UPDATE_JOB_SEEKER_QUERY = UPDATE_QUERY +
             "JOB_SEEKERS " +
-            "SET FIRST_NAME = ?, LAST_NAME = ?, NATIONAL_ID = ?, BIRTH_DATE = ?, CV_ID = ?, IS_APPROVED = ?, APPROVAL_DATE = ? " +
+            "SET FIRST_NAME = ?, LAST_NAME = ?, NATIONAL_ID = ?, BIRTH_DATE = ?, CV_ID = ?, IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?  " +
             WHERE_QUERY + "USER_ID = ?";
 
     public static final String INSERT_JOB_SEEKER_QUERY = INSERT_QUERY +
-            "JOB_SEEKERS(USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            "JOB_SEEKERS(USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     public static final String APPROVE_JOB_SEEKER_QUERY = UPDATE_QUERY +
             "JOB_SEEKERS " +
-            "SET IS_APPROVED = ? " +
+            "SET IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?  " +
             WHERE_QUERY + "USER_ID = ?";
 
     public static final String DELETE_JOB_SEEKER_QUERY = DELETE_QUERY + FROM_QUERY +

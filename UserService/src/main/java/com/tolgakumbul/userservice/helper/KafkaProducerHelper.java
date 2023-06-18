@@ -24,13 +24,36 @@ public class KafkaProducerHelper {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public KafkaProducerModel generateKafkaProducerModel(String topicName,
-                                                         String keyName,
-                                                         Object request,
-                                                         Object response,
-                                                         String operationName,
-                                                         String entityName,
-                                                         String errorMessage) {
+
+    public void sendKafkaTopic(Object request, Object response, String operationName, String topicName, String entityNameForKafka) {
+        KafkaProducerModel kafkaProducerModel = generateKafkaProducerModel(topicName,
+                entityNameForKafka + "-" + operationName,
+                request,
+                response,
+                operationName,
+                entityNameForKafka,
+                "");
+        send(kafkaProducerModel);
+    }
+
+    public void sendKafkaTopicForError(Object request, String operationName, String errorMessage, String topicName, String entityNameForKafka) {
+        KafkaProducerModel kafkaProducerModel = generateKafkaProducerModel(topicName,
+                entityNameForKafka + "-" + operationName,
+                request,
+                null,
+                operationName,
+                entityNameForKafka,
+                errorMessage);
+        send(kafkaProducerModel);
+    }
+
+    private KafkaProducerModel generateKafkaProducerModel(String topicName,
+                                                          String keyName,
+                                                          Object request,
+                                                          Object response,
+                                                          String operationName,
+                                                          String entityName,
+                                                          String errorMessage) {
         KafkaLoggingObject kafkaLoggingObject = KafkaLoggingObject.builder()
                 .request(request)
                 .response(response)
@@ -46,9 +69,9 @@ public class KafkaProducerHelper {
                 .build();
     }
 
-    public boolean send(KafkaProducerModel kafkaProducerModel) {
+    private boolean send(KafkaProducerModel kafkaProducerModel) {
         try {
-            if(isKafkaEnabledForLogging){
+            if (isKafkaEnabledForLogging) {
                 kafkaTemplate.send(kafkaProducerModel.getTopicName(), kafkaProducerModel.getKeyName(), kafkaProducerModel.getKafkaObject());
             }
             return true;

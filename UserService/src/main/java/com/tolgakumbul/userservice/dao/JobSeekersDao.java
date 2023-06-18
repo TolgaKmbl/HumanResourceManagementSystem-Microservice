@@ -18,7 +18,7 @@ public interface JobSeekersDao {
 
     Integer insertJobSeeker(JobSeekersEntity jobSeekersEntity);
 
-    Integer approveJobSeeker(Long jobSeekerId);
+    Integer approveJobSeeker(JobSeekersEntity jobSeekersEntity);
 
     Integer deleteJobSeeker(Long jobSeekerId);
 

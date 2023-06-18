@@ -1,10 +1,12 @@
 package com.tolgakumbul.userservice.dao.impl;
 
+import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.EmployersDao;
 import com.tolgakumbul.userservice.dao.mapper.EmployersRowMapper;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
+import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +53,7 @@ public class EmployersDaoImpl implements EmployersDao {
                     employerId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployerById : {}", e.getMessage());
-            return new EmployersEntity();
+            return null;
         }
     }
 
@@ -70,6 +72,7 @@ public class EmployersDaoImpl implements EmployersDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
+    @AuditHelper(sqlQuery = Constants.SQL_UPDATE)
     public Integer updateEmployer(EmployersEntity employersEntity) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.UPDATE_EMPLOYER_QUERY,
@@ -77,6 +80,8 @@ public class EmployersDaoImpl implements EmployersDao {
                     employersEntity.getWebsite(),
                     employersEntity.getPhoneNum(),
                     employersEntity.getCompanyImgUrl(),
+                    employersEntity.getUpdatedBy(),
+                    employersEntity.getUpdatedAt(),
                     employersEntity.getUserId());
             return affectedRowCount;
         } catch (Exception e) {
@@ -87,6 +92,7 @@ public class EmployersDaoImpl implements EmployersDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
+    @AuditHelper(sqlQuery = Constants.SQL_INSERT)
     public Integer insertEmployer(EmployersEntity employersEntity) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.INSERT_EMPLOYER_QUERY,
@@ -94,7 +100,11 @@ public class EmployersDaoImpl implements EmployersDao {
                     employersEntity.getCompanyName(),
                     employersEntity.getWebsite(),
                     employersEntity.getPhoneNum(),
-                    employersEntity.getCompanyImgUrl());
+                    employersEntity.getCompanyImgUrl(),
+                    employersEntity.getCreatedBy(),
+                    employersEntity.getCreatedAt(),
+                    employersEntity.getUpdatedBy(),
+                    employersEntity.getUpdatedAt());
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {

@@ -8,7 +8,6 @@ import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
-import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.relational.core.sql.LockMode;
@@ -16,6 +15,7 @@ import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
-            return new CompanyStaffEntity();
+            return null;
         }
     }
 
@@ -68,7 +68,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     firstName, lastName);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            return new CompanyStaffEntity();
+            return null;
         }
     }
 
@@ -133,12 +133,15 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
-    public Integer approveCompanyStaff(Long companyStaffId) {
+    @AuditHelper(sqlQuery = Constants.SQL_UPDATE)
+    public Integer approveCompanyStaff(CompanyStaffEntity companyStaffEntity) {
         try {
-            //TODO: send the body instead of companyStaffId
             int affectedRowCount = jdbcTemplate.update(QueryConstants.APPROVE_COMPANY_STAFF_QUERY,
-                    IsApprovedEnum.ACTIVE.getTextType(),
-                    companyStaffId);
+                    companyStaffEntity.getIsApproved(),
+                    LocalDateTime.now(),
+                    companyStaffEntity.getUpdatedBy(),
+                    companyStaffEntity.getUpdatedAt(),
+                    companyStaffEntity.getUserId());
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
