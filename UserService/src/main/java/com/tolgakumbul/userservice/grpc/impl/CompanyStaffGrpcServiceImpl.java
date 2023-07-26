@@ -37,7 +37,6 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
 
         GetAllCompanyStaffResponse getAllCompanyStaffResponse = GetAllCompanyStaffResponse.newBuilder()
                 .addAllCompanyStaffList(getCompanyStaffResponses)
-                .setCommonResponse(MAPPER.toCommonResponse(allCompanyStaff.getCommonResponse()))
                 .build();
 
         responseObserver.onNext(getAllCompanyStaffResponse);
@@ -49,14 +48,9 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
     public void getCompanyStaffById(CompanyStaffByIdRequest request, StreamObserver<CompanyStaffGeneralResponse> responseObserver) {
         CompanyStaffGeneralResponseDTO companyStaffById = companyStaffService.getCompanyStaffById(request.getUserId());
 
-        /*CompanyStaffGeneralResponse companyStaffGeneralResponse = CompanyStaffGeneralResponse.newBuilder()
-                .setCommonResponse(MAPPER.toCommonResponse(companyStaffById.getCommonResponse()))
-                .setCompanyStaffData(MAPPER.toGetCompanyStaffResponse(companyStaffById.getCompanyStaffData() == null ?
-                        new CompanyStaffDTO() :
-                        companyStaffById.getCompanyStaffData()))
-                .build();*/
+        CompanyStaffGeneralResponse companyStaffGeneralResponse = MAPPER.toCompanyStaffGeneralResponse(companyStaffById);
 
-        responseObserver.onNext(MAPPER.toCompanyStaffGeneralResponse(companyStaffById));
+        responseObserver.onNext(companyStaffGeneralResponse);
         responseObserver.onCompleted();
     }
 
@@ -64,12 +58,9 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
     public void getCompanyStaffByName(GetCompanyStaffByNameRequest request, StreamObserver<CompanyStaffGeneralResponse> responseObserver) {
         CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName(request.getFirstName(), request.getLastName());
 
-        /*CompanyStaffGeneralResponse companyStaffGeneralResponse = CompanyStaffGeneralResponse.newBuilder()
-                .setCommonResponse(MAPPER.toCommonResponse(companyStaffByName.getCommonResponse()))
-                .setCompanyStaffData(MAPPER.toGetCompanyStaffResponse(companyStaffByName.getCompanyStaffData()))
-                .build();*/
+        CompanyStaffGeneralResponse companyStaffGeneralResponse = MAPPER.toCompanyStaffGeneralResponse(companyStaffByName);
 
-        responseObserver.onNext(MAPPER.toCompanyStaffGeneralResponse(companyStaffByName));
+        responseObserver.onNext(companyStaffGeneralResponse);
         responseObserver.onCompleted();
     }
 

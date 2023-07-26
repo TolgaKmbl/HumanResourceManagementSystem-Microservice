@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -41,7 +40,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return companyStaffEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getAllCompanyStaff : {}", e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage());
         }
 
     }
@@ -55,7 +54,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -68,7 +67,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     firstName, lastName);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 

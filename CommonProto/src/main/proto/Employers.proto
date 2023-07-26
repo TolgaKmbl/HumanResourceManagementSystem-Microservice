@@ -18,12 +18,10 @@ message EmployersByCompanyNameRequest {
 
 message EmployerGeneralResponse {
   Employer employer = 1;
-  CommonResponse commonResponse = 2;
 }
 
 message EmployerListGeneralResponse {
   repeated Employer employerList = 1;
-  CommonResponse commonResponse = 2;
 }
 
 message Employer {

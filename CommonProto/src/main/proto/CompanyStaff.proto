@@ -21,12 +21,10 @@ message GetCompanyStaffByNameRequest {
 
 message CompanyStaffGeneralResponse {
   CompanyStaffData companyStaffData = 1;
-  CommonResponse commonResponse = 2;
 }
 
 message GetAllCompanyStaffResponse {
   repeated CompanyStaffData companyStaffList = 1;
-  CommonResponse commonResponse = 2;
 }
 
 message CompanyStaffData {

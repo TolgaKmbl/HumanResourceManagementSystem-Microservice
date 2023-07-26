@@ -86,7 +86,6 @@ public class CompanyStaffServiceImplTest {
         Assert.assertEquals("TestName", companyStaffById.getCompanyStaffData().getFirstName());
         Assert.assertEquals("TestLastName",companyStaffById.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffById.getCompanyStaffData().getIsApproved());
-        Assert.assertEquals(Constants.OK, companyStaffById.getCommonResponse().getReasonCode());
     }
 
     @Test
@@ -94,7 +93,6 @@ public class CompanyStaffServiceImplTest {
         Mockito.when(companyStaffDao.getCompanyStaffById(any())).thenReturn(null);
         CompanyStaffGeneralResponseDTO companyStaffById = companyStaffService.getCompanyStaffById(999L);
         Assert.assertNotNull(companyStaffById);
-        Assert.assertEquals(Constants.STATUS_INTERNAL_ERROR, companyStaffById.getCommonResponse().getReturnCode());
     }
 
     @Test
@@ -102,7 +100,6 @@ public class CompanyStaffServiceImplTest {
         Mockito.when(companyStaffDao.getCompanyStaffById(any())).thenReturn(new CompanyStaffEntity());
         CompanyStaffGeneralResponseDTO companyStaffById = companyStaffService.getCompanyStaffById(999L);
         Assert.assertNotNull(companyStaffById);
-        Assert.assertEquals(Constants.STATUS_OK, companyStaffById.getCommonResponse().getReturnCode());
     }
 
     @Test(expected = UsersException.class)
@@ -126,7 +123,6 @@ public class CompanyStaffServiceImplTest {
         Assert.assertEquals("TestName", companyStaffByName.getCompanyStaffData().getFirstName());
         Assert.assertEquals("TestLastName",companyStaffByName.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffByName.getCompanyStaffData().getIsApproved());
-        Assert.assertEquals(Constants.OK, companyStaffByName.getCommonResponse().getReasonCode());
     }
 
     @Test
@@ -134,7 +130,6 @@ public class CompanyStaffServiceImplTest {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenReturn(null);
         CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName","TestLastName");
         Assert.assertNotNull(companyStaffByName);
-        Assert.assertEquals(Constants.STATUS_INTERNAL_ERROR, companyStaffByName.getCommonResponse().getReturnCode());
     }
 
     @Test
@@ -142,7 +137,6 @@ public class CompanyStaffServiceImplTest {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenReturn(new CompanyStaffEntity());
         CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName","TestLastName");
         Assert.assertNotNull(companyStaffByName);
-        Assert.assertEquals(Constants.STATUS_OK, companyStaffByName.getCommonResponse().getReturnCode());
     }
 
     @Test(expected = UsersException.class)
@@ -167,7 +161,6 @@ public class CompanyStaffServiceImplTest {
         Assert.assertEquals("TestName", companyStaffGeneralResponseDTO.getCompanyStaffData().getFirstName());
         Assert.assertEquals("TestLastName",companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffGeneralResponseDTO.getCompanyStaffData().getIsApproved());
-        Assert.assertEquals(Constants.OK, companyStaffGeneralResponseDTO.getCommonResponse().getReasonCode());
     }
 
     @Test(expected = UsersException.class)
@@ -198,7 +191,6 @@ public class CompanyStaffServiceImplTest {
         Assert.assertEquals("TestName", companyStaffGeneralResponseDTO.getCompanyStaffData().getFirstName());
         Assert.assertEquals("TestLastName",companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffGeneralResponseDTO.getCompanyStaffData().getIsApproved());
-        Assert.assertEquals(Constants.OK, companyStaffGeneralResponseDTO.getCommonResponse().getReasonCode());
     }
 
     @Test
@@ -219,7 +211,6 @@ public class CompanyStaffServiceImplTest {
         Assert.assertEquals("TestName", companyStaffGeneralResponseDTO.getCompanyStaffData().getFirstName());
         Assert.assertEquals("TestLastName",companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffGeneralResponseDTO.getCompanyStaffData().getIsApproved());
-        Assert.assertEquals(Constants.OK, companyStaffGeneralResponseDTO.getCommonResponse().getReasonCode());
     }
 
     private CompanyStaffDTO getCompanyStaffDTO(){

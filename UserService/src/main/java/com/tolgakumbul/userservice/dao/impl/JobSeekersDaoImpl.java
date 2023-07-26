@@ -16,7 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -41,7 +40,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
             return jobSeekersEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getAllJobSeekers : {}", e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -52,7 +51,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
             return jobSeekersEntity;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerById : {}", e.getMessage());
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -63,7 +62,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
             return jobSeekersEntity;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByNationalId : {}", e.getMessage());
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -74,7 +73,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
             return jobSeekersEntity;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByNationalId : {}", e.getMessage());
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 

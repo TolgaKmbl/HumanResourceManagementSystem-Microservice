@@ -37,7 +37,6 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
 
         EmployerListGeneralResponse getAllEmployersResponse = EmployerListGeneralResponse.newBuilder()
                 .addAllEmployerList(employerList)
-                .setCommonResponse(MAPPER.toCommonResponse(allEmployers.getCommonResponse()))
                 .build();
 
         responseObserver.onNext(getAllEmployersResponse);
@@ -49,7 +48,6 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
         EmployersGeneralResponseDTO employerById = employersService.getEmployerById(request.getUserId());
 
         EmployerGeneralResponse employerGeneralResponse = EmployerGeneralResponse.newBuilder()
-                .setCommonResponse(MAPPER.toCommonResponse(employerById.getCommonResponse()))
                 .setEmployer(MAPPER.toEmployer(employerById.getEmployer()))
                 .build();
 
@@ -62,7 +60,6 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
         EmployersListResponseDTO employersByCompanyName = employersService.getEmployersByCompanyName(request.getCompanyName());
 
         EmployerListGeneralResponse employerGeneralResponse = EmployerListGeneralResponse.newBuilder()
-                .setCommonResponse(MAPPER.toCommonResponse(employersByCompanyName.getCommonResponse()))
                 .addAllEmployerList(employersByCompanyName.getEmployerList().stream()
                         .map(MAPPER::toEmployer)
                         .collect(Collectors.toList()))

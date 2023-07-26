@@ -5,7 +5,6 @@ import com.tolgakumbul.userservice.constants.ErrorCode;
 import com.tolgakumbul.userservice.dao.EmployersDao;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
-import com.tolgakumbul.userservice.helper.CommonHelper;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.EmployersMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
@@ -40,13 +39,12 @@ public class EmployersServiceImpl implements EmployersService {
         try {
             List<EmployersEntity> allEmployers = employersDao.getAllEmployers();
             List<EmployersDTO> employersDTOList = allEmployers.stream().map(MAPPER::toEmployersDTO).collect(Collectors.toList());
-            final CommonResponseDTO commonResponseDTO = CommonHelper.getCommonResponseDTO(employersDTOList);
-            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList, commonResponseDTO);
+            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList);
 
             return employersListResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.getAllEmployers : {}", e.getMessage());
-            throw new UsersException(ErrorCode.ALL_EMPLOYERS_FETCH_ERROR);
+            throw new UsersException(ErrorCode.ALL_EMPLOYERS_FETCH_ERROR, e.getMessage());
         }
     }
 
@@ -55,14 +53,13 @@ public class EmployersServiceImpl implements EmployersService {
     public EmployersGeneralResponseDTO getEmployerById(Long employerId) {
         try {
             EmployersEntity employerById = employersDao.getEmployerById(employerId);
-            final CommonResponseDTO commonResponseDTO = CommonHelper.getCommonResponseDTO(employerById);
             EmployersDTO employersDTO = MAPPER.toEmployersDTO(employerById);
-            EmployersGeneralResponseDTO employersGeneralResponseDTO = new EmployersGeneralResponseDTO(employersDTO, commonResponseDTO);
+            EmployersGeneralResponseDTO employersGeneralResponseDTO = new EmployersGeneralResponseDTO(employersDTO);
 
             return employersGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.getEmployerById : {}", e.getMessage());
-            throw new UsersException(ErrorCode.EMPLOYER_BY_ID_FETCH_ERROR);
+            throw new UsersException(ErrorCode.EMPLOYER_BY_ID_FETCH_ERROR, e.getMessage());
         }
     }
 
@@ -71,14 +68,13 @@ public class EmployersServiceImpl implements EmployersService {
     public EmployersListResponseDTO getEmployersByCompanyName(String companyName) {
         try {
             List<EmployersEntity> employersByCompanyName = employersDao.getEmployersByCompanyName(companyName);
-            final CommonResponseDTO commonResponseDTO = CommonHelper.getCommonResponseDTO(employersByCompanyName);
             List<EmployersDTO> employersDTOList = employersByCompanyName.stream().map(MAPPER::toEmployersDTO).collect(Collectors.toList());
-            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList, commonResponseDTO);
+            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList);
 
             return employersListResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.getEmployersByCompanyName : {}", e.getMessage());
-            throw new UsersException(ErrorCode.EMPLOYER_BY_COMPANY_NAME_FETCH_ERROR);
+            throw new UsersException(ErrorCode.EMPLOYER_BY_COMPANY_NAME_FETCH_ERROR, e.getMessage());
         }
     }
 
@@ -91,14 +87,12 @@ public class EmployersServiceImpl implements EmployersService {
 
             EmployersEntity employerById = employersDao.getEmployerById(employersDTO.getUserId());
 
-            EmployersGeneralResponseDTO employersGeneralResponseDTO = new EmployersGeneralResponseDTO(
-                    MAPPER.toEmployersDTO(employerById),
-                    new CommonResponseDTO(Constants.STATUS_OK, Constants.OK));
+            EmployersGeneralResponseDTO employersGeneralResponseDTO = new EmployersGeneralResponseDTO(MAPPER.toEmployersDTO(employerById));
 
             return employersGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.updateEmployer : {}", e.getMessage());
-            throw new UsersException(ErrorCode.EMPLOYER_UPDATE_ERROR, employersDTO.getUserId());
+            throw new UsersException(ErrorCode.EMPLOYER_UPDATE_ERROR, employersDTO.getUserId(), e.getMessage());
         }
     }
 
@@ -111,13 +105,12 @@ public class EmployersServiceImpl implements EmployersService {
 
             EmployersEntity employerById = employersDao.getEmployerById(employersDTO.getUserId());
 
-            EmployersGeneralResponseDTO employersGeneralResponseDTO = new EmployersGeneralResponseDTO(MAPPER.toEmployersDTO(employerById),
-                    new CommonResponseDTO(Constants.STATUS_OK, Constants.OK));
+            EmployersGeneralResponseDTO employersGeneralResponseDTO = new EmployersGeneralResponseDTO(MAPPER.toEmployersDTO(employerById));
 
             return employersGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.insertEmployer : {}", e.getMessage());
-            throw new UsersException(ErrorCode.EMPLOYER_INSERT_ERROR);
+            throw new UsersException(ErrorCode.EMPLOYER_INSERT_ERROR, e.getMessage());
         }
     }
 
@@ -133,7 +126,7 @@ public class EmployersServiceImpl implements EmployersService {
             return commonResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.deleteEmployer : {}", e.getMessage());
-            throw new UsersException(ErrorCode.EMPLOYER_DELETE_ERROR);
+            throw new UsersException(ErrorCode.EMPLOYER_DELETE_ERROR, e.getMessage());
         }
     }
 

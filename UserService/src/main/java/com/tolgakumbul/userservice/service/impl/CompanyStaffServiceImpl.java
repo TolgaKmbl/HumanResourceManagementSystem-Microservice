@@ -5,7 +5,6 @@ import com.tolgakumbul.userservice.constants.ErrorCode;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
-import com.tolgakumbul.userservice.helper.CommonHelper;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
@@ -41,13 +40,12 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
         try {
             List<CompanyStaffEntity> allCompanyStaffEntity = companyStaffDao.getAllCompanyStaff();
             List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaffEntity.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
-            final CommonResponseDTO commonResponseDTO = CommonHelper.getCommonResponseDTO(companyStaffDTOList);
-            CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO(companyStaffDTOList, commonResponseDTO);
+            CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO(companyStaffDTOList);
 
             return companyStaffListResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getAllCompanyStaff : {}", e.getMessage());
-            throw new UsersException(ErrorCode.ALL_COMPANY_STAFF_FETCH_ERROR);
+            throw new UsersException(ErrorCode.ALL_COMPANY_STAFF_FETCH_ERROR, e.getMessage());
         }
 
     }
@@ -57,14 +55,13 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     public CompanyStaffGeneralResponseDTO getCompanyStaffById(Long companyStaffId) {
         try {
             CompanyStaffEntity companyStaffEntityById = companyStaffDao.getCompanyStaffById(companyStaffId);
-            final CommonResponseDTO commonResponseDTO = CommonHelper.getCommonResponseDTO(companyStaffEntityById);
             CompanyStaffDTO companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityById);
-            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffData);
 
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffById : {}", e.getMessage());
-            throw new UsersException(ErrorCode.COMPANY_STAFF_BY_ID_FETCH_ERROR);
+            throw new UsersException(ErrorCode.COMPANY_STAFF_BY_ID_FETCH_ERROR, e.getMessage());
         }
     }
 
@@ -73,14 +70,13 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     public CompanyStaffGeneralResponseDTO getCompanyStaffByName(String firstName, String lastName) {
         try {
             CompanyStaffEntity companyStaffEntityByName = companyStaffDao.getCompanyStaffByName(firstName, lastName);
-            final CommonResponseDTO commonResponseDTO = CommonHelper.getCommonResponseDTO(companyStaffEntityByName);
             CompanyStaffDTO companyStaffData = MAPPER.toCompanyStaffDTO(companyStaffEntityByName);
-            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffData, commonResponseDTO);
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffData);
 
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.getCompanyStaffByName : {}", e.getMessage());
-            throw new UsersException(ErrorCode.COMPANY_STAFF_BY_NAME_FETCH_ERROR);
+            throw new UsersException(ErrorCode.COMPANY_STAFF_BY_NAME_FETCH_ERROR, e.getMessage());
         }
     }
 
@@ -94,13 +90,12 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             CompanyStaffDTO companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(
                     companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId()));
 
-            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO,
-                    new CommonResponseDTO(Constants.STATUS_OK, Constants.OK));
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO);
 
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.insertCompanyStaff : {}", e.getMessage());
-            throw new UsersException(ErrorCode.COMPANY_STAFF_INSERT_ERROR);
+            throw new UsersException(ErrorCode.COMPANY_STAFF_INSERT_ERROR, e.getMessage());
         }
     }
 
@@ -113,13 +108,12 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             CompanyStaffDTO companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(
                     companyStaffDao.getCompanyStaffById(companyStaffDTO.getUserId()));
 
-            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO,
-                    new CommonResponseDTO(Constants.STATUS_OK, Constants.OK));
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(companyStaffByIdDTO);
 
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.updateCompanyStaff : {}", e.getMessage());
-            throw new UsersException(ErrorCode.COMPANY_STAFF_UPDATE_ERROR, companyStaffDTO.getUserId());
+            throw new UsersException(ErrorCode.COMPANY_STAFF_UPDATE_ERROR, companyStaffDTO.getUserId(), e.getMessage());
         }
     }
 
@@ -129,11 +123,11 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     public CommonResponseDTO deleteCompanyStaff(Long companyStaffId) {
         try {
             companyStaffDao.deleteCompanyStaff(companyStaffId);
-
+            //TODO: Return response like -> 1 row has been deleted / No rows has been deleted
             return new CommonResponseDTO(Constants.STATUS_OK, Constants.OK);
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.deleteCompanyStaff : {}", e.getMessage());
-            throw new UsersException(ErrorCode.COMPANY_STAFF_DELETE_ERROR);
+            throw new UsersException(ErrorCode.COMPANY_STAFF_DELETE_ERROR, e.getMessage());
         }
     }
 
@@ -146,13 +140,12 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             companyStaffEntityById.setIsApproved(IsApprovedEnum.ACTIVE.getTextType());
             companyStaffDao.approveCompanyStaff(companyStaffEntityById);
 
-            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(MAPPER.toCompanyStaffDTO(companyStaffEntityById),
-                    new CommonResponseDTO(Constants.STATUS_OK, Constants.OK));
+            CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO = new CompanyStaffGeneralResponseDTO(MAPPER.toCompanyStaffDTO(companyStaffEntityById));
 
             return companyStaffGeneralResponseDTO;
         } catch (Exception e) {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.approveCompanyStaff : {}", e.getMessage());
-            throw new UsersException(ErrorCode.COMPANY_STAFF_APPROVE_ERROR);
+            throw new UsersException(ErrorCode.COMPANY_STAFF_APPROVE_ERROR, e.getMessage());
         }
     }
 

@@ -15,7 +15,6 @@ import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -40,7 +39,7 @@ public class EmployersDaoImpl implements EmployersDao {
             return employersEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getAllEmployers : {}", e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -53,7 +52,7 @@ public class EmployersDaoImpl implements EmployersDao {
                     employerId);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployerById : {}", e.getMessage());
-            return null;
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -66,7 +65,7 @@ public class EmployersDaoImpl implements EmployersDao {
                     companyName);
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployersByCompanyName : {}", e.getMessage());
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
