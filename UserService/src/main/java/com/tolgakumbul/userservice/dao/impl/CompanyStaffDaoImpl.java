@@ -8,7 +8,6 @@ import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
-import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -35,11 +35,12 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
-    @CacheHelper(mapName = "companyStaffListMap", keyName = "AllCompanyStaff")
+    //@CacheHelper(mapName = "companyStaffListMap", keyName = "AllCompanyStaff") /*Removed due to the pagination*/
     public List<CompanyStaffEntity> getAllCompanyStaff(ListRequest listRequest) {
         try {
-            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY), listRequest.getPageable());
-            List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(editedSql.toString(), new CompanyStaffRowMapper());
+            List<Long> params = new ArrayList<>();
+            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY), params, listRequest.getPageable());
+            List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(editedSql.toString(), new CompanyStaffRowMapper(), params.toArray(new Object[0]));
             return companyStaffEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getAllCompanyStaff : {}", e.getMessage());

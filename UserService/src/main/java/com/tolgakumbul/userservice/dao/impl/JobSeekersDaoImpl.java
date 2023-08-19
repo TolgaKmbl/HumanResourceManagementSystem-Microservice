@@ -8,7 +8,6 @@ import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.JobSeekersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
-import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -35,11 +35,12 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     }
 
     @Override
-    @CacheHelper(mapName = "jobseekerListMap", keyName = "AllJobSeekers")
+    //@CacheHelper(mapName = "jobseekerListMap", keyName = "AllJobSeekers") /*Removed due to the pagination*/
     public List<JobSeekersEntity> getAllJobSeekers(ListRequest listRequest) {
         try {
-            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_JOB_SEEKERS_QUERY), listRequest.getPageable());
-            List<JobSeekersEntity> jobSeekersEntityList = jdbcTemplate.query(editedSql.toString(), new JobSeekersRowMapper());
+            List<Long> params = new ArrayList<>();
+            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_JOB_SEEKERS_QUERY), params, listRequest.getPageable());
+            List<JobSeekersEntity> jobSeekersEntityList = jdbcTemplate.query(editedSql.toString(), new JobSeekersRowMapper(), params.toArray(new Object[0]));
             return jobSeekersEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getAllJobSeekers : {}", e.getMessage());

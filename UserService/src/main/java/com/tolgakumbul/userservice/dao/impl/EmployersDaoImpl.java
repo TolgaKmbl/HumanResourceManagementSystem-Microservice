@@ -9,7 +9,6 @@ import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
-import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
 import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,6 +17,7 @@ import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -35,11 +35,12 @@ public class EmployersDaoImpl implements EmployersDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
-    @CacheHelper(mapName = "employerListMap", keyName = "AllEmployers")
+    //@CacheHelper(mapName = "employerListMap", keyName = "AllEmployers") /*Removed due to the pagination*/
     public List<EmployersEntity> getAllEmployers(ListRequest listRequest) {
         try {
-            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY), listRequest.getPageable());
-            List<EmployersEntity> employersEntityList = jdbcTemplate.query(editedSql.toString(), new EmployersRowMapper());
+            List<Long> params = new ArrayList<>();
+            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY), params, listRequest.getPageable());
+            List<EmployersEntity> employersEntityList = jdbcTemplate.query(editedSql.toString(), new EmployersRowMapper(), params.toArray(new Object[0]));
             return employersEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getAllEmployers : {}", e.getMessage());
