@@ -1,17 +1,15 @@
 package com.tolgakumbul.userservice.service;
 
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersGeneralResponseDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersListResponseDTO;
+import com.tolgakumbul.userservice.model.employers.*;
 
 public interface EmployersService {
 
-    EmployersListResponseDTO getAllEmployers();
+    EmployersListResponseDTO getAllEmployers(GetAllEmployersRequestDTO requestDTO);
 
     EmployersGeneralResponseDTO getEmployerById(Long employerId);
 
-    EmployersListResponseDTO getEmployersByCompanyName(String companyName);
+    EmployersListResponseDTO getEmployersByCompanyName(EmployersByCompanyNameRequestDTO requestDTO);
 
     EmployersGeneralResponseDTO updateEmployer(EmployersDTO employersDTO);
 

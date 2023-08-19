@@ -1,12 +1,13 @@
 package com.tolgakumbul.userservice.dao;
 
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.JobSeekersEntity;
 
 import java.util.List;
 
 public interface JobSeekersDao {
 
-    List<JobSeekersEntity> getAllJobSeekers();
+    List<JobSeekersEntity> getAllJobSeekers(ListRequest listRequest);
 
     JobSeekersEntity getJobSeekerById(Long jobSeekerId);
 

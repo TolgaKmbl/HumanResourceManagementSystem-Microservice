@@ -1,14 +1,15 @@
 package com.tolgakumbul.userservice.grpc.impl;
 
-import com.google.protobuf.Empty;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.EmployersGrpcServiceGrpc;
 import com.tolgakumbul.proto.EmployersProto.*;
 import com.tolgakumbul.userservice.grpc.EmployersGrpcService;
 import com.tolgakumbul.userservice.mapper.EmployersMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.employers.EmployersByCompanyNameRequestDTO;
 import com.tolgakumbul.userservice.model.employers.EmployersGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.employers.EmployersListResponseDTO;
+import com.tolgakumbul.userservice.model.employers.GetAllEmployersRequestDTO;
 import com.tolgakumbul.userservice.service.EmployersService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -28,8 +29,11 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
 
 
     @Override
-    public void getAllEmployers(Empty request, StreamObserver<EmployerListGeneralResponse> responseObserver) {
-        EmployersListResponseDTO allEmployers = employersService.getAllEmployers();
+    public void getAllEmployers(EmployerListGeneralRequest request, StreamObserver<EmployerListGeneralResponse> responseObserver) {
+
+        GetAllEmployersRequestDTO getAllEmployersRequestDTO = MAPPER.toGetAllEmployersRequestDTO(request);
+
+        EmployersListResponseDTO allEmployers = employersService.getAllEmployers(getAllEmployersRequestDTO);
 
         List<Employer> employerList = allEmployers.getEmployerList().stream()
                 .map(MAPPER::toEmployer)
@@ -57,7 +61,8 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
 
     @Override
     public void getEmployersByCompanyName(EmployersByCompanyNameRequest request, StreamObserver<EmployerListGeneralResponse> responseObserver) {
-        EmployersListResponseDTO employersByCompanyName = employersService.getEmployersByCompanyName(request.getCompanyName());
+        EmployersByCompanyNameRequestDTO employersByCompanyNameRequestDTO = MAPPER.toEmployersByCompanyNameRequestDTO(request);
+        EmployersListResponseDTO employersByCompanyName = employersService.getEmployersByCompanyName(employersByCompanyNameRequestDTO);
 
         EmployerListGeneralResponse employerGeneralResponse = EmployerListGeneralResponse.newBuilder()
                 .addAllEmployerList(employersByCompanyName.getEmployerList().stream()

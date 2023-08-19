@@ -4,6 +4,8 @@ import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.EmployersDao;
 import com.tolgakumbul.userservice.dao.mapper.EmployersRowMapper;
+import com.tolgakumbul.userservice.dao.model.EmployersByCompanyNameRequest;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
@@ -33,7 +35,7 @@ public class EmployersDaoImpl implements EmployersDao {
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
     @CacheHelper(mapName = "employerListMap", keyName = "AllEmployers")
-    public List<EmployersEntity> getAllEmployers() {
+    public List<EmployersEntity> getAllEmployers(ListRequest listRequest) {
         try {
             List<EmployersEntity> employersEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY, new EmployersRowMapper());
             return employersEntityList;
@@ -58,11 +60,11 @@ public class EmployersDaoImpl implements EmployersDao {
 
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
-    public List<EmployersEntity> getEmployersByCompanyName(String companyName) {
+    public List<EmployersEntity> getEmployersByCompanyName(EmployersByCompanyNameRequest daoRequest) {
         try {
             return jdbcTemplate.query(QueryConstants.SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY,
                     new EmployersRowMapper(),
-                    companyName);
+                    daoRequest.getCompanyName());
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployersByCompanyName : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());

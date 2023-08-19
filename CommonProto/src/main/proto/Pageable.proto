@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "PageableProto";
+
+message Pageable {
+  int64 pageSize = 1;
+  int64 pageNumber = 2;
+  string sortColumn = 3;
+  string sortType = 4;
+}

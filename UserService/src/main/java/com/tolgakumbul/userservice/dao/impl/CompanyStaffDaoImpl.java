@@ -4,6 +4,7 @@ import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
 import com.tolgakumbul.userservice.dao.mapper.CompanyStaffRowMapper;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
@@ -34,7 +35,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
     @CacheHelper(mapName = "companyStaffListMap", keyName = "AllCompanyStaff")
-    public List<CompanyStaffEntity> getAllCompanyStaff() {
+    public List<CompanyStaffEntity> getAllCompanyStaff(ListRequest listRequest) {
         try {
             List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY, new CompanyStaffRowMapper());
             return companyStaffEntityList;

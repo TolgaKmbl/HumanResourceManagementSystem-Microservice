@@ -4,10 +4,11 @@ import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.GetAllCompanyStaffRequestDTO;
 
 public interface CompanyStaffService {
 
-    CompanyStaffListResponseDTO getAllCompanyStaff();
+    CompanyStaffListResponseDTO getAllCompanyStaff(GetAllCompanyStaffRequestDTO requestDTO);
 
     CompanyStaffGeneralResponseDTO getCompanyStaffById(Long companyStaffId);
 

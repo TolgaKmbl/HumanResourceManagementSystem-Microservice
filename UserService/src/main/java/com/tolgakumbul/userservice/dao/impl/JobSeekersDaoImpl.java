@@ -4,6 +4,7 @@ import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.QueryConstants;
 import com.tolgakumbul.userservice.dao.JobSeekersDao;
 import com.tolgakumbul.userservice.dao.mapper.JobSeekersRowMapper;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.JobSeekersEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
@@ -34,7 +35,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
 
     @Override
     @CacheHelper(mapName = "jobseekerListMap", keyName = "AllJobSeekers")
-    public List<JobSeekersEntity> getAllJobSeekers() {
+    public List<JobSeekersEntity> getAllJobSeekers(ListRequest listRequest) {
         try {
             List<JobSeekersEntity> jobSeekersEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_JOB_SEEKERS_QUERY, new JobSeekersRowMapper());
             return jobSeekersEntityList;

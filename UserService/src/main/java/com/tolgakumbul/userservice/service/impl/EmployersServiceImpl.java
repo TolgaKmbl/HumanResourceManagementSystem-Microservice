@@ -3,14 +3,14 @@ package com.tolgakumbul.userservice.service.impl;
 import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.ErrorCode;
 import com.tolgakumbul.userservice.dao.EmployersDao;
+import com.tolgakumbul.userservice.dao.model.EmployersByCompanyNameRequest;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.EmployersMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersGeneralResponseDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersListResponseDTO;
+import com.tolgakumbul.userservice.model.employers.*;
 import com.tolgakumbul.userservice.service.EmployersService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,9 +35,10 @@ public class EmployersServiceImpl implements EmployersService {
 
     @Override
     @KafkaHelper(topicName = Constants.USER_SERVICE_TOPIC, entityNameForKafka = Constants.EMPLOYERS_KAFKA, operationName = Constants.GET_ALL)
-    public EmployersListResponseDTO getAllEmployers() {
+    public EmployersListResponseDTO getAllEmployers(GetAllEmployersRequestDTO requestDTO) {
         try {
-            List<EmployersEntity> allEmployers = employersDao.getAllEmployers();
+            ListRequest listRequest = MAPPER.toListRequest(requestDTO);
+            List<EmployersEntity> allEmployers = employersDao.getAllEmployers(listRequest);
             List<EmployersDTO> employersDTOList = allEmployers.stream().map(MAPPER::toEmployersDTO).collect(Collectors.toList());
             EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList);
 
@@ -65,9 +66,10 @@ public class EmployersServiceImpl implements EmployersService {
 
     @Override
     @KafkaHelper(topicName = Constants.USER_SERVICE_TOPIC, entityNameForKafka = Constants.EMPLOYERS_KAFKA, operationName = Constants.GET_BY_NAME)
-    public EmployersListResponseDTO getEmployersByCompanyName(String companyName) {
+    public EmployersListResponseDTO getEmployersByCompanyName(EmployersByCompanyNameRequestDTO requestDTO) {
         try {
-            List<EmployersEntity> employersByCompanyName = employersDao.getEmployersByCompanyName(companyName);
+            EmployersByCompanyNameRequest daoRequest = MAPPER.toEmployersByCompanyNameRequest(requestDTO);
+            List<EmployersEntity> employersByCompanyName = employersDao.getEmployersByCompanyName(daoRequest);
             List<EmployersDTO> employersDTOList = employersByCompanyName.stream().map(MAPPER::toEmployersDTO).collect(Collectors.toList());
             EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList);
 

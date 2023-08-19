@@ -1,6 +1,5 @@
 package com.tolgakumbul.userservice.grpc.impl;
 
-import com.google.protobuf.Empty;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.JobSeekersGrpcServiceGrpc;
 import com.tolgakumbul.proto.JobSeekersProto.*;
@@ -12,7 +11,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 public class JobSeekersGrpcServiceImpl extends JobSeekersGrpcServiceGrpc.JobSeekersGrpcServiceImplBase implements JobSeekersGrpcService {
 
     @Override
-    public void getAllJobSeekers(Empty request, StreamObserver<JobSeekerListGeneralResponse> responseObserver) {
+    public void getAllJobSeekers(JobSeekerListGeneralRequest request, StreamObserver<JobSeekerListGeneralResponse> responseObserver) {
         /*TODO: Not implemented yet*/
     }
 

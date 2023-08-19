@@ -3,15 +3,13 @@ package com.tolgakumbul.userservice.service.impl;
 import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.constants.ErrorCode;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
+import com.tolgakumbul.userservice.model.companystaff.*;
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,9 +34,10 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
 
     @Override
     @KafkaHelper(topicName = Constants.USER_SERVICE_TOPIC, entityNameForKafka = Constants.COMPANYSTAFF_KAFKA, operationName = Constants.GET_ALL)
-    public CompanyStaffListResponseDTO getAllCompanyStaff() {
+    public CompanyStaffListResponseDTO getAllCompanyStaff(GetAllCompanyStaffRequestDTO requestDTO) {
         try {
-            List<CompanyStaffEntity> allCompanyStaffEntity = companyStaffDao.getAllCompanyStaff();
+            ListRequest listRequest = MAPPER.toListRequest(requestDTO);
+            List<CompanyStaffEntity> allCompanyStaffEntity = companyStaffDao.getAllCompanyStaff(listRequest);
             List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaffEntity.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
             CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO(companyStaffDTOList);
 

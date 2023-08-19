@@ -3,10 +3,10 @@ syntax = "proto3";
 option java_package = "com.tolgakumbul.proto";
 option java_outer_classname = "CompanyStaffProto";
 
-import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "Common.proto";
 import "IsApproved.proto";
+import "Pageable.proto";
 
 package com.tolgakumbul.proto;
 
@@ -23,6 +23,10 @@ message CompanyStaffGeneralResponse {
   CompanyStaffData companyStaffData = 1;
 }
 
+message GetAllCompanyStaffRequest {
+  Pageable pageable = 1;
+}
+
 message GetAllCompanyStaffResponse {
   repeated CompanyStaffData companyStaffList = 1;
 }
@@ -36,7 +40,7 @@ message CompanyStaffData {
 }
 
 service CompanyStaffGrpcService {
-  rpc GetAllCompanyStaff (google.protobuf.Empty) returns (GetAllCompanyStaffResponse){}
+  rpc GetAllCompanyStaff (GetAllCompanyStaffRequest) returns (GetAllCompanyStaffResponse){}
   rpc GetCompanyStaffById (CompanyStaffByIdRequest) returns (CompanyStaffGeneralResponse){}
   rpc GetCompanyStaffByName (GetCompanyStaffByNameRequest) returns (CompanyStaffGeneralResponse){}
   rpc InsertCompanyStaff (CompanyStaffData) returns (CompanyStaffGeneralResponse){}

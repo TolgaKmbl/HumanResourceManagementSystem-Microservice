@@ -1,13 +1,14 @@
 package com.tolgakumbul.userservice.dao;
 
 
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 
 import java.util.List;
 
 public interface CompanyStaffDao {
 
-    List<CompanyStaffEntity> getAllCompanyStaff();
+    List<CompanyStaffEntity> getAllCompanyStaff(ListRequest listRequest);
 
     CompanyStaffEntity getCompanyStaffById(Long companyStaffId);
 

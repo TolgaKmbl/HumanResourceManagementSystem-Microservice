@@ -2,13 +2,13 @@ package com.tolgakumbul.userservice.service;
 
 import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.dao.CompanyStaffDao;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
+import com.tolgakumbul.userservice.dao.model.Pageable;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
+import com.tolgakumbul.userservice.model.common.PageableDTO;
+import com.tolgakumbul.userservice.model.companystaff.*;
 import com.tolgakumbul.userservice.service.impl.CompanyStaffServiceImpl;
 import org.junit.After;
 import org.junit.Assert;
@@ -48,8 +48,8 @@ public class CompanyStaffServiceImplTest {
 
     @Test
     public void getAllCompanyStaffTest() {
-        Mockito.when(companyStaffDao.getAllCompanyStaff()).thenReturn(Collections.singletonList(getCompanyStaffEntity()));
-        CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff();
+        Mockito.when(companyStaffDao.getAllCompanyStaff(getListRequest())).thenReturn(Collections.singletonList(getCompanyStaffEntity()));
+        CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff(getAllCompanyStaffRequestDTO());
         Assert.assertNotNull(allCompanyStaff);
         Assert.assertEquals(123L, allCompanyStaff.getCompanyStaffList().get(0).getUserId().longValue());
         Assert.assertEquals("TestName", allCompanyStaff.getCompanyStaffList().get(0).getFirstName());
@@ -59,22 +59,22 @@ public class CompanyStaffServiceImplTest {
 
     @Test
     public void getAllCompanyStaffEmptyDaoReturnTest() {
-        Mockito.when(companyStaffDao.getAllCompanyStaff()).thenReturn(new ArrayList<>());
-        CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff();
+        Mockito.when(companyStaffDao.getAllCompanyStaff(getListRequest())).thenReturn(new ArrayList<>());
+        CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff(getAllCompanyStaffRequestDTO());
         Assert.assertNotNull(allCompanyStaff);
         Assert.assertEquals(0, allCompanyStaff.getCompanyStaffList().size());
     }
 
     @Test(expected = UsersException.class)
     public void getAllCompanyStaffDaoExceptionTest() {
-        Mockito.when(companyStaffDao.getAllCompanyStaff()).thenThrow(new RuntimeException());
-        companyStaffService.getAllCompanyStaff();
+        Mockito.when(companyStaffDao.getAllCompanyStaff(getListRequest())).thenThrow(new RuntimeException());
+        companyStaffService.getAllCompanyStaff(getAllCompanyStaffRequestDTO());
     }
 
     @Test(expected = UsersException.class)
     public void getAllCompanyStaffExceptionTest() {
-        Mockito.when(companyStaffDao.getAllCompanyStaff()).thenReturn(Collections.singletonList(getCompanyStaffEntityForException()));
-        companyStaffService.getAllCompanyStaff();
+        Mockito.when(companyStaffDao.getAllCompanyStaff(getListRequest())).thenReturn(Collections.singletonList(getCompanyStaffEntityForException()));
+        companyStaffService.getAllCompanyStaff(getAllCompanyStaffRequestDTO());
     }
 
     @Test
@@ -241,6 +241,28 @@ public class CompanyStaffServiceImplTest {
         companyStaffEntity.setIsApproved("UNKNOWN_ENUM");
         companyStaffEntity.setApprovalDate(LocalDateTime.now());
         return companyStaffEntity;
+    }
+
+    private GetAllCompanyStaffRequestDTO getAllCompanyStaffRequestDTO(){
+        GetAllCompanyStaffRequestDTO getAllCompanyStaffRequestDTO = new GetAllCompanyStaffRequestDTO();
+        PageableDTO pageableDTO = new PageableDTO();
+        pageableDTO.setPageNumber(1L);
+        pageableDTO.setPageSize(30L);
+        pageableDTO.setSortColumn("");
+        pageableDTO.setSortType("");
+        getAllCompanyStaffRequestDTO.setPageable(pageableDTO);
+        return getAllCompanyStaffRequestDTO;
+    }
+
+    private ListRequest getListRequest(){
+        ListRequest listRequest = new ListRequest();
+        Pageable pageableDTO = new Pageable();
+        pageableDTO.setPageNumber(1L);
+        pageableDTO.setPageSize(30L);
+        pageableDTO.setSortColumn("");
+        pageableDTO.setSortType("");
+        listRequest.setPageable(pageableDTO);
+        return listRequest;
     }
 
 

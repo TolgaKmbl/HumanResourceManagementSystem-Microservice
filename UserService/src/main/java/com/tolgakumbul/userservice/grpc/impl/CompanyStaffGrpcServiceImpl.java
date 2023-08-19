@@ -1,6 +1,5 @@
 package com.tolgakumbul.userservice.grpc.impl;
 
-import com.google.protobuf.Empty;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffGrpcServiceGrpc;
 import com.tolgakumbul.proto.CompanyStaffProto.*;
@@ -9,6 +8,7 @@ import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.GetAllCompanyStaffRequestDTO;
 import com.tolgakumbul.userservice.service.CompanyStaffService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
@@ -27,9 +27,11 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
     }
 
     @Override
-    public void getAllCompanyStaff(Empty request, StreamObserver<GetAllCompanyStaffResponse> responseObserver) {
+    public void getAllCompanyStaff(GetAllCompanyStaffRequest request, StreamObserver<GetAllCompanyStaffResponse> responseObserver) {
 
-        CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff();
+        GetAllCompanyStaffRequestDTO getAllCompanyStaffRequestDTO = MAPPER.toGetAllCompanyStaffRequestDTO(request);
+
+        CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff(getAllCompanyStaffRequestDTO);
 
         List<CompanyStaffData> getCompanyStaffResponses = allCompanyStaff.getCompanyStaffList().stream()
                 .map(MAPPER::toGetCompanyStaffResponse)

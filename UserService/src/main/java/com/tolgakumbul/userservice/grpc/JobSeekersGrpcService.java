@@ -1,13 +1,12 @@
 package com.tolgakumbul.userservice.grpc;
 
-import com.google.protobuf.Empty;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.JobSeekersProto.*;
 import io.grpc.stub.StreamObserver;
 
 public interface JobSeekersGrpcService {
 
-    void getAllJobSeekers(Empty request, StreamObserver<JobSeekerListGeneralResponse> responseObserver);
+    void getAllJobSeekers(JobSeekerListGeneralRequest request, StreamObserver<JobSeekerListGeneralResponse> responseObserver);
 
     void getJobSeekerById(JobSeekerByIdRequest request, StreamObserver<JobSeekerGeneralResponse> responseObserver);
 

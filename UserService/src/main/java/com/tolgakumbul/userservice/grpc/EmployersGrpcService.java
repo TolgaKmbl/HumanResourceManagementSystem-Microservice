@@ -1,13 +1,12 @@
 package com.tolgakumbul.userservice.grpc;
 
-import com.google.protobuf.Empty;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.EmployersProto.*;
 import io.grpc.stub.StreamObserver;
 
 public interface EmployersGrpcService {
 
-    void getAllEmployers(Empty request, StreamObserver<EmployerListGeneralResponse> responseObserver);
+    void getAllEmployers(EmployerListGeneralRequest request, StreamObserver<EmployerListGeneralResponse> responseObserver);
 
     void getEmployerById(EmployerByIdRequest request, StreamObserver<EmployerGeneralResponse> responseObserver);
 

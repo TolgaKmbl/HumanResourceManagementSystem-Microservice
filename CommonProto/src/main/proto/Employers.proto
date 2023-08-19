@@ -3,8 +3,8 @@ syntax = "proto3";
 option java_package = "com.tolgakumbul.proto";
 option java_outer_classname = "EmployersProto";
 
-import "google/protobuf/empty.proto";
 import "Common.proto";
+import "Pageable.proto";
 
 package com.tolgakumbul.proto;
 
@@ -14,10 +14,15 @@ message EmployerByIdRequest {
 
 message EmployersByCompanyNameRequest {
   string companyName = 1;
+  Pageable pageable = 2;
 }
 
 message EmployerGeneralResponse {
   Employer employer = 1;
+}
+
+message EmployerListGeneralRequest {
+  Pageable pageable = 1;
 }
 
 message EmployerListGeneralResponse {
@@ -33,7 +38,7 @@ message Employer {
 }
 
 service EmployersGrpcService {
-  rpc GetAllEmployers (google.protobuf.Empty) returns (EmployerListGeneralResponse){}
+  rpc GetAllEmployers (EmployerListGeneralRequest) returns (EmployerListGeneralResponse){}
   rpc GetEmployerById (EmployerByIdRequest) returns (EmployerGeneralResponse){}
   rpc GetEmployersByCompanyName (EmployersByCompanyNameRequest) returns (EmployerListGeneralResponse){}
   rpc UpdateEmployer (Employer) returns (EmployerGeneralResponse){}

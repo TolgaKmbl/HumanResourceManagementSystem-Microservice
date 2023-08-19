@@ -4,11 +4,14 @@ import com.google.protobuf.Timestamp;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffGeneralResponse;
+import com.tolgakumbul.proto.CompanyStaffProto.GetAllCompanyStaffRequest;
 import com.tolgakumbul.proto.IsApprovedProto.IsApproved;
+import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
+import com.tolgakumbul.userservice.model.companystaff.GetAllCompanyStaffRequestDTO;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
@@ -19,11 +22,14 @@ import java.time.ZoneOffset;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         componentModel = "spring",
         imports = {LocalDateTime.class})
 public interface CompanyStaffMapper {
 
     CompanyStaffMapper INSTANCE = Mappers.getMapper(CompanyStaffMapper.class);
+
+    GetAllCompanyStaffRequestDTO toGetAllCompanyStaffRequestDTO(GetAllCompanyStaffRequest grpcRequest);
 
     CompanyStaffData toGetCompanyStaffResponse(CompanyStaffDTO companyStaffDTO);
 
@@ -51,6 +57,8 @@ public interface CompanyStaffMapper {
     @ValueMapping(source = "ACTIVE", target = "ACTIVE")
     @ValueMapping(source = "PASSIVE", target = "PASSIVE")
     IsApproved toIsApproved(IsApprovedEnum isApprovedEnum);
+
+    ListRequest toListRequest(GetAllCompanyStaffRequestDTO requestDTO);
 
     default Timestamp localDateTimeToTimestamp(LocalDateTime localDateTime) {
         Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
