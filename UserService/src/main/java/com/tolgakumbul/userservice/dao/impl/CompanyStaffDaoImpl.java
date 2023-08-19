@@ -9,6 +9,7 @@ import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.helper.HazelcastCacheHelper;
 import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.helper.aspect.CacheHelper;
+import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.relational.core.sql.LockMode;
@@ -37,7 +38,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     @CacheHelper(mapName = "companyStaffListMap", keyName = "AllCompanyStaff")
     public List<CompanyStaffEntity> getAllCompanyStaff(ListRequest listRequest) {
         try {
-            List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY, new CompanyStaffRowMapper());
+            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY), listRequest.getPageable());
+            List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(editedSql.toString(), new CompanyStaffRowMapper());
             return companyStaffEntityList;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getAllCompanyStaff : {}", e.getMessage());
