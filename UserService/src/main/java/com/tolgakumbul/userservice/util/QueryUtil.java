@@ -16,8 +16,7 @@ public class QueryUtil {
                             ("ASC".equalsIgnoreCase(pageable.getSortType()) || "DESC".equalsIgnoreCase(pageable.getSortType()))
                     )
             ) {
-                stringBuilder.append(" ORDER BY ? "+ pageable.getSortType());
-                params.add(pageable.getSortColumn());
+                stringBuilder.append(" ORDER BY " + pageable.getSortColumn() + " " + pageable.getSortType());
             }
 
             if (pageable.getPageNumber() != null && pageable.getPageSize() != null) {
