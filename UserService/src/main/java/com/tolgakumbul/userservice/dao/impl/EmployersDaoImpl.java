@@ -38,7 +38,7 @@ public class EmployersDaoImpl implements EmployersDao {
     //@CacheHelper(mapName = "employerListMap", keyName = "AllEmployers") /*Removed due to the pagination*/
     public List<EmployersEntity> getAllEmployers(ListRequest listRequest) {
         try {
-            List<Long> params = new ArrayList<>();
+            List<Object> params = new ArrayList<>();
             StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY), params, listRequest.getPageable());
             List<EmployersEntity> employersEntityList = jdbcTemplate.query(editedSql.toString(), new EmployersRowMapper(), params.toArray(new Object[0]));
             return employersEntityList;

@@ -38,7 +38,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     //@CacheHelper(mapName = "jobseekerListMap", keyName = "AllJobSeekers") /*Removed due to the pagination*/
     public List<JobSeekersEntity> getAllJobSeekers(ListRequest listRequest) {
         try {
-            List<Long> params = new ArrayList<>();
+            List<Object> params = new ArrayList<>();
             StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_JOB_SEEKERS_QUERY), params, listRequest.getPageable());
             List<JobSeekersEntity> jobSeekersEntityList = jdbcTemplate.query(editedSql.toString(), new JobSeekersRowMapper(), params.toArray(new Object[0]));
             return jobSeekersEntityList;

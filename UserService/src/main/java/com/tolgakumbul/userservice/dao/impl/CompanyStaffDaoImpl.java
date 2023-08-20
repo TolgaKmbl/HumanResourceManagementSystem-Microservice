@@ -38,7 +38,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
     //@CacheHelper(mapName = "companyStaffListMap", keyName = "AllCompanyStaff") /*Removed due to the pagination*/
     public List<CompanyStaffEntity> getAllCompanyStaff(ListRequest listRequest) {
         try {
-            List<Long> params = new ArrayList<>();
+            List<Object> params = new ArrayList<>();
             StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY), params, listRequest.getPageable());
             List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(editedSql.toString(), new CompanyStaffRowMapper(), params.toArray(new Object[0]));
             return companyStaffEntityList;

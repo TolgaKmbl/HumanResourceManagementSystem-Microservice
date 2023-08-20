@@ -7,7 +7,7 @@ import java.util.List;
 
 public class QueryUtil {
 
-    public static StringBuilder addPageableQuery(StringBuilder sql, List<Long> params, Pageable pageable) {
+    public static StringBuilder addPageableQuery(StringBuilder sql, List<Object> params, Pageable pageable) {
         if (pageable != null) {
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -16,7 +16,8 @@ public class QueryUtil {
                             ("ASC".equalsIgnoreCase(pageable.getSortType()) || "DESC".equalsIgnoreCase(pageable.getSortType()))
                     )
             ) {
-                stringBuilder.append(" ORDER BY " + pageable.getSortColumn() + " " + pageable.getSortType());
+                stringBuilder.append(" ORDER BY ? "+ pageable.getSortType());
+                params.add(pageable.getSortColumn());
             }
 
             if (pageable.getPageNumber() != null && pageable.getPageSize() != null) {
