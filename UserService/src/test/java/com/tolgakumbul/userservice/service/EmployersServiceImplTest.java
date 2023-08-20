@@ -162,7 +162,8 @@ public class EmployersServiceImplTest {
 
     private EmployersDTO getEmployersDTO() {
         EmployersDTO employersDTO = new EmployersDTO();
-
+        employersDTO.setCompanyName("TEST");
+        employersDTO.setWebsite("TEST");
         return employersDTO;
     }
 
