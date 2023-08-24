@@ -11,6 +11,7 @@ import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,6 +43,9 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
             StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_JOB_SEEKERS_QUERY), params, listRequest.getPageable());
             List<JobSeekersEntity> jobSeekersEntityList = jdbcTemplate.query(editedSql.toString(), new JobSeekersRowMapper(), params.toArray(new Object[0]));
             return jobSeekersEntityList;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in JobSeekersImpl.getAllJobSeekers : {}", e.getMessage());
+            return new ArrayList<>();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getAllJobSeekers : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -53,6 +57,9 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
         try {
             JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_ID_QUERY, new JobSeekersRowMapper());
             return jobSeekersEntity;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerById : {}", e.getMessage());
+            return new JobSeekersEntity();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerById : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -64,6 +71,9 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
         try {
             JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NATIONAL_QUERY, new JobSeekersRowMapper());
             return jobSeekersEntity;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByNationalId : {}", e.getMessage());
+            return new JobSeekersEntity();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByNationalId : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -75,8 +85,11 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
         try {
             JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NAME_QUERY, new JobSeekersRowMapper());
             return jobSeekersEntity;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByName : {}", e.getMessage());
+            return new JobSeekersEntity();
         } catch (Exception e) {
-            LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByNationalId : {}", e.getMessage());
+            LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByName : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

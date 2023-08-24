@@ -12,6 +12,7 @@ import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,6 +43,9 @@ public class EmployersDaoImpl implements EmployersDao {
             StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_EMPLOYERS_QUERY), params, listRequest.getPageable());
             List<EmployersEntity> employersEntityList = jdbcTemplate.query(editedSql.toString(), new EmployersRowMapper(), params.toArray(new Object[0]));
             return employersEntityList;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in EmployersDaoImpl.getAllEmployers : {}", e.getMessage());
+            return new ArrayList<>();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getAllEmployers : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -55,6 +59,9 @@ public class EmployersDaoImpl implements EmployersDao {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_EMPLOYER_BY_ID_QUERY,
                     new EmployersRowMapper(),
                     employerId);
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployerById : {}", e.getMessage());
+            return new EmployersEntity();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployerById : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -68,6 +75,9 @@ public class EmployersDaoImpl implements EmployersDao {
             return jdbcTemplate.query(QueryConstants.SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY,
                     new EmployersRowMapper(),
                     daoRequest.getCompanyName());
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployersByCompanyName : {}", e.getMessage());
+            return new ArrayList<>();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployersByCompanyName : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());

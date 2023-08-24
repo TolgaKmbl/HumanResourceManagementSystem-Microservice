@@ -11,6 +11,7 @@ import com.tolgakumbul.userservice.helper.aspect.AuditHelper;
 import com.tolgakumbul.userservice.util.QueryUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,6 +43,9 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_ALL_COMPANY_STAFF_QUERY), params, listRequest.getPageable());
             List<CompanyStaffEntity> companyStaffEntityList = jdbcTemplate.query(editedSql.toString(), new CompanyStaffRowMapper(), params.toArray(new Object[0]));
             return companyStaffEntityList;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getAllCompanyStaff : {}", e.getMessage());
+            return new ArrayList<>();
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getAllCompanyStaff : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
@@ -56,7 +60,10 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_ID_QUERY,
                     new CompanyStaffRowMapper(),
                     companyStaffId);
-        } catch (Exception e) {
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
+            return new CompanyStaffEntity ();
+        }  catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -69,7 +76,10 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return jdbcTemplate.queryForObject(QueryConstants.SELECT_COMPANY_STAFF_BY_NAME_QUERY,
                     new CompanyStaffRowMapper(),
                     firstName, lastName);
-        } catch (Exception e) {
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
+            return new CompanyStaffEntity ();
+        }  catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
