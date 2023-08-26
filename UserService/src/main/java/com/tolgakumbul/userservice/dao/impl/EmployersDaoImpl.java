@@ -150,7 +150,7 @@ public class EmployersDaoImpl implements EmployersDao {
             return userId;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getLatestUserId : {}", e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            return 0L;
         }
     }
 }

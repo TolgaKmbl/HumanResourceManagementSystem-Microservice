@@ -184,7 +184,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
             return userId;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getLatestUserId : {}", e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            return 0L;
         }
     }
 }

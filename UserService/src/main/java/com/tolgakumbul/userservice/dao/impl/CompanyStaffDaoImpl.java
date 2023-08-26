@@ -170,7 +170,7 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return userId;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getLatestUserId : {}", e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            return 0L;
         }
     }
 
