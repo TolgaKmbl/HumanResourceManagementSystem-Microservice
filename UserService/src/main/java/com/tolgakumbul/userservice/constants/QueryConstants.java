@@ -53,9 +53,9 @@ public class QueryConstants {
             WHERE_QUERY + "USER_ID = ?";
 
     public static final String GET_LATEST_COMPANY_STAFF_ID_QUERY = "SELECT\n" +
-            "    USER_ID\n" +
+            "    MAX(USER_ID)\n" +
             "FROM\n" +
-            "    COMPANY_STAFF ORDER BY USER_ID DESC FETCH NEXT 1 ROW ONLY";
+            "    COMPANY_STAFF";
 
     /*EMPLOYERS*/
     public static final String SELECT_ALL_EMPLOYERS_QUERY = SELECT_ALL_QUERY +
@@ -90,9 +90,9 @@ public class QueryConstants {
             WHERE_QUERY + "USER_ID = ?";
 
     public static final String GET_LATEST_EMPLOYER_ID_QUERY = "SELECT\n" +
-            "    USER_ID\n" +
+            "    MAX(USER_ID)\n" +
             "FROM\n" +
-            "    EMPLOYERS ORDER BY USER_ID DESC FETCH NEXT 1 ROW ONLY";
+            "    EMPLOYERS";
 
     /*JOB SEEKERS*/
     public static final String SELECT_ALL_JOB_SEEKERS_QUERY = SELECT_ALL_QUERY +
@@ -137,7 +137,7 @@ public class QueryConstants {
             WHERE_QUERY + "USER_ID = ?";
 
     public static final String GET_LATEST_JOB_SEEKER_ID_QUERY = "SELECT\n" +
-            "    USER_ID\n" +
+            "    MAX(USER_ID)\n" +
             "FROM\n" +
-            "    JOB_SEEKERS ORDER BY USER_ID DESC FETCH NEXT 1 ROW ONLY";
+            "    JOB_SEEKERS";
 }
