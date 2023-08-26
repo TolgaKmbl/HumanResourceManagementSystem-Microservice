@@ -22,4 +22,6 @@ public interface CompanyStaffDao {
 
     Integer approveCompanyStaff(CompanyStaffEntity companyStaffEntity);
 
+    Long getLatestUserId();
+
 }

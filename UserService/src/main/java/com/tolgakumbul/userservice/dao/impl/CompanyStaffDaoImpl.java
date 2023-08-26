@@ -62,8 +62,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffId);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
-            return new CompanyStaffEntity ();
-        }  catch (Exception e) {
+            return new CompanyStaffEntity();
+        } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffById : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -78,8 +78,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     firstName, lastName);
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
-            return new CompanyStaffEntity ();
-        }  catch (Exception e) {
+            return new CompanyStaffEntity();
+        } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
@@ -99,7 +99,8 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
                     companyStaffEntity.getCreatedBy(),
                     companyStaffEntity.getCreatedAt(),
                     companyStaffEntity.getUpdatedBy(),
-                    companyStaffEntity.getUpdatedAt());
+                    companyStaffEntity.getUpdatedAt(),
+                    "N");
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
@@ -129,12 +130,12 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
         }
     }
 
-    /*TODO: Create an IS_DELETED COLUMN AND UPDATE IT INSTEAD OF DELETING DATA*/
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer deleteCompanyStaff(Long companyStaffId) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.DELETE_COMPANY_STAFF_QUERY,
+                    "Y",
                     companyStaffId);
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
@@ -158,6 +159,17 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getCompanyStaffByName : {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Long getLatestUserId() {
+        try {
+            Long userId = jdbcTemplate.queryForObject(QueryConstants.GET_LATEST_COMPANY_STAFF_ID_QUERY, Long.class);
+            return userId;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getLatestUserId : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

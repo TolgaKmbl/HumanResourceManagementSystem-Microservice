@@ -23,4 +23,5 @@ public class JobSeekerDTO implements Serializable {
     private Long cvId;
     private String isApproved;
     private LocalDateTime approvalDate;
+    private String isDeleted;
 }

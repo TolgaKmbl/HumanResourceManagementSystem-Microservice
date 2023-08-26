@@ -44,6 +44,7 @@ message JobSeeker {
   int64 cvId = 6;
   IsApproved isApproved = 7;
   google.protobuf.Timestamp approvalDate = 8;
+  string isDeleted = 9;
 }
 
 service JobSeekersGrpcService {

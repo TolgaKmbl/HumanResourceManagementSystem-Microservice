@@ -84,6 +84,8 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
     @KafkaHelper(topicName = Constants.USER_SERVICE_TOPIC, entityNameForKafka = Constants.COMPANYSTAFF_KAFKA, operationName = Constants.INSERT)
     public CompanyStaffGeneralResponseDTO insertCompanyStaff(CompanyStaffDTO companyStaffDTO) {
         try {
+            Long latestUserId = companyStaffDao.getLatestUserId();
+            companyStaffDTO.setUserId(++latestUserId);
             companyStaffDao.insertCompanyStaff(MAPPER.toCompanyStaff(companyStaffDTO));
 
             CompanyStaffDTO companyStaffByIdDTO = MAPPER.toCompanyStaffDTO(

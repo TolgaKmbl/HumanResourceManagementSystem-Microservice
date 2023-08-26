@@ -118,7 +118,8 @@ public class EmployersDaoImpl implements EmployersDao {
                     employersEntity.getCreatedBy(),
                     employersEntity.getCreatedAt(),
                     employersEntity.getUpdatedBy(),
-                    employersEntity.getUpdatedAt());
+                    employersEntity.getUpdatedAt(),
+                    "N");
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
@@ -127,17 +128,28 @@ public class EmployersDaoImpl implements EmployersDao {
         }
     }
 
-    /*TODO: Create an IS_DELETED COLUMN AND UPDATE IT INSTEAD OF DELETING DATA*/
     @Override
     @Lock(LockMode.PESSIMISTIC_WRITE)
     public Integer deleteEmployer(Long employerId) {
         try {
             int affectedRowCount = jdbcTemplate.update(QueryConstants.DELETE_EMPLOYER_QUERY,
+                    "Y",
                     employerId);
             hazelcastCacheHelper.removeAll();
             return affectedRowCount;
         } catch (Exception e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.deleteEmployer : {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Long getLatestUserId() {
+        try {
+            Long userId = jdbcTemplate.queryForObject(QueryConstants.GET_LATEST_EMPLOYER_ID_QUERY, Long.class);
+            return userId;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in EmployersDaoImpl.getLatestUserId : {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

@@ -20,4 +20,6 @@ public interface EmployersDao {
 
     Integer deleteEmployer(Long employerId);
 
+    Long getLatestUserId();
+
 }

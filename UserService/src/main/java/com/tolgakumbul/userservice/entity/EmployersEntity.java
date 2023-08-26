@@ -26,4 +26,6 @@ public class EmployersEntity extends BaseDaoEntity implements Serializable {
     private String phoneNum;
     @Column("COMPANY_IMG_URL")
     private String companyImgUrl;
+    @Column("IS_DELETED")
+    private String isDeleted;
 }

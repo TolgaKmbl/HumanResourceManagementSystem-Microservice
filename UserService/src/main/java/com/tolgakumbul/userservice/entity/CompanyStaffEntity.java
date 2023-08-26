@@ -27,4 +27,6 @@ public class CompanyStaffEntity extends BaseDaoEntity implements Serializable {
     private String isApproved;
     @Column("APPROVAL_DATE")
     private LocalDateTime approvalDate;
+    @Column("IS_DELETED")
+    private String isDeleted;
 }

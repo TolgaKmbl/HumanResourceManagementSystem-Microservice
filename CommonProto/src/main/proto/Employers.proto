@@ -35,6 +35,7 @@ message Employer {
   string website = 3;
   string phoneNum = 4;
   string companyImgUrl = 5;
+  string isDeleted = 6;
 }
 
 service EmployersGrpcService {

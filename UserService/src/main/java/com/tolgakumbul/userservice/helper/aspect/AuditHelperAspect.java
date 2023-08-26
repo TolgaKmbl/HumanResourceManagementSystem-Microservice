@@ -23,6 +23,7 @@ public class AuditHelperAspect {
     public void auditHelper(JoinPoint joinPoint, AuditHelper auditHelper) {
         Object[] args = joinPoint.getArgs();
         BaseDaoEntity baseDaoEntity = (BaseDaoEntity) args[0];
+        //TODO: do not insert null, pass the same value
         if (auditHelper.sqlQuery().equalsIgnoreCase(Constants.SQL_INSERT)) {
             baseDaoEntity.setCreatedAt(LocalDateTime.now());
             baseDaoEntity.setCreatedBy(SecurityContextHelper.getUserName());

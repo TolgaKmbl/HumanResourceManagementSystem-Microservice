@@ -103,6 +103,8 @@ public class EmployersServiceImpl implements EmployersService {
     @KafkaHelper(topicName = Constants.USER_SERVICE_TOPIC, entityNameForKafka = Constants.EMPLOYERS_KAFKA, operationName = Constants.INSERT)
     public EmployersGeneralResponseDTO insertEmployer(EmployersDTO employersDTO) {
         try {
+            Long latestUserId = employersDao.getLatestUserId();
+            employersDTO.setUserId(++latestUserId);
             employersDao.insertEmployer(MAPPER.toEmployersEntity(employersDTO));
 
             EmployersEntity employerById = employersDao.getEmployerById(employersDTO.getUserId());

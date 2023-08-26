@@ -20,5 +20,5 @@ public class CompanyStaffDTO implements Serializable {
     private String lastName;
     private IsApprovedEnum isApproved;
     private LocalDateTime approvalDate;
-
+    private String isDeleted;
 }

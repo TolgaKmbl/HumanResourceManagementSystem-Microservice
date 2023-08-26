@@ -23,4 +23,6 @@ public interface JobSeekersDao {
 
     Integer deleteJobSeeker(Long jobSeekerId);
 
+    Long getLatestUserId();
+
 }

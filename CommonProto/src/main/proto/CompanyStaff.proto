@@ -37,6 +37,7 @@ message CompanyStaffData {
   string lastName = 3;
   IsApproved isApproved = 4;
   google.protobuf.Timestamp approvalDate = 5;
+  string isDeleted = 6;
 }
 
 service CompanyStaffGrpcService {

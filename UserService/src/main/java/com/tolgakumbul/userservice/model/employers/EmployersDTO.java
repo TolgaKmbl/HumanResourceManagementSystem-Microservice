@@ -19,4 +19,5 @@ public class EmployersDTO implements Serializable {
     private String website;
     private String phoneNum;
     private String companyImgUrl;
+    private String isDeleted;
 }
