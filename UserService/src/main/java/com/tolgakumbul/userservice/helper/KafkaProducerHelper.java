@@ -71,6 +71,7 @@ public class KafkaProducerHelper {
 
     private boolean send(KafkaProducerModel kafkaProducerModel) {
         try {
+            //TODO: Async
             if (isKafkaEnabledForLogging) {
                 kafkaTemplate.send(kafkaProducerModel.getTopicName(), kafkaProducerModel.getKeyName(), kafkaProducerModel.getKafkaObject());
             }
