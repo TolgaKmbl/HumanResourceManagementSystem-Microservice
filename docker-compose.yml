@@ -46,9 +46,13 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data'
 
 volumes:
   zookeeper_data:
     driver: local
   kafka_data:
+    driver: local
+  postgres_data:
     driver: local
