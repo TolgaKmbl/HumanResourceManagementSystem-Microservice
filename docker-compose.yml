@@ -34,6 +34,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
+    restart: unless-stopped
   postgres:
     container_name: postgres-0
     image: postgres:alpine
@@ -44,6 +45,7 @@ services:
       PGDATA: /data/postgres
     ports:
       - "5432:5432"
+    restart: unless-stopped
 
 volumes:
   zookeeper_data:
