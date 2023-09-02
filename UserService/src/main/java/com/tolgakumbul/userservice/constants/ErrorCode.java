@@ -20,11 +20,11 @@ public class ErrorCode {
     public static final String ALL_JOB_SEEKERS_FETCH_ERROR = "ERRMSGJBSKRS001";
     public static final String JOB_SEEKER_BY_ID_FETCH_ERROR = "ERRMSGJBSKRS002";
     public static final String JOB_SEEKER_BY_NAME_FETCH_ERROR = "ERRMSGJBSKRS003";
-    public static final String JOB_SEEKER_BY_NATIONAL_ID_FETCH_ERROR = "ERRMSGJBSKRS003";
-    public static final String JOB_SEEKER_INSERT_ERROR = "ERRMSGJBSKRS004";
-    public static final String JOB_SEEKER_DELETE_ERROR = "ERRMSGJBSKRS005";
-    public static final String JOB_SEEKER_UPDATE_ERROR = "ERRMSGJBSKRS006";
-    public static final String JOB_SEEKER_APPROVE_ERROR = "ERRMSGJBSKRS007";
+    public static final String JOB_SEEKER_BY_NATIONAL_ID_FETCH_ERROR = "ERRMSGJBSKRS004";
+    public static final String JOB_SEEKER_INSERT_ERROR = "ERRMSGJBSKRS005";
+    public static final String JOB_SEEKER_DELETE_ERROR = "ERRMSGJBSKRS006";
+    public static final String JOB_SEEKER_UPDATE_ERROR = "ERRMSGJBSKRS007";
+    public static final String JOB_SEEKER_APPROVE_ERROR = "ERRMSGJBSKRS008";
 
     private ErrorCode() {
     }
