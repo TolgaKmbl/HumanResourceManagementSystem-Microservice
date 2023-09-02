@@ -248,7 +248,6 @@ public class CompanyStaffServiceImplTest {
         CompanyStaffDTO companyStaffDTO = new CompanyStaffDTO();
         companyStaffDTO.setUserId(123L);
         companyStaffDTO.setIsApproved(IsApprovedEnum.PASSIVE);
-        ;
         companyStaffDTO.setApprovalDate(LocalDateTime.now());
         companyStaffDTO.setFirstName("TestName");
         companyStaffDTO.setLastName("TestLastName");
