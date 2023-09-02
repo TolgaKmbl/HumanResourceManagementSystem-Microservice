@@ -72,9 +72,11 @@ public class EmployersDaoImpl implements EmployersDao {
     @Lock(LockMode.PESSIMISTIC_READ)
     public List<EmployersEntity> getEmployersByCompanyName(EmployersByCompanyNameRequest daoRequest) {
         try {
-            return jdbcTemplate.query(QueryConstants.SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY,
-                    new EmployersRowMapper(),
-                    daoRequest.getCompanyName());
+            List<Object> params = new ArrayList<>();
+            params.add(daoRequest.getCompanyName());
+            StringBuilder editedSql = QueryUtil.addPageableQuery(new StringBuilder(QueryConstants.SELECT_EMPLOYERS_BY_COMPANY_NAME_QUERY), params, daoRequest.getPageable());
+            List<EmployersEntity> employersEntityList = jdbcTemplate.query(editedSql.toString(), new EmployersRowMapper(), params.toArray(new Object[0]));
+            return employersEntityList;
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("An Error has been occurred in EmployersDaoImpl.getEmployersByCompanyName : {}", e.getMessage());
             return new ArrayList<>();

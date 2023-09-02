@@ -55,7 +55,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     @Override
     public JobSeekersEntity getJobSeekerById(Long jobSeekerId) {
         try {
-            JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_ID_QUERY, new JobSeekersRowMapper());
+            JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_ID_QUERY, new JobSeekersRowMapper(), jobSeekerId);
             return jobSeekersEntity;
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerById : {}", e.getMessage());
@@ -69,7 +69,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     @Override
     public JobSeekersEntity getJobSeekerByNationalId(String nationalId) {
         try {
-            JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NATIONAL_QUERY, new JobSeekersRowMapper());
+            JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NATIONAL_QUERY, new JobSeekersRowMapper(), nationalId);
             return jobSeekersEntity;
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByNationalId : {}", e.getMessage());
@@ -83,7 +83,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     @Override
     public JobSeekersEntity getJobSeekerByName(String firstName, String lastName) {
         try {
-            JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NAME_QUERY, new JobSeekersRowMapper());
+            JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NAME_QUERY, new JobSeekersRowMapper(), firstName, lastName);
             return jobSeekersEntity;
         } catch (EmptyResultDataAccessException e) {
             LOGGER.error("An Error has been occurred in JobSeekersImpl.getJobSeekerByName : {}", e.getMessage());

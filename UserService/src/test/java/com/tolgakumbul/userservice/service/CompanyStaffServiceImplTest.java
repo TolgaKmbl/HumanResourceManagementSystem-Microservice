@@ -84,7 +84,7 @@ public class CompanyStaffServiceImplTest {
         Assert.assertNotNull(companyStaffById);
         Assert.assertEquals(123L, companyStaffById.getCompanyStaffData().getUserId().longValue());
         Assert.assertEquals("TestName", companyStaffById.getCompanyStaffData().getFirstName());
-        Assert.assertEquals("TestLastName",companyStaffById.getCompanyStaffData().getLastName());
+        Assert.assertEquals("TestLastName", companyStaffById.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffById.getCompanyStaffData().getIsApproved());
     }
 
@@ -117,38 +117,38 @@ public class CompanyStaffServiceImplTest {
     @Test
     public void getCompanyStaffByNameTest() {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenReturn(getCompanyStaffEntity());
-        CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName","TestLastName");
+        CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName", "TestLastName");
         Assert.assertNotNull(companyStaffByName);
         Assert.assertEquals(123L, companyStaffByName.getCompanyStaffData().getUserId().longValue());
         Assert.assertEquals("TestName", companyStaffByName.getCompanyStaffData().getFirstName());
-        Assert.assertEquals("TestLastName",companyStaffByName.getCompanyStaffData().getLastName());
+        Assert.assertEquals("TestLastName", companyStaffByName.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffByName.getCompanyStaffData().getIsApproved());
     }
 
     @Test
     public void getCompanyStaffByNameDaoNullReturnTest() {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenReturn(null);
-        CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName","TestLastName");
+        CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName", "TestLastName");
         Assert.assertNotNull(companyStaffByName);
     }
 
     @Test
     public void getCompanyStaffByNameDaoEmptyReturnTest() {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenReturn(new CompanyStaffEntity());
-        CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName","TestLastName");
+        CompanyStaffGeneralResponseDTO companyStaffByName = companyStaffService.getCompanyStaffByName("TestName", "TestLastName");
         Assert.assertNotNull(companyStaffByName);
     }
 
     @Test(expected = UsersException.class)
     public void getCompanyStaffByNameDaoExceptionTest() {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenThrow(new RuntimeException());
-        companyStaffService.getCompanyStaffByName("TestName","TestLastName");
+        companyStaffService.getCompanyStaffByName("TestName", "TestLastName");
     }
 
     @Test(expected = UsersException.class)
     public void getCompanyStaffByNameExceptionTest() {
         Mockito.when(companyStaffDao.getCompanyStaffByName(any(), any())).thenReturn(getCompanyStaffEntityForException());
-        companyStaffService.getCompanyStaffByName("TestName","TestLastName");
+        companyStaffService.getCompanyStaffByName("TestName", "TestLastName");
     }
 
     @Test
@@ -159,7 +159,7 @@ public class CompanyStaffServiceImplTest {
         Assert.assertNotNull(companyStaffGeneralResponseDTO);
         Assert.assertEquals(123L, companyStaffGeneralResponseDTO.getCompanyStaffData().getUserId().longValue());
         Assert.assertEquals("TestName", companyStaffGeneralResponseDTO.getCompanyStaffData().getFirstName());
-        Assert.assertEquals("TestLastName",companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
+        Assert.assertEquals("TestLastName", companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffGeneralResponseDTO.getCompanyStaffData().getIsApproved());
     }
 
@@ -189,8 +189,20 @@ public class CompanyStaffServiceImplTest {
         Assert.assertNotNull(companyStaffGeneralResponseDTO);
         Assert.assertEquals(123L, companyStaffGeneralResponseDTO.getCompanyStaffData().getUserId().longValue());
         Assert.assertEquals("TestName", companyStaffGeneralResponseDTO.getCompanyStaffData().getFirstName());
-        Assert.assertEquals("TestLastName",companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
+        Assert.assertEquals("TestLastName", companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffGeneralResponseDTO.getCompanyStaffData().getIsApproved());
+    }
+
+    @Test(expected = UsersException.class)
+    public void updateCompanyStaffDaoInsertionExceptionTest() {
+        Mockito.when(companyStaffDao.updateCompanyStaff(any())).thenThrow(new RuntimeException());
+        companyStaffService.updateCompanyStaff(getCompanyStaffDTO());
+    }
+
+    @Test(expected = UsersException.class)
+    public void updateCompanyStaffDaoGetByIdExceptionTest() {
+        Mockito.when(companyStaffDao.getCompanyStaffById(any())).thenThrow(new RuntimeException());
+        companyStaffService.updateCompanyStaff(getCompanyStaffDTO());
     }
 
     @Test
@@ -201,6 +213,13 @@ public class CompanyStaffServiceImplTest {
         Assert.assertEquals(Constants.OK, commonResponseDTO.getReasonCode());
     }
 
+    @Test(expected = UsersException.class)
+    public void deleteCompanyStaffExceptionTest() {
+        Mockito.when(companyStaffDao.deleteCompanyStaff(any())).thenThrow(new RuntimeException());
+        companyStaffService.deleteCompanyStaff(999L);
+    }
+
+
     @Test
     public void approveCompanyStaffTest() {
         Mockito.when(companyStaffDao.approveCompanyStaff(any())).thenReturn(1);
@@ -209,14 +228,27 @@ public class CompanyStaffServiceImplTest {
         Assert.assertNotNull(companyStaffGeneralResponseDTO);
         Assert.assertEquals(123L, companyStaffGeneralResponseDTO.getCompanyStaffData().getUserId().longValue());
         Assert.assertEquals("TestName", companyStaffGeneralResponseDTO.getCompanyStaffData().getFirstName());
-        Assert.assertEquals("TestLastName",companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
+        Assert.assertEquals("TestLastName", companyStaffGeneralResponseDTO.getCompanyStaffData().getLastName());
         Assert.assertEquals(IsApprovedEnum.ACTIVE, companyStaffGeneralResponseDTO.getCompanyStaffData().getIsApproved());
     }
 
-    private CompanyStaffDTO getCompanyStaffDTO(){
+    @Test(expected = UsersException.class)
+    public void approveCompanyStaffExceptionTest() {
+        Mockito.when(companyStaffDao.approveCompanyStaff(any())).thenThrow(new RuntimeException());
+        companyStaffService.approveCompanyStaff(999L);
+    }
+
+    @Test(expected = UsersException.class)
+    public void approveCompanyStaffGetByIdExceptionTest() {
+        Mockito.when(companyStaffDao.getCompanyStaffById(any())).thenThrow(new RuntimeException());
+        companyStaffService.approveCompanyStaff(999L);
+    }
+
+    private CompanyStaffDTO getCompanyStaffDTO() {
         CompanyStaffDTO companyStaffDTO = new CompanyStaffDTO();
         companyStaffDTO.setUserId(123L);
-        companyStaffDTO.setIsApproved(IsApprovedEnum.PASSIVE);;
+        companyStaffDTO.setIsApproved(IsApprovedEnum.PASSIVE);
+        ;
         companyStaffDTO.setApprovalDate(LocalDateTime.now());
         companyStaffDTO.setFirstName("TestName");
         companyStaffDTO.setLastName("TestLastName");
@@ -243,7 +275,7 @@ public class CompanyStaffServiceImplTest {
         return companyStaffEntity;
     }
 
-    private GetAllCompanyStaffRequestDTO getAllCompanyStaffRequestDTO(){
+    private GetAllCompanyStaffRequestDTO getAllCompanyStaffRequestDTO() {
         GetAllCompanyStaffRequestDTO getAllCompanyStaffRequestDTO = new GetAllCompanyStaffRequestDTO();
         PageableDTO pageableDTO = new PageableDTO();
         pageableDTO.setPageNumber(1L);
@@ -254,7 +286,7 @@ public class CompanyStaffServiceImplTest {
         return getAllCompanyStaffRequestDTO;
     }
 
-    private ListRequest getListRequest(){
+    private ListRequest getListRequest() {
         ListRequest listRequest = new ListRequest();
         Pageable pageableDTO = new Pageable();
         pageableDTO.setPageNumber(1L);
