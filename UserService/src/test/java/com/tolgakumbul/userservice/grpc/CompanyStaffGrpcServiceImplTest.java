@@ -1,10 +1,12 @@
 package com.tolgakumbul.userservice.grpc;
 
+import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffGrpcServiceGrpc;
 import com.tolgakumbul.proto.CompanyStaffGrpcServiceGrpc.CompanyStaffGrpcServiceBlockingStub;
 import com.tolgakumbul.proto.CompanyStaffProto.*;
 import com.tolgakumbul.proto.PageableProto.Pageable;
 import com.tolgakumbul.userservice.grpc.impl.CompanyStaffGrpcServiceImpl;
+import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
@@ -104,6 +106,77 @@ public class CompanyStaffGrpcServiceImplTest {
 
         Assert.assertNotNull(companyStaffById);
         Assert.assertEquals("TestName", companyStaffById.getCompanyStaffData().getFirstName());
+    }
+
+    @Test
+    public void insertCompanyStaffTest() {
+        CompanyStaffData companyStaffData = CompanyStaffData.newBuilder()
+                .setFirstName("Tolga")
+                .setLastName("Tolga")
+                .build();
+
+        CompanyStaffGeneralResponseDTO companyStaffGeneralResponse = new CompanyStaffGeneralResponseDTO();
+        companyStaffGeneralResponse.setCompanyStaffData(getCompanyStaffDTO());
+
+        when(companyStaffService.insertCompanyStaff(any())).thenReturn(companyStaffGeneralResponse);
+
+        CompanyStaffGeneralResponse insertedCompanyStaff = blockingStub.insertCompanyStaff(companyStaffData);
+
+        Assert.assertNotNull(insertedCompanyStaff);
+        Assert.assertEquals("TestName", insertedCompanyStaff.getCompanyStaffData().getFirstName());
+    }
+
+    @Test
+    public void updateCompanyStaffTest() {
+        CompanyStaffData companyStaffData = CompanyStaffData.newBuilder()
+                .setFirstName("Tolga")
+                .setLastName("Tolga")
+                .build();
+
+        CompanyStaffGeneralResponseDTO companyStaffGeneralResponse = new CompanyStaffGeneralResponseDTO();
+        companyStaffGeneralResponse.setCompanyStaffData(getCompanyStaffDTO());
+
+        when(companyStaffService.updateCompanyStaff(any())).thenReturn(companyStaffGeneralResponse);
+
+        CompanyStaffGeneralResponse insertedCompanyStaff = blockingStub.updateCompanyStaff(companyStaffData);
+
+        Assert.assertNotNull(insertedCompanyStaff);
+        Assert.assertEquals("TestName", insertedCompanyStaff.getCompanyStaffData().getFirstName());
+    }
+
+    @Test
+    public void deleteCompanyStaffTest() {
+        CompanyStaffByIdRequest companyStaffByIdRequest = CompanyStaffByIdRequest.newBuilder()
+                .setUserId(123123L)
+                .build();
+
+        CommonResponseDTO commonResponseDTO = new CommonResponseDTO();
+        commonResponseDTO.setReasonCode("OK");
+        commonResponseDTO.setReturnCode(200);
+
+        when(companyStaffService.deleteCompanyStaff(any())).thenReturn(commonResponseDTO);
+
+        CommonResponse commonResponse = blockingStub.deleteCompanyStaff(companyStaffByIdRequest);
+
+        Assert.assertNotNull(commonResponse);
+        Assert.assertEquals("OK", commonResponse.getReasonCode());
+    }
+
+    @Test
+    public void approveCompanyStaffTest() {
+        CompanyStaffByIdRequest companyStaffByIdRequest = CompanyStaffByIdRequest.newBuilder()
+                .setUserId(123123L)
+                .build();
+
+        CompanyStaffGeneralResponseDTO companyStaffGeneralResponse = new CompanyStaffGeneralResponseDTO();
+        companyStaffGeneralResponse.setCompanyStaffData(getCompanyStaffDTO());
+
+        when(companyStaffService.approveCompanyStaff(any())).thenReturn(companyStaffGeneralResponse);
+
+        CompanyStaffGeneralResponse approvedCompanyStaff = blockingStub.approveCompanyStaff(companyStaffByIdRequest);
+
+        Assert.assertNotNull(approvedCompanyStaff);
+        Assert.assertEquals("TestName", approvedCompanyStaff.getCompanyStaffData().getFirstName());
     }
 
     private CompanyStaffDTO getCompanyStaffDTO() {
