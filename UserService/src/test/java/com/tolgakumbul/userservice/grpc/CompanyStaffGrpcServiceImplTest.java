@@ -7,6 +7,7 @@ import com.tolgakumbul.proto.CompanyStaffProto.*;
 import com.tolgakumbul.proto.PageableProto.Pageable;
 import com.tolgakumbul.userservice.grpc.impl.CompanyStaffGrpcServiceImpl;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.common.PaginationMetadataDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.companystaff.CompanyStaffListResponseDTO;
@@ -63,6 +64,10 @@ public class CompanyStaffGrpcServiceImplTest {
 
         CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO();
         companyStaffListResponseDTO.setCompanyStaffList(Collections.singletonList(getCompanyStaffDTO()));
+        PaginationMetadataDTO paginationMetadata = new PaginationMetadataDTO();
+        paginationMetadata.setPageSize(15L);
+        paginationMetadata.setCurrentPage(3L);
+        companyStaffListResponseDTO.setPaginationMetadata(paginationMetadata);
 
         when(companyStaffService.getAllCompanyStaff(any())).thenReturn(companyStaffListResponseDTO);
 
@@ -71,6 +76,8 @@ public class CompanyStaffGrpcServiceImplTest {
         Assert.assertNotNull(allCompanyStaff);
         Assert.assertEquals(1, allCompanyStaff.getCompanyStaffListList().size());
         Assert.assertEquals("TestName", allCompanyStaff.getCompanyStaffListList().get(0).getFirstName());
+        Assert.assertEquals(3L, allCompanyStaff.getPaginationMetadata().getCurrentPage());
+        Assert.assertEquals(15L, allCompanyStaff.getPaginationMetadata().getPageSize());
     }
 
     @Test

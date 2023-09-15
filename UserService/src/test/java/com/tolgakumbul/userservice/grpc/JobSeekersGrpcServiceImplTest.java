@@ -7,6 +7,7 @@ import com.tolgakumbul.proto.JobSeekersProto.*;
 import com.tolgakumbul.proto.PageableProto.Pageable;
 import com.tolgakumbul.userservice.grpc.impl.JobSeekersGrpcServiceImpl;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.common.PaginationMetadataDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerListResponseDTO;
@@ -61,6 +62,10 @@ public class JobSeekersGrpcServiceImplTest {
 
         JobSeekerListResponseDTO jobSeekerListResponseDTO = new JobSeekerListResponseDTO();
         jobSeekerListResponseDTO.setJobSeekerList(Collections.singletonList(getJobSeekerDto()));
+        PaginationMetadataDTO paginationMetadata = new PaginationMetadataDTO();
+        paginationMetadata.setPageSize(15L);
+        paginationMetadata.setCurrentPage(3L);
+        jobSeekerListResponseDTO.setPaginationMetadata(paginationMetadata);
 
         when(jobSeekersService.getAllJobSeekers(any())).thenReturn(jobSeekerListResponseDTO);
 
@@ -69,6 +74,8 @@ public class JobSeekersGrpcServiceImplTest {
         Assert.assertNotNull(allJobSeekers);
         Assert.assertEquals(1, allJobSeekers.getJobSeekerListList().size());
         Assert.assertEquals("TOLGA", allJobSeekers.getJobSeekerListList().get(0).getFirstName());
+        Assert.assertEquals(3L, allJobSeekers.getPaginationMetadata().getCurrentPage());
+        Assert.assertEquals(15L, allJobSeekers.getPaginationMetadata().getPageSize());
     }
 
     @Test

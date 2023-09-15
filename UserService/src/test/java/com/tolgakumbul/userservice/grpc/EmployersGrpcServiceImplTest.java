@@ -7,6 +7,7 @@ import com.tolgakumbul.proto.EmployersProto.*;
 import com.tolgakumbul.proto.PageableProto.Pageable;
 import com.tolgakumbul.userservice.grpc.impl.EmployersGrpcServiceImpl;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.common.PaginationMetadataDTO;
 import com.tolgakumbul.userservice.model.employers.EmployersDTO;
 import com.tolgakumbul.userservice.model.employers.EmployersGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.employers.EmployersListResponseDTO;
@@ -61,6 +62,10 @@ public class EmployersGrpcServiceImplTest {
 
         EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO();
         employersListResponseDTO.setEmployerList(Collections.singletonList(getEmployersDTO()));
+        PaginationMetadataDTO paginationMetadata = new PaginationMetadataDTO();
+        paginationMetadata.setPageSize(15L);
+        paginationMetadata.setCurrentPage(3L);
+        employersListResponseDTO.setPaginationMetadata(paginationMetadata);
 
         when(employersService.getAllEmployers(any())).thenReturn(employersListResponseDTO);
 
@@ -69,6 +74,8 @@ public class EmployersGrpcServiceImplTest {
         Assert.assertNotNull(allEmployers);
         Assert.assertEquals(1, allEmployers.getEmployerListList().size());
         Assert.assertEquals("TEST", allEmployers.getEmployerListList().get(0).getCompanyName());
+        Assert.assertEquals(3L, allEmployers.getPaginationMetadata().getCurrentPage());
+        Assert.assertEquals(15L, allEmployers.getPaginationMetadata().getPageSize());
     }
 
     @Test
@@ -91,11 +98,16 @@ public class EmployersGrpcServiceImplTest {
     @Test
     public void getEmployersByCompanyNameTest() {
         EmployersByCompanyNameRequest employersByCompanyNameRequest = EmployersByCompanyNameRequest.newBuilder()
+                .setPageable(Pageable.newBuilder().setPageNumber(3L).setPageSize(15L).setSortColumn("Column").setSortType("ASC").build())
                 .setCompanyName("COMPANY")
                 .build();
 
         EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO();
         employersListResponseDTO.setEmployerList(Collections.singletonList(getEmployersDTO()));
+        PaginationMetadataDTO paginationMetadata = new PaginationMetadataDTO();
+        paginationMetadata.setPageSize(15L);
+        paginationMetadata.setCurrentPage(3L);
+        employersListResponseDTO.setPaginationMetadata(paginationMetadata);
 
 
         when(employersService.getEmployersByCompanyName(any())).thenReturn(employersListResponseDTO);
@@ -105,6 +117,8 @@ public class EmployersGrpcServiceImplTest {
         Assert.assertNotNull(employersByCompanyName);
         Assert.assertEquals(1, employersByCompanyName.getEmployerListList().size());
         Assert.assertEquals("TEST", employersByCompanyName.getEmployerListList().get(0).getCompanyName());
+        Assert.assertEquals(3L, employersByCompanyName.getPaginationMetadata().getCurrentPage());
+        Assert.assertEquals(15L, employersByCompanyName.getPaginationMetadata().getPageSize());
     }
 
     @Test

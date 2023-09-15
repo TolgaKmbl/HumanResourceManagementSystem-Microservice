@@ -2,20 +2,15 @@ package com.tolgakumbul.userservice.mapper;
 
 import com.google.protobuf.Timestamp;
 import com.tolgakumbul.proto.CommonProto.CommonResponse;
-import com.tolgakumbul.proto.JobSeekersProto.JobSeeker;
-import com.tolgakumbul.proto.JobSeekersProto.JobSeekerByIdRequest;
-import com.tolgakumbul.proto.JobSeekersProto.JobSeekerGeneralResponse;
-import com.tolgakumbul.proto.JobSeekersProto.JobSeekerListGeneralRequest;
+import com.tolgakumbul.proto.JobSeekersProto.*;
 import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.JobSeekersEntity;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
 import com.tolgakumbul.userservice.model.jobseekers.GetAllJobSeekersRequestDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerGeneralResponseDTO;
-import org.mapstruct.CollectionMappingStrategy;
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
+import com.tolgakumbul.userservice.model.jobseekers.JobSeekerListResponseDTO;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 import java.time.Instant;
@@ -47,6 +42,9 @@ public interface JobSeekerMapper {
     JobSeekerDTO toJobSeekerDTO(JobSeekerByIdRequest jobSeekerByIdRequest);
 
     CommonResponse toCommonResponse(CommonResponseDTO commonResponseDTO);
+
+    @Mapping(source = "jobSeekerList", target = "jobSeekerListList")
+    JobSeekerListGeneralResponse toJobSeekerListGeneralResponse(JobSeekerListResponseDTO listResponseDTO);
 
     default Timestamp localDateTimeToTimestamp(LocalDateTime localDateTime) {
         Instant instant = localDateTime.toInstant(ZoneOffset.UTC);

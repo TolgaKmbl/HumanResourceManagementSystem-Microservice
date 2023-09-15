@@ -5,18 +5,13 @@ import com.tolgakumbul.proto.EmployersProto;
 import com.tolgakumbul.proto.EmployersProto.Employer;
 import com.tolgakumbul.proto.EmployersProto.EmployerGeneralResponse;
 import com.tolgakumbul.proto.EmployersProto.EmployerListGeneralRequest;
+import com.tolgakumbul.proto.EmployersProto.EmployerListGeneralResponse;
 import com.tolgakumbul.userservice.dao.model.EmployersByCompanyNameRequest;
 import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.EmployersEntity;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersByCompanyNameRequestDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersDTO;
-import com.tolgakumbul.userservice.model.employers.EmployersGeneralResponseDTO;
-import com.tolgakumbul.userservice.model.employers.GetAllEmployersRequestDTO;
-import org.mapstruct.CollectionMappingStrategy;
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.NullValueCheckStrategy;
+import com.tolgakumbul.userservice.model.employers.*;
+import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
@@ -44,6 +39,9 @@ public interface EmployersMapper {
     EmployersDTO toEmployersDTO(Employer employer);
 
     EmployerGeneralResponse toEmployerGeneralResponse(EmployersGeneralResponseDTO employersGeneralResponseDTO);
+
+    @Mapping(source = "employerList", target = "employerListList")
+    EmployerListGeneralResponse toEmployerListGeneralResponse(EmployersListResponseDTO listResponseDTO);
 
     ListRequest toListRequest(GetAllEmployersRequestDTO requestDTO);
 

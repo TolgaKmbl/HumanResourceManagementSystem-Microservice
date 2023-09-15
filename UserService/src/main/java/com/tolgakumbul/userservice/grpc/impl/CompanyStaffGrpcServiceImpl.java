@@ -13,9 +13,6 @@ import com.tolgakumbul.userservice.service.CompanyStaffService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @GrpcService
 public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.CompanyStaffGrpcServiceImplBase implements CompanyStaffGrpcService {
 
@@ -33,15 +30,9 @@ public class CompanyStaffGrpcServiceImpl extends CompanyStaffGrpcServiceGrpc.Com
 
         CompanyStaffListResponseDTO allCompanyStaff = companyStaffService.getAllCompanyStaff(getAllCompanyStaffRequestDTO);
 
-        List<CompanyStaffData> getCompanyStaffResponses = allCompanyStaff.getCompanyStaffList().stream()
-                .map(MAPPER::toGetCompanyStaffResponse)
-                .collect(Collectors.toList());
+        GetAllCompanyStaffResponse grpcResponse = MAPPER.toGetAllCompanyStaffResponse(allCompanyStaff);
 
-        GetAllCompanyStaffResponse getAllCompanyStaffResponse = GetAllCompanyStaffResponse.newBuilder()
-                .addAllCompanyStaffList(getCompanyStaffResponses)
-                .build();
-
-        responseObserver.onNext(getAllCompanyStaffResponse);
+        responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();
 
     }

@@ -13,9 +13,6 @@ import com.tolgakumbul.userservice.service.JobSeekersService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @GrpcService
 public class JobSeekersGrpcServiceImpl extends JobSeekersGrpcServiceGrpc.JobSeekersGrpcServiceImplBase implements JobSeekersGrpcService {
 
@@ -32,15 +29,9 @@ public class JobSeekersGrpcServiceImpl extends JobSeekersGrpcServiceGrpc.JobSeek
 
         JobSeekerListResponseDTO allJobSeekers = jobSeekersService.getAllJobSeekers(getAllJobSeekersRequestDTO);
 
-        List<JobSeeker> jobSeekerList = allJobSeekers.getJobSeekerList().stream()
-                .map(MAPPER::toJobSeeker)
-                .collect(Collectors.toList());
+        JobSeekerListGeneralResponse grpcResponse = MAPPER.toJobSeekerListGeneralResponse(allJobSeekers);
 
-        JobSeekerListGeneralResponse jobSeekerListGeneralResponse = JobSeekerListGeneralResponse.newBuilder()
-                .addAllJobSeekerList(jobSeekerList)
-                .build();
-
-        responseObserver.onNext(jobSeekerListGeneralResponse);
+        responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();
     }
 

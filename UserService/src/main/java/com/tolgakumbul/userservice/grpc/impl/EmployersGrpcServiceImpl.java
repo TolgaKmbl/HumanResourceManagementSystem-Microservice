@@ -14,9 +14,6 @@ import com.tolgakumbul.userservice.service.EmployersService;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @GrpcService
 public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.EmployersGrpcServiceImplBase implements EmployersGrpcService {
 
@@ -35,15 +32,9 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
 
         EmployersListResponseDTO allEmployers = employersService.getAllEmployers(getAllEmployersRequestDTO);
 
-        List<Employer> employerList = allEmployers.getEmployerList().stream()
-                .map(MAPPER::toEmployer)
-                .collect(Collectors.toList());
+        EmployerListGeneralResponse grpcResponse = MAPPER.toEmployerListGeneralResponse(allEmployers);
 
-        EmployerListGeneralResponse getAllEmployersResponse = EmployerListGeneralResponse.newBuilder()
-                .addAllEmployerList(employerList)
-                .build();
-
-        responseObserver.onNext(getAllEmployersResponse);
+        responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();
     }
 
@@ -64,13 +55,9 @@ public class EmployersGrpcServiceImpl extends EmployersGrpcServiceGrpc.Employers
         EmployersByCompanyNameRequestDTO employersByCompanyNameRequestDTO = MAPPER.toEmployersByCompanyNameRequestDTO(request);
         EmployersListResponseDTO employersByCompanyName = employersService.getEmployersByCompanyName(employersByCompanyNameRequestDTO);
 
-        EmployerListGeneralResponse employerGeneralResponse = EmployerListGeneralResponse.newBuilder()
-                .addAllEmployerList(employersByCompanyName.getEmployerList().stream()
-                        .map(MAPPER::toEmployer)
-                        .collect(Collectors.toList()))
-                .build();
+        EmployerListGeneralResponse grpcResponse = MAPPER.toEmployerListGeneralResponse(employersByCompanyName);
 
-        responseObserver.onNext(employerGeneralResponse);
+        responseObserver.onNext(grpcResponse);
         responseObserver.onCompleted();
     }
 

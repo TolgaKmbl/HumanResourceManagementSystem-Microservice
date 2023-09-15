@@ -5,14 +5,12 @@ import com.tolgakumbul.proto.CommonProto.CommonResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffData;
 import com.tolgakumbul.proto.CompanyStaffProto.CompanyStaffGeneralResponse;
 import com.tolgakumbul.proto.CompanyStaffProto.GetAllCompanyStaffRequest;
+import com.tolgakumbul.proto.CompanyStaffProto.GetAllCompanyStaffResponse;
 import com.tolgakumbul.proto.IsApprovedProto.IsApproved;
 import com.tolgakumbul.userservice.dao.model.ListRequest;
 import com.tolgakumbul.userservice.entity.CompanyStaffEntity;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffDTO;
-import com.tolgakumbul.userservice.model.companystaff.CompanyStaffGeneralResponseDTO;
-import com.tolgakumbul.userservice.model.companystaff.GetAllCompanyStaffRequestDTO;
-import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
+import com.tolgakumbul.userservice.model.companystaff.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
@@ -48,6 +46,9 @@ public interface CompanyStaffMapper {
     CommonResponse toCommonResponse(CommonResponseDTO commonResponseDTO);
 
     CompanyStaffGeneralResponse toCompanyStaffGeneralResponse(CompanyStaffGeneralResponseDTO companyStaffGeneralResponseDTO);
+
+    @Mapping(source = "companyStaffList", target = "companyStaffListList")
+    GetAllCompanyStaffResponse toGetAllCompanyStaffResponse(CompanyStaffListResponseDTO listResponseDTO);
 
     @ValueMapping(source = "ACTIVE", target = "ACTIVE")
     @ValueMapping(source = "PASSIVE", target = "PASSIVE")
