@@ -72,7 +72,7 @@ public class EmployersDaoImplTest {
     @Test
     public void getAllEmployersTest() {
         String query = "SELECT * FROM EMPLOYERS ORDER BY COMPANY_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenReturn(Collections.singletonList(employersEntity));
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenReturn(Collections.singletonList(employersEntity));
 
         List<EmployersEntity> allEmployers = employersDao.getAllEmployers(listRequest);
 
@@ -84,7 +84,7 @@ public class EmployersDaoImplTest {
     @Test
     public void getAllEmployersEmptyResultDataAccessExceptionTest() {
         String query = "SELECT * FROM EMPLOYERS ORDER BY COMPANY_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(EmptyResultDataAccessException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(EmptyResultDataAccessException.class);
 
         List<EmployersEntity> allEmployers = employersDao.getAllEmployers(listRequest);
 
@@ -95,7 +95,7 @@ public class EmployersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void getAllEmployersExceptionTest() {
         String query = "SELECT * FROM EMPLOYERS ORDER BY COMPANY_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(RuntimeException.class);
 
         employersDao.getAllEmployers(listRequest);
     }
@@ -133,7 +133,7 @@ public class EmployersDaoImplTest {
     @Test
     public void getEmployersByCompanyNameTest() {
         String query = "SELECT USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL, IS_DELETED FROM EMPLOYERS WHERE COMPANY_NAME = ? ORDER BY COMPANY_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenReturn(Collections.singletonList(employersEntity));
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenReturn(Collections.singletonList(employersEntity));
 
         List<EmployersEntity> compName = employersDao.getEmployersByCompanyName(employersByCompanyNameRequest);
 
@@ -146,7 +146,7 @@ public class EmployersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void getEmployersByCompanyNameExceptionTest() {
         String query = "SELECT USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL, IS_DELETED FROM EMPLOYERS WHERE COMPANY_NAME = ? ORDER BY COMPANY_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(RuntimeException.class);
 
         employersDao.getEmployersByCompanyName(employersByCompanyNameRequest);
     }
@@ -154,7 +154,7 @@ public class EmployersDaoImplTest {
     @Test
     public void getEmployersByCompanyNameEmptyResultDataAccessExceptionTest() {
         String query = "SELECT USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL, IS_DELETED FROM EMPLOYERS WHERE COMPANY_NAME = ? ORDER BY COMPANY_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(EmptyResultDataAccessException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(EmptyResultDataAccessException.class);
 
         List<EmployersEntity> compName = employersDao.getEmployersByCompanyName(employersByCompanyNameRequest);
 
@@ -165,7 +165,7 @@ public class EmployersDaoImplTest {
     @Test
     public void insertEmployerTest() {
         String query = "INSERT INTO EMPLOYERS(USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT, IS_DELETED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = employersDao.insertEmployer(employersEntity);
 
@@ -176,7 +176,7 @@ public class EmployersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void insertEmployerExceptionTest() {
         String query = "INSERT INTO EMPLOYERS(USER_ID, COMPANY_NAME, WEBSITE, PHONE_NUM, COMPANY_IMG_URL, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT, IS_DELETED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         employersDao.insertEmployer(employersEntity);
     }
@@ -184,7 +184,7 @@ public class EmployersDaoImplTest {
     @Test
     public void updateEmployerTest() {
         String query = "UPDATE EMPLOYERS SET COMPANY_NAME = ?, WEBSITE = ?, PHONE_NUM = ?, COMPANY_IMG_URL = ?, UPDATED_BY = ?, UPDATED_AT = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = employersDao.updateEmployer(employersEntity);
 
@@ -195,7 +195,7 @@ public class EmployersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void updateEmployerExceptionTest() {
         String query = "UPDATE EMPLOYERS SET COMPANY_NAME = ?, WEBSITE = ?, PHONE_NUM = ?, COMPANY_IMG_URL = ?, UPDATED_BY = ?, UPDATED_AT = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         employersDao.updateEmployer(employersEntity);
     }
@@ -203,7 +203,7 @@ public class EmployersDaoImplTest {
     @Test
     public void deleteEmployerTest() {
         String query = "UPDATE EMPLOYERS SET IS_DELETED = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = employersDao.deleteEmployer(123L);
 
@@ -214,7 +214,7 @@ public class EmployersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void deleteEmployerExceptionTest() {
         String query = "UPDATE EMPLOYERS SET IS_DELETED = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         employersDao.deleteEmployer(123L);
     }
@@ -247,6 +247,26 @@ public class EmployersDaoImplTest {
 
         Assert.assertNotNull(latestUserId);
         Assert.assertEquals(0L, latestUserId.longValue());
+    }
+
+    @Test
+    public void getTotalRowCountTest(){
+        when(jdbcTemplate.queryForObject(eq("SELECT COUNT(*) FROM EMPLOYERS"), eq(Long.class))).thenReturn(14L);
+
+        Long totalRowCount = employersDao.getTotalRowCount();
+
+        Assert.assertNotNull(totalRowCount);
+        Assert.assertEquals(14L, totalRowCount.longValue());
+    }
+
+    @Test
+    public void getTotalRowCountExceptionTest(){
+        when(jdbcTemplate.queryForObject(eq("SELECT COUNT(*) FROM EMPLOYERS"), eq(Long.class))).thenThrow(RuntimeException.class);
+
+        Long totalRowCount = employersDao.getTotalRowCount();
+
+        Assert.assertNotNull(totalRowCount);
+        Assert.assertEquals(0L, totalRowCount.longValue());
     }
 
 }

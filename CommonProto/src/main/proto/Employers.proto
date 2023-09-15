@@ -5,6 +5,7 @@ option java_outer_classname = "EmployersProto";
 
 import "Common.proto";
 import "Pageable.proto";
+import "PaginationMetadata.proto";
 
 package com.tolgakumbul.proto;
 
@@ -27,6 +28,7 @@ message EmployerListGeneralRequest {
 
 message EmployerListGeneralResponse {
   repeated Employer employerList = 1;
+  PaginationMetadata paginationMetadata = 2;
 }
 
 message Employer {

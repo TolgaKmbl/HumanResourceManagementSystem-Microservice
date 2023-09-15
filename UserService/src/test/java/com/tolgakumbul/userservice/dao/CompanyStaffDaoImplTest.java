@@ -68,7 +68,7 @@ public class CompanyStaffDaoImplTest {
     @Test
     public void getAllCompanyStaffTest() {
         String query = "SELECT * FROM COMPANY_STAFF ORDER BY FIRST_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenReturn(Collections.singletonList(companyStaffEntity));
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenReturn(Collections.singletonList(companyStaffEntity));
 
         List<CompanyStaffEntity> allCompanyStaff = companyStaffDao.getAllCompanyStaff(listRequest);
 
@@ -80,7 +80,7 @@ public class CompanyStaffDaoImplTest {
     @Test
     public void getAllCompanyStaffEmptyResultDataAccessExceptionTest(){
         String query = "SELECT * FROM COMPANY_STAFF ORDER BY FIRST_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(EmptyResultDataAccessException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(EmptyResultDataAccessException.class);
 
         List<CompanyStaffEntity> allCompanyStaff = companyStaffDao.getAllCompanyStaff(listRequest);
 
@@ -91,7 +91,7 @@ public class CompanyStaffDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void getAllCompanyStaffExceptionTest(){
         String query = "SELECT * FROM COMPANY_STAFF ORDER BY FIRST_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(RuntimeException.class);
 
         companyStaffDao.getAllCompanyStaff(listRequest);
     }
@@ -160,7 +160,7 @@ public class CompanyStaffDaoImplTest {
     @Test
     public void insertCompanyStaffTest() {
         String query = "INSERT INTO COMPANY_STAFF(USER_ID, FIRST_NAME, LAST_NAME, IS_APPROVED, APPROVAL_DATE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT, IS_DELETED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = companyStaffDao.insertCompanyStaff(companyStaffEntity);
 
@@ -171,7 +171,7 @@ public class CompanyStaffDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void insertCompanyStaffExceptionTest(){
         String query = "INSERT INTO COMPANY_STAFF(USER_ID, FIRST_NAME, LAST_NAME, IS_APPROVED, APPROVAL_DATE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT, IS_DELETED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         companyStaffDao.insertCompanyStaff(companyStaffEntity);
     }
@@ -179,7 +179,7 @@ public class CompanyStaffDaoImplTest {
     @Test
     public void updateCompanyStaffTest() {
         String query = "UPDATE COMPANY_STAFF SET FIRST_NAME = ?, LAST_NAME = ?, IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = companyStaffDao.updateCompanyStaff(companyStaffEntity);
 
@@ -190,7 +190,7 @@ public class CompanyStaffDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void updateCompanyStaffExceptionTest(){
         String query = "UPDATE COMPANY_STAFF SET FIRST_NAME = ?, LAST_NAME = ?, IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         companyStaffDao.updateCompanyStaff(companyStaffEntity);
     }
@@ -199,7 +199,7 @@ public class CompanyStaffDaoImplTest {
     @Test
     public void deleteCompanyStaffTest() {
         String query = "UPDATE COMPANY_STAFF SET IS_DELETED = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = companyStaffDao.deleteCompanyStaff(123L);
 
@@ -210,7 +210,7 @@ public class CompanyStaffDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void deleteCompanyStaffExceptionTest(){
         String query = "UPDATE COMPANY_STAFF SET IS_DELETED = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         companyStaffDao.deleteCompanyStaff(123L);
     }
@@ -218,7 +218,7 @@ public class CompanyStaffDaoImplTest {
     @Test
     public void approveCompanyStaffTest() {
         String query = "UPDATE COMPANY_STAFF SET IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = companyStaffDao.approveCompanyStaff(companyStaffEntity);
 
@@ -229,7 +229,7 @@ public class CompanyStaffDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void approveCompanyStaffExceptionTest(){
         String query = "UPDATE COMPANY_STAFF SET IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         companyStaffDao.approveCompanyStaff(companyStaffEntity);
     }
@@ -262,5 +262,25 @@ public class CompanyStaffDaoImplTest {
 
         Assert.assertNotNull(latestUserId);
         Assert.assertEquals(0L, latestUserId.longValue());
+    }
+
+    @Test
+    public void getTotalRowCountTest(){
+        when(jdbcTemplate.queryForObject(eq("SELECT COUNT(*) FROM COMPANY_STAFF"), eq(Long.class))).thenReturn(14L);
+
+        Long totalRowCount = companyStaffDao.getTotalRowCount();
+
+        Assert.assertNotNull(totalRowCount);
+        Assert.assertEquals(14L, totalRowCount.longValue());
+    }
+
+    @Test
+    public void getTotalRowCountExceptionTest(){
+        when(jdbcTemplate.queryForObject(eq("SELECT COUNT(*) FROM COMPANY_STAFF"), eq(Long.class))).thenThrow(RuntimeException.class);
+
+        Long totalRowCount = companyStaffDao.getTotalRowCount();
+
+        Assert.assertNotNull(totalRowCount);
+        Assert.assertEquals(0L, totalRowCount.longValue());
     }
 }

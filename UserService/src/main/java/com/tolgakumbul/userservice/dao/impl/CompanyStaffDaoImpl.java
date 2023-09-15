@@ -174,4 +174,17 @@ public class CompanyStaffDaoImpl implements CompanyStaffDao {
         }
     }
 
+    @Override
+    public Long getTotalRowCount() {
+        try {
+            StringBuilder sb = new StringBuilder(QueryConstants.GET_TOTAL_ROW_COUNT);
+            sb.append("COMPANY_STAFF");
+            Long totalRowCount = jdbcTemplate.queryForObject(sb.toString(), Long.class);
+            return totalRowCount;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in CompanyStaffDaoImpl.getTotalRowCount : {}", e.getMessage());
+            return 0L;
+        }
+    }
+
 }

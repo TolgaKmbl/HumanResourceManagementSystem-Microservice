@@ -7,6 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "Common.proto";
 import "IsApproved.proto";
 import "Pageable.proto";
+import "PaginationMetadata.proto";
 
 package com.tolgakumbul.proto;
 
@@ -29,6 +30,7 @@ message GetAllCompanyStaffRequest {
 
 message GetAllCompanyStaffResponse {
   repeated CompanyStaffData companyStaffList = 1;
+  PaginationMetadata paginationMetadata = 2;
 }
 
 message CompanyStaffData {

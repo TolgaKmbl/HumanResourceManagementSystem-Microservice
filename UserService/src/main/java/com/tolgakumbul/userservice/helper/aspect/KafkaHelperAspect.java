@@ -50,7 +50,7 @@ public class KafkaHelperAspect {
         Object request = ObjectUtils.isEmpty(args) ? args : args[0];
         GeneralErrorResponse generalErrorResponse = ExceptionMessageUtil.handleErrorResponse(exception);
         LOGGER.info("Sending request - {}, exception - {} to kafka in KafkaHelper.afterMethodException", request, generalErrorResponse.getErrorMessage());
-        kafkaProducerHelper.sendKafkaTopic(request,
+        kafkaProducerHelper.sendKafkaTopicForError(request,
                 kafkaHelper.operationName(),
                 generalErrorResponse.getErrorMessage(),
                 kafkaHelper.topicName(),

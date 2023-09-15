@@ -15,6 +15,4 @@ public class EmployersGeneralResponseDTO implements Serializable {
     private static final long serialVersionUID = -4717846751778793485L;
 
     private EmployersDTO employer;
-    //private CommonResponseDTO commonResponse;
-
 }

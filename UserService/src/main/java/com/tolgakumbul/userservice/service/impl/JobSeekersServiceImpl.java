@@ -9,12 +9,14 @@ import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.JobSeekerMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.common.PaginationMetadataDTO;
 import com.tolgakumbul.userservice.model.companystaff.IsApprovedEnum;
 import com.tolgakumbul.userservice.model.jobseekers.GetAllJobSeekersRequestDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerGeneralResponseDTO;
 import com.tolgakumbul.userservice.model.jobseekers.JobSeekerListResponseDTO;
 import com.tolgakumbul.userservice.service.JobSeekersService;
+import com.tolgakumbul.userservice.util.PaginationMetadataUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -43,7 +45,8 @@ public class JobSeekersServiceImpl implements JobSeekersService {
             ListRequest listRequest = MAPPER.toListRequest(getAllJobSeekersRequestDTO);
             List<JobSeekersEntity> allJobSeekers = jobSeekersDao.getAllJobSeekers(listRequest);
             List<JobSeekerDTO> jobSeekerDTOList = allJobSeekers.stream().map(MAPPER::toJobSeekerDTO).collect(Collectors.toList());
-            JobSeekerListResponseDTO jobSeekerListResponseDTO = new JobSeekerListResponseDTO(jobSeekerDTOList);
+            PaginationMetadataDTO paginationMetadata = PaginationMetadataUtil.getPaginationMetadata(getTotalRowCount(), getAllJobSeekersRequestDTO.getPageable());
+            JobSeekerListResponseDTO jobSeekerListResponseDTO = new JobSeekerListResponseDTO(jobSeekerDTOList, paginationMetadata);
 
             return jobSeekerListResponseDTO;
         } catch (Exception e) {
@@ -167,5 +170,9 @@ public class JobSeekersServiceImpl implements JobSeekersService {
             LOGGER.error("An Error has been occured in JobSeekersServiceImpl.deleteJobSeeker : {}", e.getMessage());
             throw new UsersException(ErrorCode.JOB_SEEKER_DELETE_ERROR, e.getMessage());
         }
+    }
+
+    private Long getTotalRowCount() {
+        return jobSeekersDao.getTotalRowCount();
     }
 }

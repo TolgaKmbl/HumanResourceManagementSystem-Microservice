@@ -24,4 +24,6 @@ public interface CompanyStaffDao {
 
     Long getLatestUserId();
 
+    Long getTotalRowCount();
+
 }

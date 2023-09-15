@@ -25,4 +25,6 @@ public interface JobSeekersDao {
 
     Long getLatestUserId();
 
+    Long getTotalRowCount();
+
 }

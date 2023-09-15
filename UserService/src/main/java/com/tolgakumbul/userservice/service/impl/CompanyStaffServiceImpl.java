@@ -9,8 +9,10 @@ import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.CompanyStaffMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.common.PaginationMetadataDTO;
 import com.tolgakumbul.userservice.model.companystaff.*;
 import com.tolgakumbul.userservice.service.CompanyStaffService;
+import com.tolgakumbul.userservice.util.PaginationMetadataUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,8 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             ListRequest listRequest = MAPPER.toListRequest(requestDTO);
             List<CompanyStaffEntity> allCompanyStaffEntity = companyStaffDao.getAllCompanyStaff(listRequest);
             List<CompanyStaffDTO> companyStaffDTOList = allCompanyStaffEntity.stream().map(MAPPER::toCompanyStaffDTO).collect(Collectors.toList());
-            CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO(companyStaffDTOList);
+            PaginationMetadataDTO paginationMetadata = PaginationMetadataUtil.getPaginationMetadata(getTotalRowCount(), requestDTO.getPageable());
+            CompanyStaffListResponseDTO companyStaffListResponseDTO = new CompanyStaffListResponseDTO(companyStaffDTOList, paginationMetadata);
 
             return companyStaffListResponseDTO;
         } catch (Exception e) {
@@ -148,6 +151,10 @@ public class CompanyStaffServiceImpl implements CompanyStaffService {
             LOGGER.error("An Error has been occured in CompanyStaffServiceImpl.approveCompanyStaff : {}", e.getMessage());
             throw new UsersException(ErrorCode.COMPANY_STAFF_APPROVE_ERROR, e.getMessage());
         }
+    }
+
+    private Long getTotalRowCount(){
+        return companyStaffDao.getTotalRowCount();
     }
 
 }

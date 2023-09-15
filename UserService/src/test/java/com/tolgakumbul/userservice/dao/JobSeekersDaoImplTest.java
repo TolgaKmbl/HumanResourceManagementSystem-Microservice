@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,7 +44,6 @@ public class JobSeekersDaoImplTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         jobSeekersEntity = new JobSeekersEntity();
         jobSeekersEntity.setUserId(123L);
         jobSeekersEntity.setCvId(456L);
@@ -72,7 +70,7 @@ public class JobSeekersDaoImplTest {
     @Test
     public void getAllJobSeekersTest() {
         String query = "SELECT * FROM JOB_SEEKERS ORDER BY FIRST_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenReturn(Collections.singletonList(jobSeekersEntity));
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenReturn(Collections.singletonList(jobSeekersEntity));
 
         List<JobSeekersEntity> allJobSeekers = jobSeekersDao.getAllJobSeekers(listRequest);
 
@@ -84,7 +82,7 @@ public class JobSeekersDaoImplTest {
     @Test
     public void getAllJobSeekersEmptyResultDataAccessExceptionTest() {
         String query = "SELECT * FROM JOB_SEEKERS ORDER BY FIRST_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(EmptyResultDataAccessException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(EmptyResultDataAccessException.class);
 
         List<JobSeekersEntity> allJobSeekers = jobSeekersDao.getAllJobSeekers(listRequest);
 
@@ -95,7 +93,7 @@ public class JobSeekersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void getAllJobSeekersExceptionTest() {
         String query = "SELECT * FROM JOB_SEEKERS ORDER BY FIRST_NAME ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ";
-        when(jdbcTemplate.query(eq(query), any(RowMapper.class), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.query(eq(query), any(RowMapper.class), (Object) any())).thenThrow(RuntimeException.class);
 
         jobSeekersDao.getAllJobSeekers(listRequest);
     }
@@ -195,7 +193,7 @@ public class JobSeekersDaoImplTest {
     @Test
     public void insertJobSeekerTest() {
         String query = "INSERT INTO JOB_SEEKERS(USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT, IS_DELETED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = jobSeekersDao.insertJobSeeker(jobSeekersEntity);
 
@@ -206,7 +204,7 @@ public class JobSeekersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void insertJobSeekerExceptionTest() {
         String query = "INSERT INTO JOB_SEEKERS(USER_ID, FIRST_NAME, LAST_NAME, NATIONAL_ID, BIRTH_DATE, CV_ID, IS_APPROVED, APPROVAL_DATE, CREATED_BY, CREATED_AT, UPDATED_BY, UPDATED_AT, IS_DELETED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         jobSeekersDao.insertJobSeeker(jobSeekersEntity);
     }
@@ -214,7 +212,7 @@ public class JobSeekersDaoImplTest {
     @Test
     public void updateJobSeekerTest() {
         String query = "UPDATE JOB_SEEKERS SET FIRST_NAME = ?, LAST_NAME = ?, NATIONAL_ID = ?, BIRTH_DATE = ?, CV_ID = ?, IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?  WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = jobSeekersDao.updateJobSeeker(jobSeekersEntity);
 
@@ -225,7 +223,7 @@ public class JobSeekersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void updateJobSeekerExceptionTest() {
         String query = "UPDATE JOB_SEEKERS SET FIRST_NAME = ?, LAST_NAME = ?, NATIONAL_ID = ?, BIRTH_DATE = ?, CV_ID = ?, IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?  WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         jobSeekersDao.updateJobSeeker(jobSeekersEntity);
     }
@@ -233,7 +231,7 @@ public class JobSeekersDaoImplTest {
     @Test
     public void deleteJobSeekerTest() {
         String query = "UPDATE JOB_SEEKERS SET IS_DELETED = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = jobSeekersDao.deleteJobSeeker(123L);
 
@@ -244,7 +242,7 @@ public class JobSeekersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void deleteJobSeekerExceptionTest() {
         String query = "UPDATE JOB_SEEKERS SET IS_DELETED = ? WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         jobSeekersDao.deleteJobSeeker(123L);
     }
@@ -252,7 +250,7 @@ public class JobSeekersDaoImplTest {
     @Test
     public void approveJobSeekerTest() {
         String query = "UPDATE JOB_SEEKERS SET IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?  WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenReturn(1);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenReturn(1);
 
         Integer integer = jobSeekersDao.approveJobSeeker(jobSeekersEntity);
 
@@ -263,7 +261,7 @@ public class JobSeekersDaoImplTest {
     @Test(expected = RuntimeException.class)
     public void approveJobSeekerExceptionTest() {
         String query = "UPDATE JOB_SEEKERS SET IS_APPROVED = ?, APPROVAL_DATE = ?, UPDATED_BY = ?, UPDATED_AT = ?  WHERE USER_ID = ?";
-        when(jdbcTemplate.update(eq(query), any(Object[].class))).thenThrow(RuntimeException.class);
+        when(jdbcTemplate.update(eq(query), (Object) any())).thenThrow(RuntimeException.class);
 
         jobSeekersDao.approveJobSeeker(jobSeekersEntity);
     }
@@ -296,6 +294,26 @@ public class JobSeekersDaoImplTest {
 
         Assert.assertNotNull(latestUserId);
         Assert.assertEquals(0L, latestUserId.longValue());
+    }
+
+    @Test
+    public void getTotalRowCountTest(){
+        when(jdbcTemplate.queryForObject(eq("SELECT COUNT(*) FROM JOB_SEEKERS"), eq(Long.class))).thenReturn(14L);
+
+        Long totalRowCount = jobSeekersDao.getTotalRowCount();
+
+        Assert.assertNotNull(totalRowCount);
+        Assert.assertEquals(14L, totalRowCount.longValue());
+    }
+
+    @Test
+    public void getTotalRowCountExceptionTest(){
+        when(jdbcTemplate.queryForObject(eq("SELECT COUNT(*) FROM JOB_SEEKERS"), eq(Long.class))).thenThrow(RuntimeException.class);
+
+        Long totalRowCount = jobSeekersDao.getTotalRowCount();
+
+        Assert.assertNotNull(totalRowCount);
+        Assert.assertEquals(0L, totalRowCount.longValue());
     }
 
 }

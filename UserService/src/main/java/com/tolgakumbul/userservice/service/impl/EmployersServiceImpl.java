@@ -10,8 +10,10 @@ import com.tolgakumbul.userservice.exception.UsersException;
 import com.tolgakumbul.userservice.helper.aspect.KafkaHelper;
 import com.tolgakumbul.userservice.mapper.EmployersMapper;
 import com.tolgakumbul.userservice.model.common.CommonResponseDTO;
+import com.tolgakumbul.userservice.model.common.PaginationMetadataDTO;
 import com.tolgakumbul.userservice.model.employers.*;
 import com.tolgakumbul.userservice.service.EmployersService;
+import com.tolgakumbul.userservice.util.PaginationMetadataUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,8 @@ public class EmployersServiceImpl implements EmployersService {
             ListRequest listRequest = MAPPER.toListRequest(requestDTO);
             List<EmployersEntity> allEmployers = employersDao.getAllEmployers(listRequest);
             List<EmployersDTO> employersDTOList = allEmployers.stream().map(MAPPER::toEmployersDTO).collect(Collectors.toList());
-            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList);
+            PaginationMetadataDTO paginationMetadata = PaginationMetadataUtil.getPaginationMetadata(getTotalRowCount(), requestDTO.getPageable());
+            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList, paginationMetadata);
 
             return employersListResponseDTO;
         } catch (Exception e) {
@@ -71,7 +74,8 @@ public class EmployersServiceImpl implements EmployersService {
             EmployersByCompanyNameRequest daoRequest = MAPPER.toEmployersByCompanyNameRequest(requestDTO);
             List<EmployersEntity> employersByCompanyName = employersDao.getEmployersByCompanyName(daoRequest);
             List<EmployersDTO> employersDTOList = employersByCompanyName.stream().map(MAPPER::toEmployersDTO).collect(Collectors.toList());
-            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList);
+            PaginationMetadataDTO paginationMetadata = PaginationMetadataUtil.getPaginationMetadata(getTotalRowCount(), requestDTO.getPageable());
+            EmployersListResponseDTO employersListResponseDTO = new EmployersListResponseDTO(employersDTOList, paginationMetadata);
 
             return employersListResponseDTO;
         } catch (Exception e) {
@@ -132,6 +136,10 @@ public class EmployersServiceImpl implements EmployersService {
             LOGGER.error("An Error has been occured in EmployersServiceImpl.deleteEmployer : {}", e.getMessage());
             throw new UsersException(ErrorCode.EMPLOYER_DELETE_ERROR, e.getMessage());
         }
+    }
+
+    private Long getTotalRowCount(){
+        return employersDao.getTotalRowCount();
     }
 
 }

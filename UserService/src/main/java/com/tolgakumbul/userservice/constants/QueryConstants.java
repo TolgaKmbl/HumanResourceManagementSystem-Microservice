@@ -140,4 +140,8 @@ public class QueryConstants {
             "    MAX(USER_ID)\n" +
             "FROM\n" +
             "    JOB_SEEKERS";
+
+    //TOTAL ROW COUNT
+
+    public static final String GET_TOTAL_ROW_COUNT = "SELECT COUNT(*) FROM ";
 }

@@ -155,4 +155,17 @@ public class EmployersDaoImpl implements EmployersDao {
             return 0L;
         }
     }
+
+    @Override
+    public Long getTotalRowCount() {
+        try {
+            StringBuilder sb = new StringBuilder(QueryConstants.GET_TOTAL_ROW_COUNT);
+            sb.append("EMPLOYERS");
+            Long totalRowCount = jdbcTemplate.queryForObject(sb.toString(), Long.class);
+            return totalRowCount;
+        } catch (Exception e) {
+            LOGGER.error("An Error has been occurred in EmployersDaoImpl.getTotalRowCount : {}", e.getMessage());
+            return 0L;
+        }
+    }
 }

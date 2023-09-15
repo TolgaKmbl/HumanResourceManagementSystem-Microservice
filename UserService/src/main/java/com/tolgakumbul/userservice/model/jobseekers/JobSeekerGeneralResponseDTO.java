@@ -15,6 +15,5 @@ public class JobSeekerGeneralResponseDTO implements Serializable {
     private static final long serialVersionUID = 5434234854454142236L;
 
     private JobSeekerDTO jobSeeker;
-    //private CommonResponseDTO commonResponse;
 
 }

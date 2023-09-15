@@ -7,6 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "Common.proto";
 import "IsApproved.proto";
 import "Pageable.proto";
+import "PaginationMetadata.proto";
 
 package com.tolgakumbul.proto;
 
@@ -33,6 +34,7 @@ message JobSeekerListGeneralRequest {
 
 message JobSeekerListGeneralResponse {
   repeated JobSeeker jobSeekerList = 1;
+  PaginationMetadata paginationMetadata = 2;
 }
 
 message JobSeeker {

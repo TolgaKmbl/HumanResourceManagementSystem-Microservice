@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "PaginationMetadataProto";
+
+message PaginationMetadata {
+  int64 totalRowCount = 1;
+  int64 currentPage = 2;
+  int64 pageSize = 3;
+  bool hasPreviousPage = 4;
+  bool hasNextPage = 5;
+}

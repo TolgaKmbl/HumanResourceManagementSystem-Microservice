@@ -22,4 +22,6 @@ public interface EmployersDao {
 
     Long getLatestUserId();
 
+    Long getTotalRowCount();
+
 }
