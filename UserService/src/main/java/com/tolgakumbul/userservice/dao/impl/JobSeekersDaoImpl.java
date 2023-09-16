@@ -35,7 +35,9 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
         this.hazelcastCacheHelper = hazelcastCacheHelper;
     }
 
+    //TODO: Add filters
     @Override
+    @Lock(LockMode.PESSIMISTIC_READ)
     //@CacheHelper(mapName = "jobseekerListMap", keyName = "AllJobSeekers") /*Removed due to the pagination*/
     public List<JobSeekersEntity> getAllJobSeekers(ListRequest listRequest) {
         try {
@@ -53,6 +55,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     }
 
     @Override
+    @Lock(LockMode.PESSIMISTIC_READ)
     public JobSeekersEntity getJobSeekerById(Long jobSeekerId) {
         try {
             JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_ID_QUERY, new JobSeekersRowMapper(), jobSeekerId);
@@ -67,6 +70,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     }
 
     @Override
+    @Lock(LockMode.PESSIMISTIC_READ)
     public JobSeekersEntity getJobSeekerByNationalId(String nationalId) {
         try {
             JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NATIONAL_QUERY, new JobSeekersRowMapper(), nationalId);
@@ -81,6 +85,7 @@ public class JobSeekersDaoImpl implements JobSeekersDao {
     }
 
     @Override
+    @Lock(LockMode.PESSIMISTIC_READ)
     public JobSeekersEntity getJobSeekerByName(String firstName, String lastName) {
         try {
             JobSeekersEntity jobSeekersEntity = jdbcTemplate.queryForObject(QueryConstants.SELECT_JOB_SEEKER_BY_NAME_QUERY, new JobSeekersRowMapper(), firstName, lastName);

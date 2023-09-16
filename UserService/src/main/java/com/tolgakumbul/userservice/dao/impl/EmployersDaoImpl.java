@@ -34,6 +34,7 @@ public class EmployersDaoImpl implements EmployersDao {
         this.hazelcastCacheHelper = hazelcastCacheHelper;
     }
 
+    //TODO: Add filters
     @Override
     @Lock(LockMode.PESSIMISTIC_READ)
     //@CacheHelper(mapName = "employerListMap", keyName = "AllEmployers") /*Removed due to the pagination*/
