@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "EmailProto";
+
+import "google/protobuf/timestamp.proto";
+
+package com.tolgakumbul.proto;
+
+message SendEmailGrpcRequest {
+  int32 userId = 1;
+  string email = 2;
+}
+
+message SendEmailGrpcResponse {
+  string message = 1;
+}
+
+message ActivateEmailGrpcRequest {
+  string activationCode = 1;
+  string email = 2;
+}
+
+message ActivateEmailGrpcResponse {
+  bool isActivated = 1;
+  google.protobuf.Timestamp activationDate = 2;
+}
+
+service EmailGrpcService {
+  rpc SendEmail (SendEmailGrpcRequest) returns (SendEmailGrpcResponse){}
+  rpc ActivateEmail (ActivateEmailGrpcRequest) returns (ActivateEmailGrpcResponse){}
+}
