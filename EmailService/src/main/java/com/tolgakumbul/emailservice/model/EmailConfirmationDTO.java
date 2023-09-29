@@ -13,4 +13,5 @@ public class EmailConfirmationDTO implements Serializable {
 
     private String activationCode;
     private String email;
+    private String status;
 }
