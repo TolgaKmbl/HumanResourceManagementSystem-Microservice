@@ -1,7 +1,9 @@
 package com.tolgakumbul.emailservice.event;
 
 import com.tolgakumbul.emailservice.helper.JsonConverterHelper;
-import com.tolgakumbul.emailservice.model.EmailConfirmationDTO;
+import com.tolgakumbul.emailservice.model.EmailDTO;
+import com.tolgakumbul.emailservice.model.confirmation.EmailConfirmationRequestDTO;
+import com.tolgakumbul.emailservice.model.confirmation.EmailConfirmationResponseDTO;
 import com.tolgakumbul.emailservice.service.EmailService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -25,28 +27,23 @@ public class EmailServiceListener {
     public void sendEmail(String value) {
         try {
             LOGGER.info("EmailServiceListener received data for sendEmail {}", value);
+            EmailDTO emailDTO = JsonConverterHelper.convertToPojo(value, EmailDTO.class);
+            emailService.sendEmail(emailDTO);
         } catch (Exception e) {
             LOGGER.error("Error receiving data on EmailServiceListener {}: {}", value, e.getMessage());
         }
     }
 
-    @KafkaListener(topics = "${kafka.topic.emailservice.resending.name}", groupId = "group-id")
-    public void resendEmail(String value) {
-        try {
-            LOGGER.info("EmailServiceListener received data for resendEmail {}", value);
-        } catch (Exception e) {
-            LOGGER.error("Error receiving data on EmailServiceListener {}: {}", value, e.getMessage());
-        }
-    }
-
+    /*@KafkaListener(topics = "${kafka.topic.emailservice.confirming.name}")
+    @SendTo("${kafka.topic.emailservice.confirmingreply.name}")*/
     @KafkaListener(topics = "${kafka.topic.consumer}")
     @SendTo("${kafka.topic.producer}")
     public String confirmMail(ConsumerRecord<String, String> value) {
         try {
             LOGGER.info("EmailServiceListener received data for confirmMail {}", value);
-            EmailConfirmationDTO emailConfirmationDTO = JsonConverterHelper.convertToPojo(value.value(), EmailConfirmationDTO.class);
-            emailConfirmationDTO.setStatus("ACTIVE");
-            return JsonConverterHelper.convertToJson(emailConfirmationDTO);
+            EmailConfirmationRequestDTO emailConfirmationRequestDTO = JsonConverterHelper.convertToPojo(value.value(), EmailConfirmationRequestDTO.class);
+            EmailConfirmationResponseDTO emailConfirmationResponseDTO = emailService.confirmEmail(emailConfirmationRequestDTO);
+            return JsonConverterHelper.convertToJson(emailConfirmationResponseDTO);
         } catch (Exception e) {
             LOGGER.error("Error receiving data on EmailServiceListener {}: {}", value, e.getMessage());
             throw e;

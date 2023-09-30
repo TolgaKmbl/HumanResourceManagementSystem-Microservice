@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-public class SubscriberConfig {
+public class KafkaSubscriberConfig {
 
     @Value("${kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -34,10 +34,6 @@ public class SubscriberConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        /*props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class.getName());
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.tolgakumbul.emailservice.model.EmailConfirmationDTO");
-        props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");*/
         props.put(ConsumerConfig.GROUP_ID_CONFIG, tunnelGroup);
 
         return props;
