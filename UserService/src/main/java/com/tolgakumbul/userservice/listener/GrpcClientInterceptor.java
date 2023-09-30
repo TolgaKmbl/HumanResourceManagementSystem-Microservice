@@ -21,6 +21,11 @@ public class GrpcClientInterceptor implements ClientInterceptor {
                         CustomSecurityContextMapper.toMetadata(contextService.getContext(), headers);
                         super.start(responseListener, headers);
                     }
+
+                    @Override
+                    public void sendMessage(ReqT message) {
+                        super.sendMessage(message);
+                    }
                 };
     }
 
