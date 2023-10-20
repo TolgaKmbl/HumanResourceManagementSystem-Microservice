@@ -9,4 +9,5 @@
 - [ ] Add an aggregator service to call grpc services (user service etc.)
 - [x] Add an async email service to send an activation mail
 - [ ] Add job adverts and a cv service
+- [ ] Convert one of the services into kotlin
   
