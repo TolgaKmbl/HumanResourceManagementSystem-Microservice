@@ -37,13 +37,13 @@ public class EmailServiceImpl implements EmailService {
 
         Optional<EmailActivationEntity> byUserId = emailActivationRepository.findByUserId(emailDTO.getUserId());
         if (byUserId.isPresent()) {
-            /** resend mail
+            /** TODO:resend mail
              */
             EmailActivationEntity entity = byUserId.get();
             entity.setActivationCode(activationCode);
             emailActivationRepository.save(entity);
         } else {
-            /** send mail
+            /** TODO:send mail
              */
             EmailActivationEntity entity = EMAIL_MAPPER.toEmailActivationEntity(emailDTO, activationCode, DEFAULT_TIME);
             emailActivationRepository.save(entity);
