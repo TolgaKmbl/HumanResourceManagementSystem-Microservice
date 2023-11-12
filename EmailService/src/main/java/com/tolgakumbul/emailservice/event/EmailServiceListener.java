@@ -34,10 +34,8 @@ public class EmailServiceListener {
         }
     }
 
-    /*@KafkaListener(topics = "${kafka.topic.emailservice.confirming.name}")
-    @SendTo("${kafka.topic.emailservice.confirmingreply.name}")*/
-    @KafkaListener(topics = "${kafka.topic.consumer}")
-    @SendTo("${kafka.topic.producer}")
+    @KafkaListener(topics = "${kafka.topic.emailservice.confirming.name}")
+    @SendTo("${kafka.topic.emailservice.confirmingreply.name}")
     public String confirmMail(ConsumerRecord<String, String> value) {
         try {
             LOGGER.info("EmailServiceListener received data for confirmMail {}", value);

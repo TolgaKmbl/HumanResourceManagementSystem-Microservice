@@ -25,7 +25,7 @@ public class KafkaSubscriberConfig {
     @Value("${kafka.tunnel.group}")
     private String tunnelGroup;
 
-    @Value("${kafka.topic.producer}")
+    @Value("${kafka.topic.emailservice.confirmingreply.name}")
     private String jsonTopicReply;
 
     @Bean
