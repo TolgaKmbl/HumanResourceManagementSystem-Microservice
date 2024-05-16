@@ -48,7 +48,26 @@ services:
     restart: unless-stopped
     volumes:
       - 'postgres_data:/var/lib/postgresql/data'
-
+  oracle:
+    image: gvenzl/oracle-free:latest
+    environment:
+      ORACLE_RANDOM_PASSWORD: true
+      APP_USER: usersadmin
+      APP_USER_PASSWORD: password
+    ports:
+      - 1521:1521
+    healthcheck:
+      test:
+        - CMD
+        - /opt/oracle/healthcheck.sh
+      interval: 10s
+      timeout: 5s
+      retries: 10
+#After connecting to oracle, in order to create multiple users follow this;
+#ALTER SESSION SET CONTAINER = freepdb1;
+#CREATE USER <user_name> IDENTIFIED BY <password>;
+#GRANT CREATE SESSION TO <user_name>;
+#GRANT CREATE TABLE TO <user_name>;
 volumes:
   zookeeper_data:
     driver: local
