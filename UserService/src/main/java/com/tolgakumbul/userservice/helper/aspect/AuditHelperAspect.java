@@ -1,8 +1,8 @@
 package com.tolgakumbul.userservice.helper.aspect;
 
+import com.tolgakumbul.securitycontexthelper.SecurityContextHelper;
 import com.tolgakumbul.userservice.constants.Constants;
 import com.tolgakumbul.userservice.entity.BaseDaoEntity;
-import com.tolgakumbul.userservice.helper.SecurityContextHelper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

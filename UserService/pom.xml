@@ -210,10 +210,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--CUSTOM CONTEXT LIBRARY-->
+        <!--GRPC INTERCEPTOR LIBRARY-->
         <dependency>
             <groupId>com.tolgakumbul</groupId>
-            <artifactId>customcontext</artifactId>
+            <artifactId>grpcinterceptor</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--ASPECTJ-->
