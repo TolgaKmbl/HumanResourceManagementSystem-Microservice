@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "com.tolgakumbul.proto";
+option java_outer_classname = "AggregatorOperationsProto";
+
+package com.tolgakumbul.proto;
+
+message TestGrpcRequest {
+  int32 userId = 1;
+  string email = 2;
+}
+
+message TestGrpcResponse {
+  string message = 1;
+}
+
+service AggregatorOperationsGrpcService {
+  rpc TestRpcForContext (TestGrpcRequest) returns (TestGrpcResponse){}
+}
