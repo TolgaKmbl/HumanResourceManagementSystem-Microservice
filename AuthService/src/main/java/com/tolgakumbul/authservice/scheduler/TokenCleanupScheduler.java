@@ -19,7 +19,7 @@ public class TokenCleanupScheduler {
      * Scheduled task to delete expired tokens daily.
      * Runs every midnight.
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * *")
     public void deleteExpiredTokens() {
         authenticationRepository.deleteExpiredTokens(LocalDateTime.now());
     }
