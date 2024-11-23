@@ -37,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationRepository authenticationRepository;
 
     @Override
+    @Transactional
     public String register(AuthRequestDto request) {
         try {
             User user = User.builder()
@@ -53,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public AuthResponseDto authenticate(AuthRequestDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = repository
