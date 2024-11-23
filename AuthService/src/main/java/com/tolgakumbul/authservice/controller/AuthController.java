@@ -17,4 +17,10 @@ public interface AuthController {
     @GetMapping("/validate")
     ResponseEntity<Result> validateToken(@RequestHeader("token") String token);
 
+    @GetMapping("/refresh")
+    ResponseEntity<Result> refreshToken(@RequestHeader("token") String token);
+
+    @GetMapping("/")
+    ResponseEntity<Result> listToken();
+
 }

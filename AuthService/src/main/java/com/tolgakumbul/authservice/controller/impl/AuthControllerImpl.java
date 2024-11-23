@@ -31,4 +31,14 @@ public class AuthControllerImpl implements AuthController {
         authService.validateToken(token);
         return ResponseEntity.ok(new SuccessResult("Token is valid"));
     }
+
+    @Override
+    public ResponseEntity<Result> refreshToken(String token) {
+        return ResponseEntity.ok(new SuccessDataResult<>(authService.refresh(token), "Success"));
+    }
+
+    @Override
+    public ResponseEntity<Result> listToken() {
+        return ResponseEntity.ok(new SuccessDataResult<>(authService.list(), "Success"));
+    }
 }

@@ -19,6 +19,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -47,13 +50,31 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, LocalDateTime expireDateTime) {
+
+        Date expireDate = Date.from(expireDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
         return Jwts.builder()
+                .claim("username", userDetails.getUsername())
                 .claim("role", userDetails.getAuthorities())
                 .setSubject(userDetails.getUsername())
                 .setIssuer(ISSUER)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 45))  // 45 mins valid token
+                .setExpiration(expireDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    @Override
+    public String generateRefreshToken(UserDetails userDetails, LocalDateTime expireDateTime) {
+        Date expireDate = Date.from(expireDateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        return Jwts.builder()
+                .claim("username", userDetails.getUsername())
+                .setSubject(userDetails.getUsername())
+                .setIssuer(ISSUER)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
