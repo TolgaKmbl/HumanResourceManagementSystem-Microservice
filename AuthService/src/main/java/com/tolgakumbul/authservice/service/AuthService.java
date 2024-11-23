@@ -16,6 +16,4 @@ public interface AuthService {
 
     AuthResponseDto refresh(String token);
 
-    List<Authentication> list();
-
 }

@@ -100,12 +100,6 @@ public class AuthServiceImpl implements AuthService {
         return authResponse;
     }
 
-    @Override
-    public List<Authentication> list() {
-        return authenticationRepository.findAll();
-    }
-
-
     private AuthResponseDto getAuthResponse(User user) {
         LocalDateTime accessTokenExpireTime = LocalDateTime.now().plusHours(1);
         LocalDateTime refreshTokenExpireTime = LocalDateTime.now().plusHours(10);

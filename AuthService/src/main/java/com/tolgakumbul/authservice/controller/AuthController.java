@@ -20,7 +20,4 @@ public interface AuthController {
     @GetMapping("/refresh")
     ResponseEntity<Result> refreshToken(@RequestHeader("token") String token);
 
-    @GetMapping("/")
-    ResponseEntity<Result> listToken();
-
 }
