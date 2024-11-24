@@ -11,4 +11,5 @@
 - [ ] Add job adverts and a cv service
 - [ ] Convert one of the services into kotlin or asp.net core
 - [ ] (IMPORTANT) Add a rollback mechanism to services that are triggered from aggregator service. Use SAGA pattern with Kafka.
+- [ ] Application Architecture Diagram
   
